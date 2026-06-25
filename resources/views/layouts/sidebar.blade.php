@@ -21,7 +21,7 @@
 
                 <!-- Submenú desplegable -->
                 <div x-show="open" x-cloak x-collapse class="pl-8 space-y-1 bg-gray-50 dark:bg-gray-950/40 rounded-lg py-1">
-                    <a href="{{ route('usuarios.crear') }}" class="block px-4 py-2 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition">
+                    <a href="{{ route('usuarios.index') }}" class="block px-4 py-2 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition">
                         • Ver Usuarios
                     </a>
                     <a href="{{ route('usuarios.crear') }}" class="block px-4 py-2 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition">
