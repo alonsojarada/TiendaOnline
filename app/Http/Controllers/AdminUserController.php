@@ -8,6 +8,23 @@ use App\Models\User;
 
 class AdminUserController extends Controller
 {
+
+    // Trae y muestra la lista de todos los usuarios
+    public function index()
+    {
+        // Validación de seguridad (opcional, igual que en create)
+        if (auth()->user()->role !== 'admin') {
+            abort(403, 'No tienes autorización para ver esta página.');
+        }
+
+        // Traemos todos los usuarios de la base de datos
+        $usuarios = User::all(); 
+
+        // Retornamos la vista (por ejemplo: admin.users.index) pasando los datos
+        return view('admin.users.usuarios.index', compact('usuarios'));
+    }
+
+
     //
     public function create()
     {

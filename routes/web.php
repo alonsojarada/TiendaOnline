@@ -17,6 +17,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // Rutas para Usuarios Admin
+    Route::get('/usuarios', [App\Http\Controllers\AdminUserController::class, 'index'])->name('usuarios.index');
     Route::get('/usuarios/crear', [App\Http\Controllers\AdminUserController::class, 'create'])->name('usuarios.crear');
     Route::post('/usuarios/guardar', [App\Http\Controllers\AdminUserController::class, 'store'])->name('usuarios.guardar');
 
