@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\DebtController;
+use App\Http\Controllers\ClientController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -27,6 +29,27 @@ Route::middleware('auth')->group(function () {
     Route::post('/categorias/guardar', [App\Http\Controllers\Admin\CategoryController::class, 'store'])->name('categorias.guardar');
     Route::get('/categorias/{category}/editar', [App\Http\Controllers\Admin\CategoryController::class, 'edit'])->name('categorias.edit');
     Route::put('/categorias/{category}', [App\Http\Controllers\Admin\CategoryController::class, 'update'])->name('categorias.update');
-});
 
+    // Ver el estado de cuenta y créditos de un cliente en específico
+    Route::get('/client/{id}/accounts', [DebtController::class, 'showClientAccount'])->name('clients.accounts');
+    // Guardar un nuevo préstamo o mercancía fiada
+    Route::post('/debts/store', [DebtController::class, 'store'])->name('debts.store');
+    // Registrar un abono a una deuda o préstamo
+    Route::post('/debts/{id}/payment', [DebtController::class, 'storePayment'])->name('payments.store');
+
+    // Listar y buscar clientes
+    Route::get('/clients', [ClientController::class, 'index'])->name('clients.index');
+    // Guardar un cliente nuevo (desde un formulario POST)
+    Route::post('/clients/store', [ClientController::class, 'store'])->name('clients.store');
+    // Ver el perfil detallado del cliente (reemplaza la ruta anterior de accounts que hicimos)
+    Route::get('/clients/{id}', [ClientController::class, 'show'])->name('clients.show');
+
+    // Rutas de Deudas (Préstamos / Fiados)
+    Route::post('/debts/store', [DebtController::class, 'store'])->name('debts.store');
+    Route::delete('/debts/{id}', [DebtController::class, 'destroy'])->name('debts.destroy'); // Eliminar préstamo/fiado
+
+    // Rutas de Abonos
+    Route::post('/debts/{id}/payment', [DebtController::class, 'storePayment'])->name('payments.store');
+    Route::delete('/payments/{id}', [DebtController::class, 'destroyPayment'])->name('payments.destroy'); // Eliminar abono
+});
 require __DIR__ . '/auth.php';
