@@ -15,10 +15,10 @@ class ClientController extends Controller
         $search = $request->input('search');
 
         $clients = Client::when($search, function ($query, $search) {
-                return $query->where('name', 'LIKE', "%{$search}%")
-                             ->orWhere('alias', 'LIKE', "%{$search}%")
-                             ->orWhere('phone', 'LIKE', "%{$search}%");
-            })
+            return $query->where('name', 'LIKE', "%{$search}%")
+                ->orWhere('alias', 'LIKE', "%{$search}%")
+                ->orWhere('phone', 'LIKE', "%{$search}%");
+        })
             ->orderBy('name', 'asc')
             ->paginate(10); // Paginación de 10 en 10 para mayor orden
 
@@ -47,15 +47,52 @@ class ClientController extends Controller
         return redirect()->route('clients.index')->with('success', 'Cliente registrado exitosamente.');
     }
 
-    // 3. Mostrar el perfil detallado de un cliente (y sus cuentas)
     public function show($id)
     {
-        $client = Client::with(['debts.payments', 'debts.installments'])->findOrFail($id);
-        
-        // Separamos sus deudas por tipo para mostrarlas ordenadas
+        $client = Client::with('debts.payments', 'debts.installments')->findOrFail($id);
+
         $storeCredits = $client->debts->where('type', 'store_credit');
         $cashLoans = $client->debts->where('type', 'cash_loan');
 
-        return view('clients.show', compact('client', 'storeCredits', 'cashLoans'));
+        // Cálculos de Mercancía Fiada
+        $totalMercanciaOriginal = (float) $storeCredits->sum('total_amount');
+        $totalAbonosMercancia = 0.0;
+        foreach ($storeCredits as $debt) {
+            $totalAbonosMercancia += (float) $debt->payments->sum('amount');
+        }
+        $totalMercanciaRestante = max(0, $totalMercanciaOriginal - $totalAbonosMercancia);
+
+        // Cálculos de Préstamos en Efectivo
+        $totalPrestamosOriginal = (float) $cashLoans->sum('total_amount');
+        $totalAbonosPrestamos = 0.0;
+        foreach ($cashLoans as $debt) {
+            $totalAbonosPrestamos += (float) $debt->payments->sum('amount');
+        }
+        $totalPrestamosRestante = max(0, $totalPrestamosOriginal - $totalAbonosPrestamos);
+
+        // Totales Globales
+        $totalGeneralOriginal = $totalMercanciaOriginal + $totalPrestamosOriginal;
+        $totalAbonosGlobal = $totalAbonosMercancia + $totalAbonosPrestamos;
+        $totalAdeudoGlobal = $totalMercanciaRestante + $totalPrestamosRestante;
+
+        // Nota: Como estamos en ClientController, pasamos $client principal 
+        // y si la vista necesita un objeto $loan por compatibilidad, mandamos el primero o null
+        $loan = $client->debts->first();
+
+        return view('clients.show', compact(
+            'loan',
+            'client',
+            'storeCredits',
+            'cashLoans',
+            'totalMercanciaOriginal',
+            'totalAbonosMercancia',
+            'totalMercanciaRestante',
+            'totalPrestamosOriginal',
+            'totalAbonosPrestamos',
+            'totalPrestamosRestante',
+            'totalGeneralOriginal',
+            'totalAbonosGlobal',
+            'totalAdeudoGlobal'
+        ));
     }
 }

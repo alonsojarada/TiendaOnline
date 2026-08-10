@@ -51,5 +51,11 @@ Route::middleware('auth')->group(function () {
     // Rutas de Abonos
     Route::post('/debts/{id}/payment', [DebtController::class, 'storePayment'])->name('payments.store');
     Route::delete('/payments/{id}', [DebtController::class, 'destroyPayment'])->name('payments.destroy'); // Eliminar abono
+
+    Route::get('/debts/{id}', [DebtController::class, 'show'])->name('debts.details');
+    Route::post('/debts/{debt}/installments/{installment}/pay', [DebtController::class, 'payInstallment'])->name('installments.pay');
+    Route::delete('/debts/{debt}/installments/{installment}/payment', [DebtController::class, 'destroyInstallmentPayment'])->name('installments.destroyPayment');
+
+    Route::post('/debts/{id}/liquidar', [DebtController::class, 'liquidar'])->name('debts.liquidar');
 });
 require __DIR__ . '/auth.php';
