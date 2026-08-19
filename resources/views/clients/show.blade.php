@@ -1,12 +1,13 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex justify-between items-center">
+        <!-- Cambiamos pl-14 por pl-16 para separar más el texto del botón -->
+        <div class="flex justify-between items-center pl-16 sm:pl-0">
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
                 {{ $client->name }} <span
                     class="text-sm text-indigo-500 font-normal">({{ $client->alias ? '"' . $client->alias . '"' : 'Sin alias' }})</span>
             </h2>
             <a href="{{ route('clients.index') }}" class="text-sm text-indigo-600 dark:text-indigo-400 hover:underline">
-                &larr; Volver al catálogo
+                &larr; Volver
             </a>
         </div>
     </x-slot>
@@ -112,7 +113,9 @@
                         <!-- Contenedor con borde y fondo resaltado si supera los 7 días -->
                         <div
                             class="p-3 rounded-xl mb-3 border transition {{ $alertaInactivo ? 'border-red-300 dark:border-red-800/80 bg-red-50/30 dark:bg-red-950/10' : 'bg-gray-50 dark:bg-gray-700/50 border-gray-200 dark:border-gray-700' }}">
-                            <div class="flex justify-between items-center mb-2">
+
+                            <!-- Cabecera de la tarjeta: Concepto y Botón de Detalle -->
+                            <div class="flex justify-between items-start mb-2">
                                 <div>
                                     <h4 class="font-bold text-gray-900 dark:text-white text-sm">{{ $credit->concept }}</h4>
                                     <p
@@ -128,7 +131,16 @@
                                     </p>
                                 </div>
 
-                                <div class="text-right">
+                                <!-- Botón para ir al detalle completo en otra ventana -->
+                                <a href="{{ route('store-details', $credit->id) }}"
+                                    class="text-[10px] uppercase font-bold text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 flex items-center gap-0.5 transition">
+                                    Detalle ➔
+                                </a>
+                            </div>
+
+                            <!-- Monto Restante -->
+                            <div class="flex justify-between items-center mb-2">
+                                <div class="text-right ml-auto">
                                     <span class="text-[10px] uppercase text-amber-500 font-bold block">Debe</span>
                                     <span class="text-sm font-bold text-amber-600 dark:text-amber-400">
                                         ${{ number_format($saldoPendiente, 2) }}
@@ -209,7 +221,7 @@
                             $capitalPrestado = $loan->capital_amount ?? ($loan->amount > 0 ? $loan->amount : ($tasa > 0 ? $montoTotalConInteres / (1 + ($tasa / 100)) : $montoTotalConInteres));
 
                             $interesPorcentaje = $loan->interest_rate ?? 0;
-                            $valorTotalIntereses = $montoTotalConInteres - $loan->amount;
+                            $valorTotalIntereses = $montoTotalConInteres - $capitalPrestado;
                             $fechaCredito = optional($loan->created_at)->format('d M Y') ?? 'N/A';
 
                             $firstUnpaid = $loan->installments->where('status', '!=', 'paid')->first();
@@ -432,7 +444,8 @@
                     class="text-gray-400 hover:text-gray-600">✕</button>
             </div>
 
-            <form action="{{ route('debts.store') }}" method="POST" class="mt-4" onsubmit="disableSubmit(this)">
+            <!-- Se removió el onsubmit por seguridad para asegurar que envíe los datos -->
+            <form action="{{ route('debts.store') }}" method="POST" class="mt-4">
                 @csrf
                 <input type="hidden" name="client_id" value="{{ $client->id }}">
                 <input type="hidden" name="type" value="store_credit">
@@ -446,7 +459,7 @@
 
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Costo Total ($)</label>
-                    <input type="number" step="0.01" name="total_amount" required
+                    <input type="number" step="0.01" name="total_amount" placeholder="0.00" required
                         class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                 </div>
 

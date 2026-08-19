@@ -4,11 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use App\Traits\BelongsToCompany;
 class Debt extends Model
 {
     //
-    use HasFactory;
+    use HasFactory, BelongsToCompany;
 
     protected $fillable = [
         'client_id', 'type', 'concept', 'total_amount', 

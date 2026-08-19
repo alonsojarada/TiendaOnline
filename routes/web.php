@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DebtController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\Admin\ProductController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -29,6 +30,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/categorias/guardar', [App\Http\Controllers\Admin\CategoryController::class, 'store'])->name('categorias.guardar');
     Route::get('/categorias/{category}/editar', [App\Http\Controllers\Admin\CategoryController::class, 'edit'])->name('categorias.edit');
     Route::put('/categorias/{category}', [App\Http\Controllers\Admin\CategoryController::class, 'update'])->name('categorias.update');
+
+    // Rutas para Productos
+    Route::get('/productos', [App\Http\Controllers\Admin\ProductController::class, 'index'])->name('productos.index');
+    Route::get('/productos/crear', [App\Http\Controllers\Admin\ProductController::class, 'create'])->name('productos.crear');
+    Route::post('/productos/guardar', [App\Http\Controllers\Admin\ProductController::class, 'store'])->name('productos.guardar');
 
     // Ver el estado de cuenta y créditos de un cliente en específico
     Route::get('/client/{id}/accounts', [DebtController::class, 'showClientAccount'])->name('clients.accounts');
@@ -57,5 +63,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/debts/{debt}/installments/{installment}/payment', [DebtController::class, 'destroyInstallmentPayment'])->name('installments.destroyPayment');
 
     Route::post('/debts/{id}/liquidar', [DebtController::class, 'liquidar'])->name('debts.liquidar');
+
+
+    Route::get('/detalles-fiado/{id}', [DebtController::class, 'show'])->name('loan-details');
+
+    Route::get('/mercancia-fiada/detalle/{id}', [DebtController::class, 'showStoreDetails'])->name('store-details');
 });
 require __DIR__ . '/auth.php';

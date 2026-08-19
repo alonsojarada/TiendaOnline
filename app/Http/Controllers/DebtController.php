@@ -44,7 +44,7 @@ class DebtController extends Controller
         ));
     }
 
-    
+
     // Guardar un nuevo crédito de tienda (mercancía) o préstamo en efectivo
     public function store(Request $request)
     {
@@ -57,13 +57,16 @@ class DebtController extends Controller
             'loan_modal' => 'nullable|in:interest_only,fixed_installments',
             'payment_frequency' => 'nullable|in:weekly,biweekly,monthly',
             'installments_count' => 'nullable|integer|min:1',
-            'loan_date' => 'required|date',
+            'loan_date' => 'nullable|date', // Cambiado a nullable por si es mercancía fiada
         ]);
 
         $capitalInicial = $request->total_amount;
         $interesPorcentaje = $request->interest_rate ?? 0;
 
-        $totalConInteres = $capitalInicial * (1 + ($interesPorcentaje / 100));
+        // Si es mercancía fiada, el total es netamente el costo ingresado sin intereses automáticos de préstamos
+        $totalConInteres = $request->type === 'store_credit'
+            ? $capitalInicial
+            : $capitalInicial * (1 + ($interesPorcentaje / 100));
 
         $debt = Debt::create([
             'client_id' => $request->client_id,
@@ -77,7 +80,7 @@ class DebtController extends Controller
             'status' => 'pending',
         ]);
 
-        if ($request->loan_modal === 'fixed_installments' && $request->installments_count > 0) {
+        if ($request->type === 'cash_loan' && $request->loan_modal === 'fixed_installments' && $request->installments_count > 0) {
             $numCuotas = $request->installments_count;
             $montoPorCuota = round($totalConInteres / $numCuotas, 2);
 
@@ -102,8 +105,10 @@ class DebtController extends Controller
             }
         }
 
+        $mensaje = $request->type === 'store_credit' ? 'Mercancía fiada registrada correctamente.' : 'Préstamo registrado y cuotas calculadas correctamente.';
+
         return redirect()->route('clients.show', $request->client_id)
-            ->with('success', 'Préstamo registrado y cuotas calculadas correctamente.');
+            ->with('success', $mensaje);
     }
 
     // Registrar un abono general (vía input manual)
@@ -298,5 +303,15 @@ class DebtController extends Controller
         ]);
 
         return redirect()->back()->with('success', '¡Préstamo liquidado por completo y saldos actualizados!');
+    }
+
+    public function showStoreDetails($id)
+    {
+        // Carga el crédito de tienda con sus pagos
+        $credit = Debt::with(['payments', 'client'])
+            ->where('type', 'store_credit')
+            ->findOrFail($id);
+
+        return view('clients.store-credits', compact('credit'));
     }
 }
