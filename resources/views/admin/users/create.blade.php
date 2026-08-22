@@ -9,6 +9,7 @@
         <div class="max-w-xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-6">
                 
+                {{-- Apunta correctamente a la ruta que tienes en tu web.php --}}
                 <form method="POST" action="{{ route('usuarios.guardar') }}" class="max-w-md mx-auto space-y-4">
                     @csrf
 
@@ -26,31 +27,50 @@
                         <x-input-error :messages="$errors->get('email')" class="mt-2" />
                     </div>
 
-                    <!-- Rol -->
+                    <!-- Empresa Asignada -->
+                    <div class="mt-4">
+                        <x-input-label for="company_id" :value="__('Empresa Asignada')" />
+                        <select id="company_id" name="company_id" required class="block mt-1 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
+                            <option value="">Seleccione una empresa...</option>
+                            @foreach($companies as $company)
+                                <option value="{{ $company->id }}" {{ old('company_id') == $company->id ? 'selected' : '' }}>
+                                    {{ $company->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <x-input-error :messages="$errors->get('company_id')" class="mt-2" />
+                    </div>
+
+                    <!-- Rol del Usuario -->
                     <div class="mt-4">
                         <x-input-label for="role" :value="__('Rol del Usuario')" />
                         <select id="role" name="role" class="block mt-1 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
-                            <option value="user">Usuario Estándar / Cliente</option>
-                            <option value="admin">Administrador</option>
+                            <!--<option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Administrador de la Empresa</option>-->
+                            <option value="seller" {{ old('role') == 'seller' ? 'selected' : '' }}>Vendedor / Encargado</option>
+                            <option value="cashier" {{ old('role') == 'cashier' ? 'selected' : '' }}>Cajero</option>
                         </select>
                         <x-input-error :messages="$errors->get('role')" class="mt-2" />
                     </div>
 
-                    <!-- Password -->
+                    <!-- Contraseña -->
                     <div class="mt-4">
                         <x-input-label for="password" :value="__('Contraseña')" />
                         <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required />
                         <x-input-error :messages="$errors->get('password')" class="mt-2" />
                     </div>
 
-                    <!-- Confirm Password -->
+                    <!-- Confirmar Contraseña -->
                     <div class="mt-4">
                         <x-input-label for="password_confirmation" :value="__('Confirmar Contraseña')" />
                         <x-text-input id="password_confirmation" class="block mt-1 w-full" type="password" name="password_confirmation" required />
                         <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
                     </div>
 
-                    <div class="flex items-center justify-end mt-4">
+                    <div class="flex items-center justify-between mt-4">
+                        <a href="{{ route('usuarios.index') }}" class="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 underline">
+                            {{ __('Cancelar') }}
+                        </a>
+
                         <x-primary-button>
                             {{ __('Registrar Usuario') }}
                         </x-primary-button>

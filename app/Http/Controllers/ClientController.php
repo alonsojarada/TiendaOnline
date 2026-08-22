@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Models;
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Client;
+use Barryvdh\DomPDF\Facade\Pdf;
+// Si prefieres exportar a CSV/Excel nativo de forma sencilla o usar descargas directas:
+// (O puedes integrar librerías como Maatwebsite Excel / DomPDF cuando lo requieras)
 
 class ClientController extends Controller
 {
-    //
     // 1. Mostrar la lista de clientes (con opción de búsqueda por nombre o alias)
     public function index(Request $request)
     {
@@ -47,6 +48,7 @@ class ClientController extends Controller
         return redirect()->route('clients.index')->with('success', 'Cliente registrado exitosamente.');
     }
 
+    // 3. Ver detalles y cuentas del cliente
     public function show($id)
     {
         $client = Client::with('debts.payments', 'debts.installments')->findOrFail($id);
@@ -75,8 +77,6 @@ class ClientController extends Controller
         $totalAbonosGlobal = $totalAbonosMercancia + $totalAbonosPrestamos;
         $totalAdeudoGlobal = $totalMercanciaRestante + $totalPrestamosRestante;
 
-        // Nota: Como estamos en ClientController, pasamos $client principal 
-        // y si la vista necesita un objeto $loan por compatibilidad, mandamos el primero o null
         $loan = $client->debts->first();
 
         return view('clients.show', compact(
@@ -94,5 +94,56 @@ class ClientController extends Controller
             'totalAbonosGlobal',
             'totalAdeudoGlobal'
         ));
+    }
+
+    // 4. Método para exportar a Excel (Descarga en formato CSV compatible con Excel)
+    public function exportExcel()
+    {
+        $clients = Client::orderBy('name', 'asc')->get();
+
+        $fileName = 'directorio_clientes_' . date('Y-m-d') . '.csv';
+
+        $headers = [
+            "Content-type" => "text/csv; charset=UTF-8",
+            "Content-Disposition" => "attachment; filename=$fileName",
+            "Pragma" => "no-cache",
+            "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
+            "Expires" => "0"
+        ];
+
+        $callback = function () use ($clients) {
+            $file = fopen('php://output', 'w');
+            // Añadir BOM para que reconozca losacentos correctamente en Excel
+            fprintf($file, chr(0xEF) . chr(0xBB) . chr(0xBF));
+
+            // Encabezados de columnas
+            fputcsv($file, ['NOMBRE', 'ALIAS', 'DIRECCIÓN', 'TELÉFONO']);
+
+            // Filas de datos
+            foreach ($clients as $client) {
+                fputcsv($file, [
+                    $client->name,
+                    $client->alias,
+                    $client->address,
+                    $client->phone
+                ]);
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
+
+    // 5. Método para exportar a PDF (Vista preliminar / Descarga rápida)
+    public function exportPdf()
+    {
+        // Obtienes tus datos normalmente
+        $clients = Client::all();
+
+        // Cargas la vista y fuerzas la descarga directa
+        $pdf = Pdf::loadView('exports.clients-pdf', compact('clients'));
+
+        return $pdf->download('directorio_clientes.pdf');
     }
 }

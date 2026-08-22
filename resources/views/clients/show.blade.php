@@ -22,66 +22,92 @@
                 </div>
             @endif
 
-            <div
-                class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700 mb-6">
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-center">
-                    <!-- Teléfono y Dirección -->
+            <!-- Fila superior de tarjetas: Totalmente independiente y responsiva -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 mb-4">
+                <!-- Tarjeta 1: Información de Contacto -->
+                <div
+                    class="bg-white dark:bg-gray-800 px-3 py-3 rounded-xl shadow-xs border border-gray-100 dark:border-gray-700 flex flex-col justify-center gap-1.5">
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="font-black text-gray-500 uppercase text-[11px] tracking-wider">Tel:</span>
+                        <span class="font-bold text-gray-900 dark:text-gray-100">📞 {{ $client->phone ?? 'N/A' }}</span>
+                    </div>
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="font-black text-gray-500 uppercase text-[11px] tracking-wider">Dir:</span>
+                        <span class="font-semibold text-gray-800 dark:text-gray-200 truncate max-w-[140px]"
+                            title="{{ $client->address ?? 'N/A' }}">📍 {{ $client->address ?? 'N/A' }}</span>
+                    </div>
+                </div>
+
+                <!-- Tarjeta 2: Mercancía Fiada -->
+                <div
+                    class="bg-white dark:bg-gray-800 px-3 py-3 rounded-xl shadow-xs border border-gray-100 dark:border-gray-700 flex flex-col justify-center">
                     <div>
-                        <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider block">Teléfono</span>
                         <span
-                            class="text-gray-800 dark:text-gray-200 font-medium mb-2 block">{{ $client->phone ?? 'N/A' }}</span>
-                        <span
-                            class="text-xs font-semibold text-gray-400 uppercase tracking-wider block">Dirección</span>
-                        <span
-                            class="text-gray-800 dark:text-gray-200 font-medium">{{ $client->address ?? 'N/A' }}</span>
+                            class="text-xs font-black text-indigo-600 dark:text-indigo-400 uppercase tracking-wider block">Mercancía</span>
+                        <div class="text-xl font-black text-gray-900 dark:text-white leading-tight">
+                            ${{ number_format($totalMercanciaRestante, 2) }}
+                        </div>
                     </div>
+                    <div class="text-sm font-bold text-gray-600 dark:text-gray-300 mt-1">
+                        Abonado: <span
+                            class="font-extrabold text-emerald-600">${{ number_format($totalAbonosMercancia, 2) }}</span>
+                    </div>
+                </div>
 
-                    <!-- Desglose de Mercancía Fiada -->
-                    <div
-                        class="border-t md:border-t-0 md:border-l border-gray-200 dark:border-gray-700 pt-3 md:pt-0 md:pl-4">
+                <!-- Tarjeta 3: Préstamos en Efectivo -->
+                <div
+                    class="bg-white dark:bg-gray-800 px-3 py-3 rounded-xl shadow-xs border border-gray-100 dark:border-gray-700 flex flex-col justify-center">
+                    <div>
                         <span
-                            class="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider block">Mercancía
-                            Fiada</span>
-                        <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                            Abonado: <span
-                                class="font-semibold text-green-600">${{ number_format($totalAbonosMercancia, 2) }}</span>
-                        </div>
-                        <div class="text-sm font-bold text-gray-800 dark:text-gray-200">
-                            Restante: ${{ number_format($totalMercanciaRestante, 2) }}
+                            class="text-xs font-black text-emerald-700 dark:text-emerald-400 uppercase tracking-wider block">Préstamos</span>
+                        <div class="text-xl font-black text-gray-900 dark:text-white leading-tight">
+                            ${{ number_format($totalPrestamosRestante, 2) }}
                         </div>
                     </div>
+                    <div class="text-sm font-bold text-gray-600 dark:text-gray-300 mt-1">
+                        Abonado: <span
+                            class="font-extrabold text-emerald-600">${{ number_format($totalAbonosPrestamos, 2) }}</span>
+                    </div>
+                </div>
 
-                    <!-- Desglose de Préstamos en Efectivo -->
-                    <div
-                        class="border-t md:border-t-0 md:border-l border-gray-200 dark:border-gray-700 pt-3 md:pt-0 md:pl-4">
+                <!-- Tarjeta 4: Adeudo Global Restante (Destacada) -->
+                <div
+                    class="bg-rose-50 dark:bg-rose-950/30 px-3 py-3 rounded-xl shadow-xs border border-rose-100 dark:border-rose-900/50 flex flex-col justify-center">
+                    <div>
                         <span
-                            class="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider block">Préstamos
-                            Efectivo</span>
-                        <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                            Abonado: <span
-                                class="font-semibold text-green-600">${{ number_format($totalAbonosPrestamos, 2) }}</span>
-                        </div>
-                        <div class="text-sm font-bold text-gray-800 dark:text-gray-200">
-                            Restante: ${{ number_format($totalPrestamosRestante, 2) }}
+                            class="text-xs font-black text-rose-600 dark:text-rose-400 uppercase tracking-wider block">Adeudo
+                            Global</span>
+                        <div class="text-2xl font-black text-rose-700 dark:text-rose-300 leading-tight">
+                            ${{ number_format($totalAdeudoGlobal, 2) }}
                         </div>
                     </div>
+                    <div class="text-sm text-rose-600 dark:text-rose-400 font-extrabold mt-1">
+                        Total pendiente
+                    </div>
+                </div>
 
-                    <!-- Total Adeudo Global -->
-                    <div
-                        class="bg-red-50 dark:bg-red-900/20 p-3 rounded-lg border border-red-100 dark:border-red-800/30 text-right">
-                        <span
-                            class="text-xs font-bold text-red-600 dark:text-red-400 uppercase tracking-wider block">Adeudo
-                            Global Restante</span>
-                        <span
-                            class="text-xl font-extrabold text-red-700 dark:text-red-300">${{ number_format($totalAdeudoGlobal, 2) }}</span>
-                    </div>
+                <!-- Tarjeta 5: Acciones Rápidas -->
+                <div
+                    class="bg-white dark:bg-gray-800 p-2.5 rounded-xl shadow-xs border border-gray-100 dark:border-gray-700 flex flex-col justify-center gap-1.5 sm:col-span-2 lg:col-span-1">
+                    <!-- Botón Fiar Artículo -->
+                    <button type="button"
+                        onclick="document.getElementById('modalFiarArticulo').classList.remove('hidden')"
+                        class="w-full py-1.5 px-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-extrabold shadow-xs transition text-center flex items-center justify-center gap-1">
+                        🛍️ + Fiar Artículo
+                    </button>
+
+                    <!-- Botón Nuevo Préstamo -->
+                    <button type="button" onclick="document.getElementById('modalPrestamo').classList.remove('hidden')"
+                        class="w-full py-1.5 px-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-extrabold shadow-xs transition text-center flex items-center justify-center gap-1">
+                        💵 + Nuevo Préstamo
+                    </button>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
                 <!-- ================= COLUMNA 1: MERCANCÍA FIADA ================= -->
-                <div class="bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg p-6">
+                <div class="bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg p-4 sm:p-5">
                     <div class="flex justify-between items-center mb-4 pb-3 border-b dark:border-gray-700">
                         <h3 class="font-bold text-lg text-gray-900 dark:text-gray-100">Ropa y Mercancía Fiada</h3>
                         <button type="button" onclick="document.getElementById('modalFiado').classList.remove('hidden')"
@@ -91,7 +117,6 @@
                     </div>
 
                     @php
-                        // Forzamos el ordenamiento directamente en la vista por si acaso la variable no llega ordenada
                         $creditosOrdenados = $storeCredits->sortByDesc(function ($credit) {
                             $ultimoPago = $credit->payments()->latest('payment_date')->first();
                             $fechaRef = $ultimoPago ? \Carbon\Carbon::parse($ultimoPago->payment_date) : \Carbon\Carbon::parse($credit->created_at);
@@ -104,15 +129,17 @@
                             $ultimoPago = $credit->payments()->latest('payment_date')->first();
                             $fechaReferencia = $ultimoPago ? \Carbon\Carbon::parse($ultimoPago->payment_date) : \Carbon\Carbon::parse($credit->created_at);
                             $diasTranscurridos = $fechaReferencia->startOfDay()->diffInDays(\Carbon\Carbon::now()->startOfDay());
-                            $textoFecha = $ultimoPago ? 'Abono: ' . $fechaReferencia->format('d/m/Y') : 'Fiado: ' . $fechaReferencia->format('d/m/Y');
+                            $textoFecha = $ultimoPago ? 'Último Abono: ' . $fechaReferencia->format('d/m/Y') : 'Fiado: ' . $fechaReferencia->format('d/m/Y');
 
-                            $saldoPendiente = $credit->total_amount - $credit->payments->sum('amount');
-                            $alertaInactivo = ($diasTranscurridos >= 7 && $saldoPendiente > 0);
+                            $totalAbonado = $credit->payments->sum('amount');
+                            $saldoPendiente = $credit->total_amount - $totalAbonado;
+                            $estaLiquidado = $saldoPendiente <= 0;
+                            $alertaInactivo = (!$estaLiquidado && $diasTranscurridos >= 7);
                         @endphp
 
-                        <!-- Contenedor con borde y fondo resaltado si supera los 7 días -->
+                        <!-- Contenedor de la Tarjeta -->
                         <div
-                            class="p-3 rounded-xl mb-3 border transition {{ $alertaInactivo ? 'border-red-300 dark:border-red-800/80 bg-red-50/30 dark:bg-red-950/10' : 'bg-gray-50 dark:bg-gray-700/50 border-gray-200 dark:border-gray-700' }}">
+                            class="p-3 rounded-xl mb-3 border transition {{ $estaLiquidado ? 'bg-gray-50/50 dark:bg-gray-700/20 border-gray-200 dark:border-gray-700 opacity-80' : ($alertaInactivo ? 'border-red-300 dark:border-red-800/80 bg-red-50/30 dark:bg-red-950/10' : 'bg-gray-50 dark:bg-gray-700/50 border-gray-200 dark:border-gray-700') }}">
 
                             <!-- Cabecera de la tarjeta: Concepto y Botón de Detalle -->
                             <div class="flex justify-between items-start mb-2">
@@ -123,7 +150,7 @@
                                         <span>{{ $textoFecha }}</span>
                                         <span>•</span>
                                         <span>${{ number_format($credit->total_amount, 2) }}</span>
-                                        @if($diasTranscurridos >= 7)
+                                        @if($alertaInactivo)
                                             <span class="font-bold text-red-600 dark:text-red-400">
                                                 ({{ $diasTranscurridos }} días sin abonar)
                                             </span>
@@ -131,39 +158,61 @@
                                     </p>
                                 </div>
 
-                                <!-- Botón para ir al detalle completo en otra ventana -->
+                                <!-- Botón de Detalle -->
                                 <a href="{{ route('store-details', $credit->id) }}"
                                     class="text-[10px] uppercase font-bold text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 flex items-center gap-0.5 transition">
                                     Detalle ➔
                                 </a>
                             </div>
 
-                            <!-- Monto Restante -->
-                            <div class="flex justify-between items-center mb-2">
-                                <div class="text-right ml-auto">
-                                    <span class="text-[10px] uppercase text-amber-500 font-bold block">Debe</span>
-                                    <span class="text-sm font-bold text-amber-600 dark:text-amber-400">
-                                        ${{ number_format($saldoPendiente, 2) }}
-                                    </span>
+                            <!-- Sección inferior: Abonado, Debe / Liquidado y Botón -->
+                            <div
+                                class="flex justify-between items-center mt-3 pt-2 border-t border-gray-200/60 dark:border-gray-700/60">
+
+                                <!-- Izquierda: Totales (Abonado y Debe juntos) -->
+                                <div class="flex items-center gap-6">
+                                    <div>
+                                        <span class="text-[10px] uppercase text-green-600 font-bold block">Abonado</span>
+                                        <span class="text-sm font-bold text-green-600 dark:text-green-400">
+                                            ${{ number_format($totalAbonado, 2) }}
+                                        </span>
+                                    </div>
+
+                                    @if($estaLiquidado)
+                                        <div>
+                                            <span class="text-[10px] uppercase text-gray-400 font-bold block">Estado</span>
+                                            <span class="text-xs font-bold text-green-600 dark:text-green-400">
+                                                ✓ LIQUIDADO
+                                            </span>
+                                        </div>
+                                    @else
+                                        <div>
+                                            <span class="text-[10px] uppercase text-amber-500 font-bold block">Debe</span>
+                                            <span class="text-sm font-bold text-amber-600 dark:text-amber-400">
+                                                ${{ number_format($saldoPendiente, 2) }}
+                                            </span>
+                                        </div>
+                                    @endif
                                 </div>
+
+                                <!-- Derecha: Botón de Abonar (Solo si no está liquidado) -->
+                                @unless($estaLiquidado)
+                                    <button type="button"
+                                        onclick="abrirModalAbono('{{ route('payments.store', $credit->id) }}', '{{ $saldoPendiente }}')"
+                                        class="px-3.5 py-1.5 bg-green-600 hover:bg-green-700 text-white text-xs font-semibold rounded-md uppercase tracking-wider transition shadow-sm">
+                                        Abonar
+                                    </button>
+                                @endunless
+
                             </div>
 
-                            <!-- Formulario de Abono Rápido -->
-                            <form action="{{ route('payments.store', $credit->id) }}" method="POST" class="flex gap-2">
-                                @csrf
-                                <input type="number" step="0.01" name="amount" placeholder="$ Monto a abonar" required
-                                    class="w-full text-xs px-3 py-1.5 rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 focus:ring-indigo-500">
-                                <button type="submit"
-                                    class="px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-xs font-semibold rounded-md uppercase tracking-wider transition">
-                                    Abonar
-                                </button>
-                            </form>
                         </div>
                     @empty
                         <p class="text-gray-500 dark:text-gray-400 text-sm text-center py-4">No tiene mercancía fiada
                             pendiente.</p>
                     @endforelse
                 </div>
+
 
                 <!-- ================= COLUMNA 2: PRÉSTAMOS EN EFECTIVO ================= -->
                 <div class="bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg p-4 sm:p-5">
@@ -273,18 +322,29 @@
                                 </div>
                             </div>
 
-                            <div class="flex justify-between items-center text-xs px-1 my-0.5">
+                            <div class="flex justify-between items-center text-xs px-1 mb-2">
                                 <span class="text-gray-500 dark:text-gray-400">
                                     Pagado: <span
                                         class="font-medium text-green-600">${{ number_format($totalPagado, 2) }}</span>
                                 </span>
-                                <!-- Cambio a color naranja (amber) -->
-                                <span class="font-bold text-amber-600 dark:text-amber-400 text-base tracking-tight">
-                                    Restante: ${{ number_format($montoTotalConInteres - $totalPagado, 2) }}
-                                </span>
+
+                                <!-- Saldo Restante o Liquidado -->
+                                <div>
+                                    @php $restante = $montoTotalConInteres - $totalPagado; @endphp
+                                    @if($restante <= 0)
+                                        <span
+                                            class="px-2 py-0.5 bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300 rounded-md text-xs font-bold">
+                                            ✓ Liquidado
+                                        </span>
+                                    @else
+                                        <span class="font-bold text-amber-600 dark:text-amber-400 text-base tracking-tight">
+                                            Restante: ${{ number_format($restante, 2) }}
+                                        </span>
+                                    @endif
+                                </div>
                             </div>
 
-                            <!-- Fila Inferior -->
+                            <!-- Fila Inferior (Grid de 4 columnas) -->
                             <div
                                 class="grid grid-cols-4 gap-1 pt-2 border-t border-gray-100 dark:border-gray-700 text-center items-center">
                                 <div>
@@ -308,7 +368,7 @@
                                 <div class="border-l border-gray-100 dark:border-gray-700 flex justify-center">
                                     @if($cuotasVencidas > 0)
                                         <span
-                                            class="px-3 py-1.5 bg-red-600 text-white dark:bg-red-700 rounded-lg font-black text-xs md:text-sm shadow-md scale-105 flex items-center gap-1.5">
+                                            class="px-2.5 py-1 bg-red-600 text-white dark:bg-red-700 rounded-lg font-black text-xs shadow-xs flex items-center gap-1">
                                             🚨 {{ $cuotasVencidas }} Venc.
                                         </span>
                                     @else
@@ -461,6 +521,12 @@
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Costo Total ($)</label>
                     <input type="number" step="0.01" name="total_amount" placeholder="0.00" required
                         class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-xs font-bold text-gray-600 dark:text-gray-400 uppercase mb-1">Fecha de
+                        Movimiento</label>
+                    <input type="date" name="created_at" value="{{ date('Y-m-d') }}"
+                        class="w-full px-3 py-2 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-hidden text-gray-800 dark:text-gray-200">
                 </div>
 
                 <div class="flex justify-end space-x-3 mt-6">
@@ -616,6 +682,61 @@
         </div>
     </div>
 
+    <!-- MODAL FLOTANTE DE ABONO (Colócalo una sola vez al final de tu vista principal) -->
+    <div id="paymentModal"
+        class="hidden fixed inset-0 z-50 overflow-y-auto bg-gray-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div
+            class="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl max-w-md w-full p-6 shadow-2xl relative">
+            <div class="flex justify-between items-center pb-4 border-b border-gray-100 dark:border-gray-800">
+                <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100">Registrar Nuevo Abono</h3>
+                <button type="button" onclick="document.getElementById('paymentModal').classList.add('hidden')"
+                    class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition">
+                    ✕
+                </button>
+            </div>
+
+            <form id="formAbonoModal" method="POST" class="mt-4 space-y-4">
+                @csrf
+                <div>
+                    <label
+                        class="block text-xs font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400 mb-1">Monto
+                        del Abono ($)</label>
+                    <input type="number" step="0.01" id="inputMaxAmount" name="amount" required
+                        class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition">
+                </div>
+
+                <div>
+                    <label
+                        class="block text-xs font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400 mb-1">Fecha</label>
+                    <input type="date" name="payment_date" value="{{ date('Y-m-d') }}" required
+                        class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition">
+                </div>
+
+                <div>
+                    <label
+                        class="block text-xs font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400 mb-1">Notas
+                        / Observación (Opcional)</label>
+                    <textarea name="notes" rows="2"
+                        class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition"
+                        placeholder="Ej. Abonó en efectivo..."></textarea>
+                </div>
+
+                <div class="flex justify-end space-x-3 pt-4 border-t border-gray-100 dark:border-gray-800 mt-6">
+                    <button type="button" onclick="document.getElementById('paymentModal').classList.add('hidden')"
+                        class="px-4 py-2.5 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl text-xs font-semibold uppercase tracking-wider transition">
+                        Cancelar
+                    </button>
+                    <button type="submit"
+                        class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-semibold uppercase tracking-wider transition shadow-sm">
+                        Guardar Abono
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+
     <!-- Scripts de Control -->
     <script>
         function toggleInstallments() {
@@ -634,6 +755,20 @@
                 btn.disabled = true;
                 btn.innerText = 'Guardando...';
             }
+        }
+    </script>
+    <!-- Script JavaScript para controlar dinámicamente el modal -->
+    <script>
+        function abrirModalAbono(urlAccion, saldoRestante) {
+            const form = document.getElementById('formAbonoModal');
+            form.action = urlAccion;
+
+            const inputAmount = document.getElementById('inputMaxAmount');
+            inputAmount.max = saldoRestante;
+            inputAmount.value = '';
+            inputAmount.placeholder = `Máx: $${saldoRestante}`;
+
+            document.getElementById('paymentModal').classList.remove('hidden');
         }
     </script>
 </x-app-layout>

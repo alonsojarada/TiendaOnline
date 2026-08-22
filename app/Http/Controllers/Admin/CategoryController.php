@@ -11,12 +11,15 @@ class CategoryController extends Controller
 {
     public function index()
     {
-        if (auth()->user()->role !== 'admin') {
-            abort(403);
+        $user = auth()->user();
+
+        // 1. Si el usuario no tiene una empresa asignada, denegar acceso
+        if (!$user || is_null($user->company_id)) {
+            abort(403, 'No tienes una empresa asignada para ver las categorías.');
         }
 
-        // Trae todas las categorías ordenadas por las más recientes
-        $categories = Category::latest()->get();
+        // 2. Traer únicamente las categorías que pertenecen a la empresa del usuario
+        $categories = Category::where('company_id', $user->company_id)->get();
 
         return view('admin.users.categories.index', compact('categories'));
     }
@@ -24,8 +27,10 @@ class CategoryController extends Controller
     // Muestra el formulario para crear una categoría
     public function create()
     {
-        if (auth()->user()->role !== 'admin') {
-            abort(403);
+        $user = auth()->user();
+
+        if (!$user || is_null($user->company_id)) {
+            abort(403, 'No tienes una empresa asignada para ver las categorías.');
         }
 
         return view('admin.users.categories.create');
@@ -34,8 +39,10 @@ class CategoryController extends Controller
     // Guarda la categoría en la base de datos
     public function store(Request $request)
     {
-        if (auth()->user()->role !== 'admin') {
-            abort(403);
+        $user = auth()->user();
+
+        if (!$user || is_null($user->company_id)) {
+            abort(403, 'No tienes una empresa asignada para ver las categorías.');
         }
 
         // Validamos que el nombre sea obligatorio y único
@@ -56,8 +63,10 @@ class CategoryController extends Controller
 
     public function edit(Category $category)
     {
-        if (auth()->user()->role !== 'admin') {
-            abort(403);
+        $user = auth()->user();
+
+        if (!$user || is_null($user->company_id)) {
+            abort(403, 'No tienes una empresa asignada para ver las categorías.');
         }
 
         // Retorna la vista pasando la categoría seleccionada
@@ -67,8 +76,10 @@ class CategoryController extends Controller
     // Procesa la actualización en la base de datos
     public function update(Request $request, Category $category)
     {
-        if (auth()->user()->role !== 'admin') {
-            abort(403);
+        $user = auth()->user();
+
+        if (!$user || is_null($user->company_id)) {
+            abort(403, 'No tienes una empresa asignada para ver las categorías.');
         }
 
         // Validamos. El parámetro ignorar el ID ($category->id) evita que falle 
@@ -85,7 +96,7 @@ class CategoryController extends Controller
             'description' => $request->description,
             // 'slug' => Str::slug($request->name), // <-- Descomenta si usas slug automático
         ]);
-
-        return redirect()->route('categories.index')->with('success', 'Categoría actualizada correctamente.');
+        
+        return redirect()->route('categorias.index')->with('success', 'Categoría actualizada correctamente.');
     }
 }

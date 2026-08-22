@@ -8,6 +8,7 @@ use App\Models\Client;
 use App\Models\Payment;
 use App\Models\LoanInstallment;
 use Carbon\Carbon;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class DebtController extends Controller
 {
@@ -57,7 +58,8 @@ class DebtController extends Controller
             'loan_modal' => 'nullable|in:interest_only,fixed_installments',
             'payment_frequency' => 'nullable|in:weekly,biweekly,monthly',
             'installments_count' => 'nullable|integer|min:1',
-            'loan_date' => 'nullable|date', // Cambiado a nullable por si es mercancía fiada
+            'loan_date' => 'nullable|date',
+            'created_at' => 'required|date', // <-- 1. Validamos que llegue la fecha del modal
         ]);
 
         $capitalInicial = $request->total_amount;
@@ -78,6 +80,7 @@ class DebtController extends Controller
             'payment_frequency' => $request->payment_frequency,
             'installments_count' => $request->installments_count,
             'status' => 'pending',
+            'created_at' => $request->created_at, // <-- Asegúrate de pasarlo aquí también
         ]);
 
         if ($request->type === 'cash_loan' && $request->loan_modal === 'fixed_installments' && $request->installments_count > 0) {
@@ -215,7 +218,6 @@ class DebtController extends Controller
     {
         $payment = Payment::with('debt')->findOrFail($id);
         $debt = $payment->debt;
-        $clientId = $debt->client_id;
 
         $payment->delete();
 
@@ -224,7 +226,8 @@ class DebtController extends Controller
             $debt->save();
         }
 
-        return redirect()->route('clients.show', $clientId)
+        // Cambiado de clients.show a redirect()->back() para que no te mueva de pantalla
+        return redirect()->back()
             ->with('success', 'Abono eliminado y saldo recalculado correctamente.');
     }
 
@@ -313,5 +316,16 @@ class DebtController extends Controller
             ->findOrFail($id);
 
         return view('clients.store-credits', compact('credit'));
+    }
+
+    public function exportPdf($id)
+    {
+        $credit = Debt::with(['client', 'payments'])->findOrFail($id);
+
+        // Puedes crear una vista específica limpia solo para el PDF o usar la misma con una variable de control
+        $pdf = Pdf::loadView('exports.edo-cta-pdf', compact('credit'));
+
+        // download() fuerza la descarga directa del archivo sin abrir la ventana de impresión
+        return $pdf->download("estado-de-cuenta-{$credit->id}.pdf");
     }
 }

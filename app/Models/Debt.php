@@ -13,7 +13,7 @@ class Debt extends Model
     protected $fillable = [
         'client_id', 'type', 'concept', 'total_amount', 
         'loan_modal', 'interest_rate', 'payment_frequency', 
-        'installments_count', 'status'
+        'installments_count', 'status', 'created_at' // <-- Agregado aquí
     ];
 
     public function client()

@@ -8,9 +8,9 @@ use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\Relations\BelongsTo; // Importante para la relación
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['name', 'email', 'password', 'company_id'])] // <-- 1. Añadimos company_id aquí
+#[Fillable(['name', 'email', 'password', 'company_id', 'role', 'status'])] // <-- Añadido 'status'
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -31,7 +31,7 @@ class User extends Authenticatable
     }
 
     /**
-     * 2. Definimos la relación con la empresa
+     * Definimos la relación con la empresa
      */
     public function company(): BelongsTo
     {

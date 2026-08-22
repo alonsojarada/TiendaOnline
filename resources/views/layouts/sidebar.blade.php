@@ -11,11 +11,11 @@
                         
                         <div class="flex items-center justify-between">
                             <div class="truncate pr-2">
-                                <!-- Nombre de la Empresa (Ahora destaca primero y más grande) -->
+                                <!-- Nombre de la Empresa -->
                                 <span class="block text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400 truncate">
                                     {{ auth()->user()->company->name ?? 'Sin Empresa' }}
                                 </span>
-                                <!-- Usuario actual (Como subtítulo) -->
+                                <!-- Usuario actual -->
                                 <span class="block text-sm font-semibold text-gray-800 dark:text-gray-200 truncate mt-0.5">
                                     {{ auth()->user()->name }}
                                 </span>
@@ -60,16 +60,87 @@
                 Dashboard
             </a>
 
-            <!-- Usuarios (Manejado con Alpine.js) -->
+            <!-- MÓDULO ADMINISTRATIVO (Solo visible si es Admin Global / sin empresa o según tu regla de rol) -->
+            @if(auth()->user()->company_id === null) <!-- O usa tu lógica de rol, ej: auth()->user()->is_admin -->
+                <div class="pt-2 pb-1">
+                    <p class="px-4 text-[10px] font-bold uppercase tracking-wider text-gray-400">Administración</p>
+                </div>
+
+                <!-- Usuarios -->
+                <div x-data="{ open: false }" class="space-y-1">
+                    <button @click="open = !open"
+                        class="w-full flex items-center justify-between px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition focus:outline-none">
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 mr-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                            </svg>
+                            Usuarios
+                        </div>
+                        <svg :class="{'rotate-180': open}" class="w-4 h-4 text-gray-500 transition-transform duration-200"
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
+
+                    <div x-show="open" x-cloak
+                        class="pl-8 space-y-1 bg-gray-50 dark:bg-gray-950/40 rounded-lg py-1">
+                        <a href="{{ route('usuarios.index') }}"
+                            class="block px-4 py-2 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition">
+                            • Ver Usuarios
+                        </a>
+                        <a href="{{ route('usuarios.crear') }}"
+                            class="block px-4 py-2 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition">
+                            • Nuevo Usuario
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Empresas -->
+                <div x-data="{ open: false }" class="space-y-1">
+                    <button @click="open = !open"
+                        class="w-full flex items-center justify-between px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition focus:outline-none">
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 mr-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                            </svg>
+                            Empresas
+                        </div>
+                        <svg :class="{'rotate-180': open}" class="w-4 h-4 text-gray-500 transition-transform duration-200"
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
+
+                    <div x-show="open" x-cloak
+                        class="pl-8 space-y-1 bg-gray-50 dark:bg-gray-950/40 rounded-lg py-1">
+                        <a href="{{ route('companies.index') }}"
+                            class="block px-4 py-2 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition">
+                            • Ver todas
+                        </a>
+                        <a href="{{ route('companies.create') }}"
+                            class="block px-4 py-2 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition">
+                            • Nueva Empresa
+                        </a>
+                    </div>
+                </div>
+
+                <div class="pt-2 pb-1">
+                    <p class="px-4 text-[10px] font-bold uppercase tracking-wider text-gray-400">Operación Tienda</p>
+                </div>
+            @endif
+
+            <!-- Clientes -->
             <div x-data="{ open: false }" class="space-y-1">
                 <button @click="open = !open"
                     class="w-full flex items-center justify-between px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition focus:outline-none">
                     <div class="flex items-center">
                         <svg class="w-5 h-5 mr-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                         </svg>
-                        Usuarios
+                        Clientes
                     </div>
                     <svg :class="{'rotate-180': open}" class="w-4 h-4 text-gray-500 transition-transform duration-200"
                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -79,18 +150,14 @@
 
                 <div x-show="open" x-cloak
                     class="pl-8 space-y-1 bg-gray-50 dark:bg-gray-950/40 rounded-lg py-1">
-                    <a href="{{ route('usuarios.index') }}"
+                    <a href="{{ route('clients.index') }}"
                         class="block px-4 py-2 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition">
-                        • Ver Usuarios
-                    </a>
-                    <a href="{{ route('usuarios.crear') }}"
-                        class="block px-4 py-2 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition">
-                        • Nuevo Usuario
+                        • Ver Clientes
                     </a>
                 </div>
             </div>
 
-            <!-- Categorías (Manejado con Alpine.js) -->
+            <!-- Categorías -->
             <div x-data="{ open: false }" class="space-y-1">
                 <button @click="open = !open"
                     class="w-full flex items-center justify-between px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition focus:outline-none">
@@ -120,35 +187,6 @@
                 </div>
             </div>
 
-            <!-- Productos (Manejado con Alpine.js) -->
-            <div x-data="{ open: false }" class="space-y-1">
-                <button @click="open = !open"
-                    class="w-full flex items-center justify-between px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition focus:outline-none">
-                    <div class="flex items-center">
-                        <svg class="w-5 h-5 mr-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                        </svg>
-                        Productos
-                    </div>
-                    <svg :class="{'rotate-180': open}" class="w-4 h-4 text-gray-500 transition-transform duration-200"
-                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                    </svg>
-                </button>
-
-                <div x-show="open" x-cloak
-                    class="pl-8 space-y-1 bg-gray-50 dark:bg-gray-950/40 rounded-lg py-1">
-                    <a href="{{ route('productos.index') }}"
-                        class="block px-4 py-2 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition">
-                        • Ver todos
-                    </a>
-                    <a href="{{ route('productos.crear') }}"
-                        class="block px-4 py-2 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition">
-                        • Nuevo Producto
-                    </a>
-                </div>
-            </div>
 
         </nav>
     </div>
