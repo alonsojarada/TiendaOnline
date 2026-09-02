@@ -328,4 +328,14 @@ class DebtController extends Controller
         // download() fuerza la descarga directa del archivo sin abrir la ventana de impresión
         return $pdf->download("estado-de-cuenta-{$credit->id}.pdf");
     }
+
+    public function exportLoanPdf($id)
+    {
+        $loan = Debt::with(['client', 'installments', 'payments'])->findOrFail($id);
+
+        // Genera el PDF utilizando una vista diseñada para préstamos
+        $pdf = Pdf::loadView('exports.loan-edo-cta-pdf', compact('loan'));
+
+        return $pdf->download("estado-de-cuenta-prestamo-{$loan->id}.pdf");
+    }
 }

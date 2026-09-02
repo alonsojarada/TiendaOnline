@@ -12,7 +12,7 @@
         </div>
 
         <!-- TARJETAS SUPERIORES (KPIs) COMPACTAS -->
-        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 mb-3">
+        <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 mb-3">
             <!-- Por Cobrar Total -->
             <div
                 class="bg-white dark:bg-gray-800 py-2 px-3 rounded-xl shadow-xs border border-gray-100 dark:border-gray-700/80 flex flex-col items-center justify-center text-center">
@@ -26,13 +26,6 @@
                 <span class="text-xs font-extrabold uppercase tracking-wider text-indigo-500">Total Préstamos</span>
                 <span
                     class="text-sm sm:text-base font-black text-indigo-600 dark:text-indigo-400 mt-0.5">${{ number_format($totalPrestamos, 2) }}</span>
-            </div>
-            <!-- Monto Retrasado -->
-            <div
-                class="bg-white dark:bg-gray-800 py-2 px-3 rounded-xl shadow-xs border border-gray-100 dark:border-gray-700/80 flex flex-col items-center justify-center text-center">
-                <span class="text-xs font-extrabold uppercase tracking-wider text-amber-500">Monto Retrasado</span>
-                <span
-                    class="text-sm sm:text-base font-black text-amber-600 dark:text-amber-400 mt-0.5">${{ number_format($montoAbonosRetrasados, 2) }}</span>
             </div>
             <!-- Total Mercancía -->
             <div

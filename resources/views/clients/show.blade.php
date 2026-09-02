@@ -101,6 +101,12 @@
                         class="w-full py-1.5 px-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-extrabold shadow-xs transition text-center flex items-center justify-center gap-1">
                         💵 + Nuevo Préstamo
                     </button>
+
+                    <!-- Botón Historial Cuenta -->
+                    <a href="{{ route('reports.historial-cuentas', ['client_id' => $client->id]) }}"
+                        class="w-full py-1.5 px-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-xs font-extrabold shadow-xs transition text-center flex items-center justify-center gap-1">
+                        📊 Historial Cuenta
+                    </a>
                 </div>
             </div>
 
@@ -617,70 +623,7 @@
         </div>
     </div>
 
-    <!-- ================= SECCIÓN: HISTORIAL DE ABONOS Y PAGOS ================= -->
-    <div class="bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg p-6 mt-6">
-        <h3 class="font-bold text-lg text-gray-900 dark:text-gray-100 mb-4 pb-3 border-b dark:border-gray-700">
-            Historial de Abonos Realizados
-        </h3>
 
-        <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-sm">
-                <thead>
-                    <tr
-                        class="text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                        <th class="py-2 px-3">Fecha</th>
-                        <th class="py-2 px-3">Concepto / Préstamo</th>
-                        <th class="py-2 px-3 text-right">Monto Abonado</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-200 dark:divide-gray-700 text-gray-700 dark:text-gray-300">
-                    @php
-                        $allPayments = $client->debts->flatMap->payments->sortByDesc('created_at');
-                    @endphp
-
-                    @forelse($allPayments as $payment)
-                        <tr>
-                            <td class="py-2.5 px-3 whitespace-nowrap text-xs text-gray-500 dark:text-gray-400">
-                                {{ $payment->created_at->format('d/m/Y H:i') }}
-                            </td>
-                            <td class="py-2.5 px-3">
-                                <span class="font-medium text-gray-900 dark:text-white">
-                                    {{ $payment->debt->concept ?? 'Concepto general' }}
-                                </span>
-                                <span class="block text-[11px] text-indigo-500">
-                                    {{ $payment->debt->type == 'cash_loan' ? 'Préstamo en Efectivo' : 'Mercancía Fiada' }}
-                                </span>
-                            </td>
-                            <td class="py-2.5 px-3 whitespace-nowrap text-right">
-                                <div class="flex items-center justify-end gap-3">
-                                    <span class="font-bold text-green-600 dark:text-green-400">
-                                        +${{ number_format($payment->amount, 2) }}
-                                    </span>
-
-                                    <form action="{{ route('payments.destroy', $payment->id) }}" method="POST"
-                                        onsubmit="return confirm('¿Estás seguro de eliminar este abono? El dinero se sumará nuevamente a la deuda.');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit"
-                                            class="text-red-500 hover:text-red-700 text-xs font-semibold px-2 py-1 rounded bg-gray-100 dark:bg-gray-700 transition"
-                                            title="Borrar abono">
-                                            🗑️
-                                        </button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="3" class="py-4 text-center text-gray-500 dark:text-gray-400 text-sm">
-                                Este cliente aún no registra abonos.
-                            </td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
-    </div>
 
     <!-- MODAL FLOTANTE DE ABONO (Colócalo una sola vez al final de tu vista principal) -->
     <div id="paymentModal"

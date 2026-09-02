@@ -9,6 +9,7 @@ use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\CompanyController; 
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ReportController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -76,6 +77,8 @@ Route::middleware(['auth', \App\Http\Middleware\CheckOperationalAccess::class])-
     Route::delete('/payments/{id}', [DebtController::class, 'destroyPayment'])->name('payments.destroy');
 
     Route::get('/credits/{id}/export-pdf', [DebtController::class, 'exportPdf'])->name('credits.export-pdf');
+    Route::get('/debts/{loan}/pdf', [DebtController::class, 'exportLoanPdf'])->name('debts.pdf'); // Para préstamos en efectivo
+
     Route::get('/debts/{id}', [DebtController::class, 'show'])->name('debts.details');
     Route::post('/debts/{debt}/installments/{installment}/pay', [DebtController::class, 'payInstallment'])->name('installments.pay');
     Route::delete('/debts/{debt}/installments/{installment}/payment', [DebtController::class, 'destroyInstallmentPayment'])->name('installments.destroyPayment');
@@ -87,6 +90,9 @@ Route::middleware(['auth', \App\Http\Middleware\CheckOperationalAccess::class])-
 
     Route::get('/dashboard/exportar-excel', [DashboardController::class, 'exportExcel'])->name('dashboard.export.excel');
     Route::get('/dashboard/exportar-pdf', [DashboardController::class, 'exportPDF'])->name('dashboard.export.pdf');
+
+    Route::get('/historial-cuentas', [ReportController::class, 'historialCuentas'])->name('reports.historial-cuentas');
+    Route::get('/reports/historial-cuentas/pdf-download', [ReportController::class, 'descargarPdfHistorial'])->name('reports.historial.pdf-download');
 
 });
 
