@@ -8,8 +8,6 @@
                     <div class="flex justify-between items-center mb-6">
                         <h3 class="text-xl font-bold text-gray-800 dark:text-white">Historial General de Cuentas y
                             Préstamos</h3>
-                        <a href="{{ url()->previous() }}"
-                            class="text-sm text-indigo-600 dark:text-indigo-400 hover:underline">← Volver</a>
                     </div>
 
                     <!-- Formulario de Filtros Principales -->
@@ -65,14 +63,14 @@
                         </div>
                     </form>
 
-                    <!-- Barra de Búsqueda Chica + Filtros (Izquierda) y Botones de Exportar (Derecha) -->
+                    <!-- Barra de Búsqueda + Filtros y Botones de Exportar (Adaptativo y Robusto) -->
                     <div
-                        class="flex flex-col lg:flex-row justify-between items-center gap-4 mb-6 bg-white dark:bg-gray-800 p-3 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
+                        class="bg-white dark:bg-gray-800 p-3 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm mb-6 flex flex-col xl:flex-row items-stretch xl:items-center justify-between gap-3">
 
-                        <!-- Izquierda: Búsqueda chica y Botones de Filtro a un lado -->
-                        <div class="flex flex-col sm:flex-row items-center gap-3 w-full lg:w-auto">
-                            <!-- Input de Búsqueda (Más chico con w-64) -->
-                            <div class="relative w-full sm:w-64">
+                        <!-- Izquierda: Búsqueda y Botones de Filtro -->
+                        <div class="flex flex-col md:flex-row items-stretch md:items-center gap-2.5 w-full xl:w-auto">
+                            <!-- Input de Búsqueda -->
+                            <div class="relative w-full md:w-64">
                                 <span
                                     class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-indigo-500">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -82,31 +80,32 @@
                                 </span>
                                 <input type="text" id="searchInput" onkeyup="aplicarFiltros()"
                                     placeholder="Buscar cliente..."
-                                    class="w-full pl-9 pr-4 py-2 text-xs rounded-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                    class="w-full pl-9 pr-4 py-1.5 text-xs rounded-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                             </div>
 
                             <!-- Botones de Píldora (Estatus) -->
-                            <div class="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0 w-full sm:w-auto">
+                            <div class="flex flex-wrap items-center gap-1.5" id="filtrosEstatusContainer">
                                 <button type="button" onclick="cambiarFiltroEstatus('todos', this)"
-                                    class="filtro-btn px-4 py-1.5 rounded-full text-xs font-semibold bg-indigo-600 text-white shadow-sm transition whitespace-nowrap">
+                                    class="filtro-btn px-3 py-1.5 rounded-full text-xs font-semibold bg-indigo-600 text-white shadow-sm transition whitespace-nowrap">
                                     Todos
                                 </button>
                                 <button type="button" onclick="cambiarFiltroEstatus('pendiente', this)"
-                                    class="filtro-btn px-4 py-1.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300 hover:bg-gray-200 transition whitespace-nowrap">
+                                    class="filtro-btn px-3 py-1.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300 hover:bg-gray-200 transition whitespace-nowrap">
                                     ⏳ Pendientes
                                 </button>
                                 <button type="button" onclick="cambiarFiltroEstatus('liquidado', this)"
-                                    class="filtro-btn px-4 py-1.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300 hover:bg-gray-200 transition whitespace-nowrap">
+                                    class="filtro-btn px-3 py-1.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300 hover:bg-gray-200 transition whitespace-nowrap">
                                     ✓ Liquidados
                                 </button>
                             </div>
                         </div>
 
                         <!-- Derecha: Botones de Exportar (Excel y PDF) -->
-                        <div class="flex items-center gap-2 justify-end w-full lg:w-auto">
+                        <div
+                            class="flex items-center justify-end gap-2 w-full xl:w-auto pt-2 xl:pt-0 border-t xl:border-t-0 border-gray-100 dark:border-gray-700">
                             <!-- Botón Excel -->
                             <button type="button" onclick="exportarExcel()"
-                                class="inline-flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 px-3 rounded-md text-xs shadow-sm transition whitespace-nowrap">
+                                class="inline-flex items-center justify-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-1.5 px-3 rounded-md text-xs shadow-sm transition whitespace-nowrap">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
@@ -115,8 +114,9 @@
                                 Exportar Excel
                             </button>
 
+                            <!-- Botón PDF -->
                             <button type="button" onclick="exportarPDF()"
-                                class="inline-flex items-center gap-1.5 bg-rose-600 hover:bg-rose-700 text-white font-semibold py-2 px-3 rounded-md text-xs shadow-sm transition whitespace-nowrap">
+                                class="inline-flex items-center justify-center gap-1.5 bg-rose-600 hover:bg-rose-700 text-white font-semibold py-1.5 px-3 rounded-md text-xs shadow-sm transition whitespace-nowrap">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z">
@@ -157,9 +157,17 @@
                                         $clientName = $debt->client->name ?? '';
                                         $clientAddress = $debt->client->address ?? '';
                                         $textoBusqueda = strtolower($clientName . ' ' . $clientAddress);
+
+                                        // Definición de la ruta según si es mercancía o crédito en efectivo
+                                        // (Ajusta 'creditos.mercancia.show' y 'creditos.efectivo.show' según tus rutas reales)
+                                        $urlDetalle = ($debt->type === 'store_credit')
+                                            ? route('store-details', ['id' => $debt->id, 'from' => 'historial'])
+                                            : route('loan-details', ['id' => $debt->id, 'from' => 'historial']);
                                     @endphp
-                                    <tr class="fila-cuenta hover:bg-gray-50 dark:hover:bg-gray-700/50"
-                                        data-status="{{ $estatusTexto }}" data-search="{{ $textoBusqueda }}">
+
+                                    <tr class="fila-cuenta hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer transition"
+                                        data-status="{{ $estatusTexto }}" data-search="{{ $textoBusqueda }}"
+                                        onclick="window.location.href='{{ $urlDetalle }}'" title="Clic para ver el detalle">
 
                                         <!-- Cliente -->
                                         <td class="px-4 py-3 font-bold text-gray-900 dark:text-white">
@@ -217,8 +225,10 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="9" class="px-4 py-8 text-center text-gray-500">No se encontraron
-                                            cuentas registradas en el sistema con los filtros seleccionados.</td>
+                                        <td colspan="9" class="px-4 py-8 text-center text-gray-500">
+                                            No se encontraron cuentas registradas en el sistema con los filtros
+                                            seleccionados.
+                                        </td>
                                     </tr>
                                 @endforelse
 

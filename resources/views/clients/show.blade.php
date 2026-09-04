@@ -6,7 +6,7 @@
                 {{ $client->name }} <span
                     class="text-sm text-indigo-500 font-normal">({{ $client->alias ? '"' . $client->alias . '"' : 'Sin alias' }})</span>
             </h2>
-            <a href="{{ route('clients.index') }}" class="text-sm text-indigo-600 dark:text-indigo-400 hover:underline">
+            <a href="{{ route('dashboard') }}" class="text-sm text-indigo-600 dark:text-indigo-400 hover:underline">
                 &larr; Volver
             </a>
         </div>
@@ -90,8 +90,7 @@
                 <div
                     class="bg-white dark:bg-gray-800 p-2.5 rounded-xl shadow-xs border border-gray-100 dark:border-gray-700 flex flex-col justify-center gap-1.5 sm:col-span-2 lg:col-span-1">
                     <!-- Botón Fiar Artículo -->
-                    <button type="button"
-                        onclick="document.getElementById('modalFiarArticulo').classList.remove('hidden')"
+                    <button type="button" onclick="document.getElementById('modalFiado').classList.remove('hidden')"
                         class="w-full py-1.5 px-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-extrabold shadow-xs transition text-center flex items-center justify-center gap-1">
                         🛍️ + Fiar Artículo
                     </button>
@@ -102,11 +101,6 @@
                         💵 + Nuevo Préstamo
                     </button>
 
-                    <!-- Botón Historial Cuenta -->
-                    <a href="{{ route('reports.historial-cuentas', ['client_id' => $client->id]) }}"
-                        class="w-full py-1.5 px-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-xs font-extrabold shadow-xs transition text-center flex items-center justify-center gap-1">
-                        📊 Historial Cuenta
-                    </a>
                 </div>
             </div>
 
@@ -165,7 +159,7 @@
                                 </div>
 
                                 <!-- Botón de Detalle -->
-                                <a href="{{ route('store-details', $credit->id) }}"
+                                <a href="{{ route('store-details', ['id' => $credit->id, 'from' => 'cliente']) }}"
                                     class="text-[10px] uppercase font-bold text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 flex items-center gap-0.5 transition">
                                     Detalle ➔
                                 </a>
@@ -312,7 +306,7 @@
                                         👁️ Detalle
                                     </button>
 
-                                    <a href="{{ route('debts.details', $loan->id) }}"
+                                    <a href="{{ route('debts.details', ['id' => $loan->id, 'from' => 'cliente'])  }}"
                                         class="w-7 h-7 rounded-lg bg-gray-50 dark:bg-gray-700 hover:bg-emerald-500 hover:text-white flex items-center justify-center text-gray-400 transition text-xs"
                                         title="Ir a página completa">
                                         ➔

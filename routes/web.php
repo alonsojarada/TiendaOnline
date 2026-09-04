@@ -6,7 +6,7 @@ use App\Http\Controllers\ClientController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\AdminUserController;
-use App\Http\Controllers\CompanyController; 
+use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ReportController;
@@ -94,6 +94,12 @@ Route::middleware(['auth', \App\Http\Middleware\CheckOperationalAccess::class])-
     Route::get('/historial-cuentas', [ReportController::class, 'historialCuentas'])->name('reports.historial-cuentas');
     Route::get('/reports/historial-cuentas/pdf-download', [ReportController::class, 'descargarPdfHistorial'])->name('reports.historial.pdf-download');
 
+    Route::get('/reports/ventas', [ReportController::class, 'ventasPorRango'])->name('reports.ventas');
+    Route::get('reports/ventas/excel', [ReportController::class, 'ventasExcel'])->name('reports.ventas.excel');
+
+    Route::get('/reports/abonos', [ReportController::class, 'cobros'])->name('reports.abonos');
+
+    Route::get('/reports/mensual', [ReportController::class, 'reporteMensual'])->name('reports.reporte-mensual');
 });
 
 require __DIR__ . '/auth.php';

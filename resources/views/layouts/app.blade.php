@@ -30,11 +30,10 @@
         <!-- 3. Contenido Principal -->
         <div class="flex-1 flex flex-col min-w-0 md:pl-64 transition-all duration-300">
             
-            <!-- 4. BARRA SUPERIOR FIJA (Header Global que incluye el Botón Hamburguesa y el Título) -->
+            <!-- 4. BARRA SUPERIOR FIJA -->
             <header class="fixed top-0 right-0 left-0 md:left-64 z-30 bg-white dark:bg-gray-800 shadow-sm">
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
                     
-                    <!-- Lado Izquierdo: Botón Hamburguesa + Título/Header -->
                     <div class="flex items-center space-x-3 w-full">
                         <button id="menu-btn" class="p-2 rounded-md text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none md:hidden shrink-0">
                             <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none">
@@ -42,7 +41,6 @@
                             </svg>
                         </button>
 
-                        <!-- Page Heading (Contenido del slot integrado de forma fluida) -->
                         <div class="flex-1 min-w-0">
                             @isset($header)
                                 {{ $header }}
@@ -53,7 +51,7 @@
                 </div>
             </header>
 
-            <!-- 5. Page Content (Con pt-20 para evitar que la barra fija tape las tarjetas al inicio) -->
+            <!-- 5. Page Content -->
             <main class="flex-1 p-6 pt-20 md:pt-24">
                 {{ $slot }}
             </main>
@@ -75,6 +73,9 @@
         menuBtn.addEventListener('click', toggleMenu);
         menuOverlay.addEventListener('click', toggleMenu);
     </script>
+
+    <!-- Pila de scripts para inyectar gráficos y componentes específicos -->
+    @stack('scripts')
 </body>
 
 </html>

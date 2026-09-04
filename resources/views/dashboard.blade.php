@@ -12,7 +12,7 @@
         </div>
 
         <!-- TARJETAS SUPERIORES (KPIs) COMPACTAS -->
-        <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 mb-3">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-2.5 mb-3">
             <!-- Por Cobrar Total -->
             <div
                 class="bg-white dark:bg-gray-800 py-2 px-3 rounded-xl shadow-xs border border-gray-100 dark:border-gray-700/80 flex flex-col items-center justify-center text-center">
@@ -36,7 +36,7 @@
             </div>
             <!-- Clientes con Retraso -->
             <div
-                class="bg-white dark:bg-gray-800 py-2 px-3 rounded-xl shadow-xs border border-gray-100 dark:border-gray-700/80 flex flex-col items-center justify-center text-center col-span-2 sm:col-span-1">
+                class="bg-white dark:bg-gray-800 py-2 px-3 rounded-xl shadow-xs border border-gray-100 dark:border-gray-700/80 flex flex-col items-center justify-center text-center">
                 <span class="text-xs font-extrabold uppercase tracking-wider text-red-500">Con Retraso (>7d)</span>
                 <span
                     class="text-sm sm:text-base font-black text-red-600 dark:text-red-400 mt-0.5">{{ $clientesConRetrasoCount }}
@@ -44,23 +44,21 @@
             </div>
         </div>
 
-        <!-- FILTROS, BUSCADOR Y BOTONES DE EXPORTACIÓN -->
-        <div
-            class="bg-white dark:bg-gray-800 p-2.5 sm:p-3 rounded-xl shadow-xs border border-gray-100 dark:border-gray-700/80 mb-3 flex flex-col lg:flex-row items-center justify-between gap-3">
+        <!-- FILTROS, BUSCADOR Y BOTONES DE EXPORTACIÓN (OPTIMIZADO) -->
+        <div class="bg-white dark:bg-gray-800 p-3 rounded-xl shadow-xs border border-gray-100 dark:border-gray-700/80 mb-3 flex flex-col md:flex-row items-center justify-between gap-3">
 
-            <!-- Buscador y Filtros agrupados -->
-            <div class="flex flex-col md:flex-row items-center gap-2.5 w-full lg:w-auto">
+            <!-- Izquierda: Buscador y Filtros -->
+            <div class="flex flex-col lg:flex-row items-center gap-2.5 w-full md:w-auto flex-1">
                 <!-- Buscador -->
-                <div class="relative w-full md:w-80">
-                    <span
-                        class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400 text-xs">🔍</span>
+                <div class="relative w-full lg:w-72">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400 text-xs">🔍</span>
                     <input type="text" id="buscadorDashboard"
-                        placeholder="Buscar cliente por nombre, alias o dirección..."
+                        placeholder="Buscar cliente por nombre, alias..."
                         class="w-full pl-9 pr-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600/60 rounded-lg text-xs text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
                 </div>
 
                 <!-- Botones de Filtro (Selección Múltiple) -->
-                <div class="flex flex-wrap items-center gap-1.5 w-full md:w-auto" id="filtrosEstado">
+                <div class="flex flex-wrap items-center justify-center lg:justify-start gap-1.5 w-full lg:w-auto" id="filtrosEstado">
                     <button type="button" onclick="toggleFiltro('todos')" id="btn-todos"
                         class="filtro-btn px-2.5 py-1 bg-indigo-600 text-white rounded-lg text-xs font-bold shadow-xs transition">
                         Todos
@@ -71,7 +69,7 @@
                     </button>
                     <button type="button" onclick="toggleFiltro('proximos')" id="btn-proximos"
                         class="filtro-btn px-2.5 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg text-xs font-semibold transition">
-                        ⏰ Próximos a Vencer
+                        ⏰ Próximos
                     </button>
                     <button type="button" onclick="toggleFiltro('al_dia')" id="btn-al_dia"
                         class="filtro-btn px-2.5 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg text-xs font-semibold transition">
@@ -80,32 +78,24 @@
                 </div>
             </div>
 
-            <!-- Botones de Exportar (Excel y PDF) -->
-            <div style="display: flex; gap: 8px; align-items: center;">
+            <!-- Derecha: Botones de Exportar (Excel y PDF) -->
+            <div class="flex items-center gap-2 w-full md:w-auto justify-end shrink-0 pt-2 md:pt-0 border-t md:border-t-0 border-gray-100 dark:border-gray-700">
                 <!-- Botón Excel -->
                 <a href="{{ route('dashboard.export.excel') }}"
-                    style="display: inline-flex; align-items: center; gap: 6px; background-color: #16a34a; color: white; padding: 6px 12px; font-size: 13px; font-weight: 500; border-radius: 6px; text-decoration: none; box-shadow: 0 1px 2px rgba(0,0,0,0.05); transition: background-color 0.2s;"
-                    onmouseover="this.style.backgroundColor='#15803d'"
-                    onmouseout="this.style.backgroundColor='#16a34a'">
-                    <svg style="width: 16px; height: 16px;" fill="none" stroke="currentColor" stroke-width="2"
-                        viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                    class="inline-flex items-center justify-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 text-xs font-medium rounded-lg shadow-xs transition text-decoration-none">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                     </svg>
                     Excel
                 </a>
 
                 <!-- Botón PDF -->
                 <a href="{{ route('dashboard.export.pdf') }}"
-                    style="display: inline-flex; align-items: center; gap: 6px; background-color: #dc2626; color: white; padding: 6px 12px; font-size: 13px; font-weight: 500; border-radius: 6px; text-decoration: none; box-shadow: 0 1px 2px rgba(0,0,0,0.05); transition: background-color 0.2s;"
-                    onmouseover="this.style.backgroundColor='#b91c1c'"
-                    onmouseout="this.style.backgroundColor='#dc2626'">
-                    <svg style="width: 16px; height: 16px;" fill="none" stroke="currentColor" stroke-width="2"
-                        viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    class="inline-flex items-center justify-center gap-1.5 bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 text-xs font-medium rounded-lg shadow-xs transition text-decoration-none">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
-                    Descargar PDF
+                    PDF
                 </a>
             </div>
         </div>
@@ -263,7 +253,6 @@
                 }
             }
 
-            // Si se deseleccionan todos, activar 'todos' por defecto
             if (filtrosSeleccionados.size === 0) {
                 filtrosSeleccionados.add('todos');
             }
@@ -303,7 +292,6 @@
                 const clienteCelda = fila.querySelector('td:nth-child(1)');
                 const textoCliente = clienteCelda ? clienteCelda.innerText.toLowerCase() : '';
 
-                // Mostrar solo si cumple el buscador Y los filtros de estado
                 const estadoFila = fila.getAttribute('data-estado');
                 const coincideEstado = filtrosSeleccionados.has('todos') || filtrosSeleccionados.has(estadoFila);
 
@@ -314,32 +302,5 @@
                 }
             });
         });
-    </script>
-    <script>
-        function abrirPdfModal(url) {
-            // Evita duplicar iframes si ya existe uno
-            let iframeExistente = document.getElementById('pdf-print-frame');
-            if (iframeExistente) {
-                iframeExistente.remove();
-            }
-
-            // Crea un iframe oculto
-            const iframe = document.createElement('iframe');
-            iframe.id = 'pdf-print-frame';
-            iframe.style.display = 'none';
-            iframe.src = url;
-
-            document.body.appendChild(iframe);
-
-            // Cuando el iframe cargue el contenido, lanza el cuadro de impresión automáticamente
-            iframe.onload = function () {
-                try {
-                    iframe.contentWindow.focus();
-                    iframe.contentWindow.print();
-                } catch (e) {
-                    console.error("No se pudo iniciar la impresión automática", e);
-                }
-            };
-        }
     </script>
 </x-app-layout>

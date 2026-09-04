@@ -94,7 +94,7 @@
                         $pagoCuota = $loan->payments->where('installment_id', $installment->id)->first();
                         $montoAbonado = $pagoCuota ? $pagoCuota->amount : $installment->amount_due;
                         $saldoTablaAcumulado -= $montoAbonado;
-                        $fechaFila = $pagoCuota ? \Carbon\Carbon::parse($pagoCuota->payment_date)->format('d/m/Y') : ($installment->due_date ? \Carbon\Carbon::parse($installment->due_date)->format('d/m/Y') : 'N/A');
+                        $fechaFila = $pagoCuota ? \Carbon\Carbon::parse($pagoCuota->updated_at)->format('d/m/Y') : ($installment->updated_at ? \Carbon\Carbon::parse($installment->updated_at)->format('d/m/Y') : 'N/A');
                     @endphp
                     <tr>
                         <td>{{ $fechaFila }}</td>
