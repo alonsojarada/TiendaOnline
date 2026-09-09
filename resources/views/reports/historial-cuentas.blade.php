@@ -1,67 +1,73 @@
 <x-app-layout>
+    <x-slot name="header">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight text-left">
+                Historial General de Cuentas y Préstamos
+            </h2>
+            <p class="text-xs text-gray-500 dark:text-gray-400">Vista rápida de saldos pendientes, mercancía fiada y
+                control de cobros.</p>
+        </div>
+    </x-slot>
     <div class="py-6">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
 
-                    <!-- Encabezado y botón volver -->
-                    <div class="flex justify-between items-center mb-6">
-                        <h3 class="text-xl font-bold text-gray-800 dark:text-white">Historial General de Cuentas y
-                            Préstamos</h3>
-                    </div>
 
                     <!-- Formulario de Filtros Principales -->
-                    <form method="GET" action="{{ route('reports.historial-cuentas') }}"
-                        class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6 bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg border border-gray-200 dark:border-gray-700 items-end">
+<form method="GET" action="{{ route('reports.historial-cuentas') }}"
+    class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6 bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg border border-gray-200 dark:border-gray-700 items-end">
 
-                        <!-- Columna 1: Cliente y a un costado el checkbox "Activar" -->
-                        <div>
-                            <label
-                                class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Cliente</label>
-                            <div class="flex items-center gap-2">
-                                <select name="client_id"
-                                    class="w-full text-xs rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                                    <option value="">-- Todos --</option>
-                                    @foreach($clients as $c)
-                                        <option value="{{ $c->id }}" {{ (request('client_id') == $c->id) ? 'selected' : '' }}>
-                                            {{ $c->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                <label
-                                    class="flex items-center gap-1 text-xs font-medium text-gray-600 dark:text-gray-400 cursor-pointer whitespace-nowrap">
-                                    <input type="checkbox" id="activarFechas"
-                                        onchange="toggleFechasCalendario(); aplicarFiltros();"
-                                        class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500 w-3.5 h-3.5">
-                                    <span>Activar</span>
-                                </label>
-                            </div>
-                        </div>
+    <!-- Columna 1: Cliente y a un costado el checkbox "Activar" -->
+    <div>
+        <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Cliente</label>
+        <div class="flex items-center gap-2">
+            <select name="client_id"
+                class="w-full text-xs rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                <option value="">-- Todos --</option>
+                @foreach($clients as $c)
+                    <option value="{{ $c->id }}" {{ (request('client_id') == $c->id) ? 'selected' : '' }}>
+                        {{ $c->name }}
+                    </option>
+                @endforeach
+            </select>
+            <label
+                class="flex items-center gap-1 text-xs font-medium text-gray-600 dark:text-gray-400 cursor-pointer whitespace-nowrap">
+<input type="checkbox" id="activarFechas" name="activar"
+    {{ (request('fecha_inicio') || request('fecha_fin')) ? 'checked' : '' }}
+    onchange="toggleFechasCalendario();"
+    class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500 w-3.5 h-3.5">
+                <span>Activar</span>
+            </label>
+        </div>
+    </div>
 
-                        <!-- Columna 2: Desde -->
-                        <div>
-                            <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Desde</label>
-                            <input type="date" name="fecha_inicio" id="inputFechaInicio"
-                                value="{{ request('fecha_inicio') }}" disabled
-                                class="w-full text-xs py-1.5 px-2.5 rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:text-gray-400">
-                        </div>
+    <!-- Columna 2: Desde -->
+    <div>
+        <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Desde</label>
+        <input type="date" name="fecha_inicio" id="inputFechaInicio"
+            value="{{ request('fecha_inicio') }}"
+            {{ (request('fecha_inicio') || request('fecha_fin')) ? '' : 'disabled' }}
+            class="w-full text-xs py-1.5 px-2.5 rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:text-gray-400">
+    </div>
 
-                        <!-- Columna 3: Hasta -->
-                        <div>
-                            <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Hasta</label>
-                            <input type="date" name="fecha_fin" id="inputFechaFin" value="{{ request('fecha_fin') }}"
-                                disabled
-                                class="w-full text-xs py-1.5 px-2.5 rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:text-gray-400">
-                        </div>
+    <!-- Columna 3: Hasta -->
+    <div>
+        <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Hasta</label>
+        <input type="date" name="fecha_fin" id="inputFechaFin"
+            value="{{ request('fecha_fin') }}"
+            {{ (request('fecha_inicio') || request('fecha_fin')) ? '' : 'disabled' }}
+            class="w-full text-xs py-1.5 px-2.5 rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:text-gray-400">
+    </div>
 
-                        <!-- Columna 4: Botón Consultar -->
-                        <div>
-                            <button type="submit"
-                                class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md text-xs shadow-sm transition">
-                                Consultar Historial
-                            </button>
-                        </div>
-                    </form>
+    <!-- Columna 4: Botón Consultar -->
+    <div>
+        <button type="submit"
+            class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md text-xs shadow-sm transition">
+            Consultar Historial
+        </button>
+    </div>
+</form>
 
                     <!-- Barra de Búsqueda + Filtros y Botones de Exportar (Adaptativo y Robusto) -->
                     <div
@@ -150,19 +156,37 @@
 
                                 @forelse($loans as $debt)
                                     @php
-                                        $isLiquidated = $debt->current_capital <= 0;
-                                        $montoAbonadoDebt = $debt->payments->sum('capital_covered');
-                                        $estatusTexto = $isLiquidated ? 'liquidado' : 'pendiente';
+    $isLiquidated = $debt->current_capital <= 0;
 
-                                        $clientName = $debt->client->name ?? '';
-                                        $clientAddress = $debt->client->address ?? '';
-                                        $textoBusqueda = strtolower($clientName . ' ' . $clientAddress);
+    // 1. Total abonado general (para la columna de ABONADO)
+    $montoAbonadoDebt = $debt->payments->sum('amount')
+        ?? ($debt->payments->sum('capital_covered') + $debt->payments->sum('interest_covered'));
 
-                                        // Definición de la ruta según si es mercancía o crédito en efectivo
-                                        // (Ajusta 'creditos.mercancia.show' y 'creditos.efectivo.show' según tus rutas reales)
-                                        $urlDetalle = ($debt->type === 'store_credit')
-                                            ? route('store-details', ['id' => $debt->id, 'from' => 'historial'])
-                                            : route('loan-details', ['id' => $debt->id, 'from' => 'historial']);
+    // 2. Cálculo directo de componentes
+    $montoInicial = $debt->total_amount;
+    $sumaAbonosCapital = $debt->payments->sum('capital_covered') ?? 0;
+
+    // Sumamos las cuotas pendientes de loan_installments de forma limpia
+    $cuotasPendientes = \App\Models\LoanInstallment::where('debt_id', $debt->id)
+        ->where('status', 'pending')
+        ->sum('amount_due');
+
+    // 3. Asignación del saldo: Si tiene cuotas pendientes y el capital no es cero, aplicamos tu fórmula
+    if (!$isLiquidated && $cuotasPendientes > 0 && (str_contains(strtolower($debt->loan_modal), 'interest_only'))) {
+        $saldoTotal = ($montoInicial - $sumaAbonosCapital) + $cuotasPendientes;
+    } else {
+        $saldoTotal = $debt->current_balance ?? $debt->current_capital;
+    }
+
+    $estatusTexto = $isLiquidated ? 'liquidado' : 'pendiente';
+
+    $clientName = $debt->client->name ?? '';
+    $clientAddress = $debt->client->address ?? '';
+    $textoBusqueda = strtolower($clientName . ' ' . $clientAddress);
+
+    $urlDetalle = ($debt->type === 'store_credit')
+        ? route('store-details', ['id' => $debt->id, 'from' => 'historial'])
+        : route('loan-details', ['id' => $debt->id, 'from' => 'historial']);
                                     @endphp
 
                                     <tr class="fila-cuenta hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer transition"
@@ -179,9 +203,8 @@
                                             {{ $debt->client->address ?? 'Sin dirección' }}
                                         </td>
 
-                                        <!-- Concepto -->
                                         <td class="px-4 py-3 font-medium text-gray-700 dark:text-gray-300">
-                                            {{ $debt->concept ?? 'Cuenta #' . $debt->id }}
+                                            {{ '#' . $debt->id }} - {{ $debt->concept ?? 'Cuenta' }}
                                         </td>
 
                                         <!-- Monto Total -->
@@ -195,10 +218,9 @@
                                             ${{ number_format($montoAbonadoDebt, 2) }}
                                         </td>
 
-                                        <!-- Saldo Actual -->
                                         <td class="px-4 py-3 text-right font-bold monto-saldo"
-                                            data-valor="{{ $debt->current_capital }}">
-                                            ${{ number_format($debt->current_capital, 2) }}
+                                            data-valor="{{ $saldoTotal }}">
+                                            ${{ number_format($saldoTotal, 2) }}
                                         </td>
 
                                         <!-- F. Apertura -->
@@ -413,34 +435,21 @@
             document.body.removeChild(downloadLink);
         }
 
-        function toggleFechasCalendario() {
-            const activarFechas = document.getElementById('activarFechas');
-            if (!activarFechas) return;
+            function toggleFechasCalendario() {
+                const activar = document.getElementById('activarFechas').checked;
+                const inputInicio = document.getElementById('inputFechaInicio');
+                const inputFin = document.getElementById('inputFechaFin');
 
-            const activo = activarFechas.checked;
-            const inputInicio = document.getElementById('inputFechaInicio');
-            const inputFin = document.getElementById('inputFechaFin');
-
-            if (inputInicio) inputInicio.disabled = !activo;
-            if (inputFin) inputFin.disabled = !activo;
-
-            if (activo) {
-                if (inputFin && inputInicio && !inputFin.value && !inputInicio.value) {
-                    const hoy = new Date();
-                    const fechaHoyStr = hoy.toISOString().split('T')[0];
-
-                    const fechaHace7Dias = new Date();
-                    fechaHace7Dias.setDate(hoy.getDate() - 7);
-                    const fechaHace7DiasStr = fechaHace7Dias.toISOString().split('T')[0];
-
-                    inputFin.value = fechaHoyStr;
-                    inputInicio.value = fechaHace7DiasStr;
+                if (activar) {
+                    inputInicio.removeAttribute('disabled');
+                    inputFin.removeAttribute('disabled');
+                } else {
+                    inputInicio.setAttribute('disabled', 'true');
+                    inputFin.setAttribute('disabled', 'true');
+                    inputInicio.value = ''; // Opcional: limpia la fecha si desmarca
+                    inputFin.value = '';   // Opcional: limpia la fecha si desmarca
                 }
-            } else {
-                if (inputInicio) inputInicio.value = '';
-                if (inputFin) inputFin.value = '';
             }
-        }
 
 
         function exportarPDF() {

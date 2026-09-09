@@ -5,8 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Client;
 use Barryvdh\DomPDF\Facade\Pdf;
-// Si prefieres exportar a CSV/Excel nativo de forma sencilla o usar descargas directas:
-// (O puedes integrar librerías como Maatwebsite Excel / DomPDF cuando lo requieras)
+
 
 class ClientController extends Controller
 {
@@ -35,6 +34,7 @@ class ClientController extends Controller
             'phone' => 'nullable|string|max:20',
             'address' => 'nullable|string',
             'notes' => 'nullable|string',
+            'status' => 'nullable|string|max:50', // Agregado el campo status
         ]);
 
         Client::create([
@@ -43,12 +43,39 @@ class ClientController extends Controller
             'phone' => $request->phone,
             'address' => $request->address,
             'notes' => $request->notes,
+            'status' => $request->status, // Agregado aquí
         ]);
 
         return redirect()->route('clients.index')->with('success', 'Cliente registrado exitosamente.');
     }
 
-    // 3. Ver detalles y cuentas del cliente
+    // 3. Actualizar un cliente existente (Método PUT / PATCH)
+    public function update(Request $request, $id)
+    {
+        $client = Client::findOrFail($id);
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'alias' => 'nullable|string|max:100',
+            'phone' => 'nullable|string|max:20',
+            'address' => 'nullable|string',
+            'notes' => 'nullable|string',
+            'status' => 'nullable|string|max:50', // Validación de status
+        ]);
+
+        $client->update([
+            'name' => $request->name,
+            'alias' => $request->alias,
+            'phone' => $request->phone,
+            'address' => $request->address,
+            'notes' => $request->notes,
+            'status' => $request->status, // Actualización de status
+        ]);
+
+        return redirect()->route('clients.index', $client->id)->with('success', 'Cliente actualizado exitosamente.');
+    }
+
+    // 4. Ver detalles y cuentas del cliente
     public function show($id)
     {
         $client = Client::with('debts.payments', 'debts.installments')->findOrFail($id);
@@ -96,7 +123,7 @@ class ClientController extends Controller
         ));
     }
 
-    // 4. Método para exportar a Excel (Descarga en formato CSV compatible con Excel)
+    // 5. Método para exportar a Excel (Descarga en formato CSV compatible con Excel)
     public function exportExcel()
     {
         $clients = Client::orderBy('name', 'asc')->get();
@@ -113,11 +140,11 @@ class ClientController extends Controller
 
         $callback = function () use ($clients) {
             $file = fopen('php://output', 'w');
-            // Añadir BOM para que reconozca losacentos correctamente en Excel
+            // Añadir BOM para que reconozca los acentos correctamente en Excel
             fprintf($file, chr(0xEF) . chr(0xBB) . chr(0xBF));
 
             // Encabezados de columnas
-            fputcsv($file, ['NOMBRE', 'ALIAS', 'DIRECCIÓN', 'TELÉFONO']);
+            fputcsv($file, ['NOMBRE', 'ALIAS', 'DIRECCIÓN', 'TELÉFONO', 'ESTADO']);
 
             // Filas de datos
             foreach ($clients as $client) {
@@ -125,7 +152,8 @@ class ClientController extends Controller
                     $client->name,
                     $client->alias,
                     $client->address,
-                    $client->phone
+                    $client->phone,
+                    $client->status
                 ]);
             }
 
@@ -135,13 +163,11 @@ class ClientController extends Controller
         return response()->stream($callback, 200, $headers);
     }
 
-    // 5. Método para exportar a PDF (Vista preliminar / Descarga rápida)
+    // 6. Método para exportar a PDF (Vista preliminar / Descarga rápida)
     public function exportPdf()
     {
-        // Obtienes tus datos normalmente
         $clients = Client::all();
 
-        // Cargas la vista y fuerzas la descarga directa
         $pdf = Pdf::loadView('exports.clients-pdf', compact('clients'));
 
         return $pdf->download('directorio_clientes.pdf');

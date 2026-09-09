@@ -102,7 +102,7 @@
                 <tr>
                     <td>{{ $debt->client->name ?? 'Cliente Desconocido' }}</td>
                     <td>{{ $debt->client->address ?? 'Sin dirección' }}</td>
-                    <td>{{ $debt->concept ?? 'Cuenta #' . $debt->id }}</td>
+                    <td>{{'#' . $debt->id }} - {{ $debt->concept }}</td>
                     <td class="text-right">${{ number_format($debt->total_amount ?? 0, 2) }}</td>
                     <td class="text-right text-emerald">${{ number_format($montoAbonadoDebt, 2) }}</td>
                     <td class="text-right font-bold">${{ number_format($debt->current_capital ?? 0, 2) }}</td>

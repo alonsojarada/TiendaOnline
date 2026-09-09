@@ -3,11 +3,13 @@
         <!-- Cambiamos pl-14 por pl-16 para separar más el texto del botón -->
         <div class="flex justify-between items-center pl-16 sm:pl-0">
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                {{ $client->name }} <span
-                    class="text-sm text-indigo-500 font-normal">({{ $client->alias ? '"' . $client->alias . '"' : 'Sin alias' }})</span>
+                Edo. Cta.: {{ $client->name }} <span
+                    class="text-sm text-indigo-500 font-normal">({{ $client->address ? '"' . $client->address . '"' : '' }})</span>
             </h2>
-            <a href="{{ route('dashboard') }}" class="text-sm text-indigo-600 dark:text-indigo-400 hover:underline">
-                &larr; Volver
+            <a href="{{ route('dashboard') }}"
+                class="inline-flex items-center gap-2 px-4 py-2 text-xs font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/50 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 border border-indigo-200 dark:border-indigo-800 rounded-xl shadow-xs transition-all duration-200 group">
+                <span class="transform group-hover:-translate-x-0.5 transition-transform duration-200">&larr;</span>
+                <span>Volver</span>
             </a>
         </div>
     </x-slot>
@@ -121,6 +123,10 @@
                             $ultimoPago = $credit->payments()->latest('payment_date')->first();
                             $fechaRef = $ultimoPago ? \Carbon\Carbon::parse($ultimoPago->payment_date) : \Carbon\Carbon::parse($credit->created_at);
                             return $fechaRef->startOfDay()->diffInDays(\Carbon\Carbon::now()->startOfDay());
+                        })->filter(function ($credit) {
+                            // Filtramos para conservar únicamente los que NO están liquidados
+                            $totalAbonado = $credit->payments->sum('amount');
+                            return ($credit->total_amount - $totalAbonado) > 0;
                         });
                     @endphp
 
@@ -133,18 +139,17 @@
 
                             $totalAbonado = $credit->payments->sum('amount');
                             $saldoPendiente = $credit->total_amount - $totalAbonado;
-                            $estaLiquidado = $saldoPendiente <= 0;
-                            $alertaInactivo = (!$estaLiquidado && $diasTranscurridos >= 7);
+                            $alertaInactivo = ($diasTranscurridos >= 7);
                         @endphp
 
                         <!-- Contenedor de la Tarjeta -->
                         <div
-                            class="p-3 rounded-xl mb-3 border transition {{ $estaLiquidado ? 'bg-gray-50/50 dark:bg-gray-700/20 border-gray-200 dark:border-gray-700 opacity-80' : ($alertaInactivo ? 'border-red-300 dark:border-red-800/80 bg-red-50/30 dark:bg-red-950/10' : 'bg-gray-50 dark:bg-gray-700/50 border-gray-200 dark:border-gray-700') }}">
+                            class="p-3 rounded-xl mb-3 border transition {{ $alertaInactivo ? 'border-red-300 dark:border-red-800/80 bg-red-50/30 dark:bg-red-950/10' : 'bg-gray-50 dark:bg-gray-700/50 border-gray-200 dark:border-gray-700' }}">
 
                             <!-- Cabecera de la tarjeta: Concepto y Botón de Detalle -->
                             <div class="flex justify-between items-start mb-2">
                                 <div>
-                                    <h4 class="font-bold text-gray-900 dark:text-white text-sm">{{ $credit->concept }}</h4>
+                                    <h4 class="font-bold text-gray-900 dark:text-white text-sm">#{{ $credit->id }} - {{ $credit->concept }}</h4>
                                     <p
                                         class="text-xs text-gray-700 dark:text-gray-300 font-medium flex items-center gap-1.5 flex-wrap">
                                         <span>{{ $textoFecha }}</span>
@@ -160,12 +165,13 @@
 
                                 <!-- Botón de Detalle -->
                                 <a href="{{ route('store-details', ['id' => $credit->id, 'from' => 'cliente']) }}"
-                                    class="text-[10px] uppercase font-bold text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 flex items-center gap-0.5 transition">
+                                    class="px-2 py-1 bg-gray-100 hover:bg-emerald-50 dark:bg-gray-700 dark:hover:bg-emerald-950 text-gray-600 dark:text-gray-300 hover:text-emerald-600 rounded-lg text-xs font-semibold flex items-center gap-1 transition"
+                                    title="Ir a página completa">
                                     Detalle ➔
                                 </a>
                             </div>
 
-                            <!-- Sección inferior: Abonado, Debe / Liquidado y Botón -->
+                            <!-- Sección inferior: Abonado, Debe y Botón -->
                             <div
                                 class="flex justify-between items-center mt-3 pt-2 border-t border-gray-200/60 dark:border-gray-700/60">
 
@@ -178,31 +184,20 @@
                                         </span>
                                     </div>
 
-                                    @if($estaLiquidado)
-                                        <div>
-                                            <span class="text-[10px] uppercase text-gray-400 font-bold block">Estado</span>
-                                            <span class="text-xs font-bold text-green-600 dark:text-green-400">
-                                                ✓ LIQUIDADO
-                                            </span>
-                                        </div>
-                                    @else
-                                        <div>
-                                            <span class="text-[10px] uppercase text-amber-500 font-bold block">Debe</span>
-                                            <span class="text-sm font-bold text-amber-600 dark:text-amber-400">
-                                                ${{ number_format($saldoPendiente, 2) }}
-                                            </span>
-                                        </div>
-                                    @endif
+                                    <div>
+                                        <span class="text-[10px] uppercase text-amber-500 font-bold block">Debe</span>
+                                        <span class="text-sm font-bold text-amber-600 dark:text-amber-400">
+                                            ${{ number_format($saldoPendiente, 2) }}
+                                        </span>
+                                    </div>
                                 </div>
 
-                                <!-- Derecha: Botón de Abonar (Solo si no está liquidado) -->
-                                @unless($estaLiquidado)
-                                    <button type="button"
-                                        onclick="abrirModalAbono('{{ route('payments.store', $credit->id) }}', '{{ $saldoPendiente }}')"
-                                        class="px-3.5 py-1.5 bg-green-600 hover:bg-green-700 text-white text-xs font-semibold rounded-md uppercase tracking-wider transition shadow-sm">
-                                        Abonar
-                                    </button>
-                                @endunless
+                                <!-- Derecha: Botón de Abonar -->
+                                <button type="button"
+                                    onclick="abrirModalAbono('{{ route('payments.store', $credit->id) }}', '{{ $saldoPendiente }}')"
+                                    class="px-3.5 py-1.5 bg-green-600 hover:bg-green-700 text-white text-xs font-semibold rounded-md uppercase tracking-wider transition shadow-sm">
+                                    Abonar
+                                </button>
 
                             </div>
 
@@ -229,8 +224,12 @@
                     </div>
 
                     @php
-                        // Ordenamos primero los que tengan cuotas vencidas y luego por la cantidad de cuotas pendientes
-                        $prestamosOrdenados = $cashLoans->sort(function ($a, $b) {
+                        // Filtramos para conservar únicamente los que NO están liquidados y después los ordenamos
+                        $prestamosOrdenados = $cashLoans->filter(function ($loan) {
+                            $totalPagado = $loan->payments->sum('amount');
+                            $montoTotalConInteres = $loan->total_amount;
+                            return ($montoTotalConInteres - $totalPagado) > 0;
+                        })->sort(function ($a, $b) {
                             $vencidasA = $a->installments->where('status', '!=', 'paid')->where('due_date', '<', now())->count();
                             $vencidasB = $b->installments->where('status', '!=', 'paid')->where('due_date', '<', now())->count();
 
@@ -303,20 +302,20 @@
                                         onclick="document.getElementById('modal-detalle-{{ $loan->id }}').classList.remove('hidden')"
                                         class="px-2 py-1 bg-gray-100 hover:bg-emerald-50 dark:bg-gray-700 dark:hover:bg-emerald-950 text-gray-600 dark:text-gray-300 hover:text-emerald-600 rounded-lg text-xs font-semibold flex items-center gap-1 transition"
                                         title="Vista Rápida">
-                                        👁️ Detalle
+                                        👁️ Info.
                                     </button>
 
-                                    <a href="{{ route('debts.details', ['id' => $loan->id, 'from' => 'cliente'])  }}"
-                                        class="w-7 h-7 rounded-lg bg-gray-50 dark:bg-gray-700 hover:bg-emerald-500 hover:text-white flex items-center justify-center text-gray-400 transition text-xs"
+                                    <a href="{{ route('debts.details', ['id' => $loan->id, 'from' => 'cliente']) }}"
+                                        class="px-2 py-1 bg-gray-100 hover:bg-emerald-50 dark:bg-gray-700 dark:hover:bg-emerald-950 text-gray-600 dark:text-gray-300 hover:text-emerald-600 rounded-lg text-xs font-semibold flex items-center gap-1 transition"
                                         title="Ir a página completa">
-                                        ➔
+                                        Detalle ➔
                                     </a>
                                 </div>
                             </div>
 
                             <!-- Barra de Progreso -->
                             <div class="mb-2">
-                                <div class="w-full bg-gray-100 dark:bg-gray-700 h-2 rounded-full overflow-hidden">
+                                <div class="w-full bg-gray-50 dark:bg-gray-700 h-2 rounded-full overflow-hidden">
                                     <div class="bg-emerald-500 h-full rounded-full transition-all duration-500"
                                         style="width: {{ $porcentajePagado }}%;"></div>
                                 </div>
@@ -328,19 +327,12 @@
                                         class="font-medium text-green-600">${{ number_format($totalPagado, 2) }}</span>
                                 </span>
 
-                                <!-- Saldo Restante o Liquidado -->
+                                <!-- Saldo Restante -->
                                 <div>
                                     @php $restante = $montoTotalConInteres - $totalPagado; @endphp
-                                    @if($restante <= 0)
-                                        <span
-                                            class="px-2 py-0.5 bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300 rounded-md text-xs font-bold">
-                                            ✓ Liquidado
-                                        </span>
-                                    @else
-                                        <span class="font-bold text-amber-600 dark:text-amber-400 text-base tracking-tight">
-                                            Restante: ${{ number_format($restante, 2) }}
-                                        </span>
-                                    @endif
+                                    <span class="font-bold text-amber-600 dark:text-amber-400 text-base tracking-tight">
+                                        Restante: ${{ number_format($restante, 2) }}
+                                    </span>
                                 </div>
                             </div>
 
@@ -554,6 +546,8 @@
                 @csrf
                 <input type="hidden" name="client_id" value="{{ $client->id }}">
                 <input type="hidden" name="type" value="cash_loan">
+                
+                <input type="hidden" name="created_at" value="{{ date('Y-m-d H:i:s') }}">
 
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Concepto / Motivo</label>

@@ -77,7 +77,7 @@ class DashboardController extends Controller
                 return (object) [
                     'client_id' => $credit->client_id,
                     'client' => $credit->client,
-                    'concept' => $credit->concept,
+                    'concept' => '#' . $credit->id . ' - ' . ($credit->concept ?? 'Cuenta'),
                     'tipo' => $tipoTexto,
                     'is_loan' => $credit->type === 'cash_loan',
                     'fecha_ref' => $fechaRef->format('d/m/Y'),

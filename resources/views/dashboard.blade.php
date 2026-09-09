@@ -1,15 +1,14 @@
 <x-app-layout>
-    <div class="pt-0 pb-3 px-3 sm:px-4 lg:px-6 w-full mx-auto">
-
-        <!-- ENCABEZADO Y TARJETAS DE RESUMEN RÁPIDO -->
-        <div class="mb-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
-            <div>
-                <h1 class="text-2xl sm:text-3xl font-black text-gray-900 dark:text-white tracking-tight">Panel General
-                    de Cobranza</h1>
-                <p class="text-xs text-gray-500 dark:text-gray-400">Vista rápida de saldos pendientes, mercancía fiada y
-                    control de cobros.</p>
-            </div>
+    <x-slot name="header">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight text-left">
+                Panel General de Cobranza
+            </h2>
+            <p class="text-xs text-gray-500 dark:text-gray-400">Vista rápida de saldos pendientes, mercancía fiada y
+                control de cobros.</p>
         </div>
+    </x-slot>
+    <div class="pt-0 pb-3 px-3 sm:px-4 lg:px-6 w-full mx-auto">
 
         <!-- TARJETAS SUPERIORES (KPIs) COMPACTAS -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-2.5 mb-3">
@@ -45,20 +44,22 @@
         </div>
 
         <!-- FILTROS, BUSCADOR Y BOTONES DE EXPORTACIÓN (OPTIMIZADO) -->
-        <div class="bg-white dark:bg-gray-800 p-3 rounded-xl shadow-xs border border-gray-100 dark:border-gray-700/80 mb-3 flex flex-col md:flex-row items-center justify-between gap-3">
+        <div
+            class="bg-white dark:bg-gray-800 p-3 rounded-xl shadow-xs border border-gray-100 dark:border-gray-700/80 mb-3 flex flex-col md:flex-row items-center justify-between gap-3">
 
             <!-- Izquierda: Buscador y Filtros -->
             <div class="flex flex-col lg:flex-row items-center gap-2.5 w-full md:w-auto flex-1">
                 <!-- Buscador -->
                 <div class="relative w-full lg:w-72">
-                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400 text-xs">🔍</span>
-                    <input type="text" id="buscadorDashboard"
-                        placeholder="Buscar cliente por nombre, alias..."
+                    <span
+                        class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400 text-xs">🔍</span>
+                    <input type="text" id="buscadorDashboard" placeholder="Buscar cliente por nombre, alias..."
                         class="w-full pl-9 pr-3 py-1.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600/60 rounded-lg text-xs text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
                 </div>
 
                 <!-- Botones de Filtro (Selección Múltiple) -->
-                <div class="flex flex-wrap items-center justify-center lg:justify-start gap-1.5 w-full lg:w-auto" id="filtrosEstado">
+                <div class="flex flex-wrap items-center justify-center lg:justify-start gap-1.5 w-full lg:w-auto"
+                    id="filtrosEstado">
                     <button type="button" onclick="toggleFiltro('todos')" id="btn-todos"
                         class="filtro-btn px-2.5 py-1 bg-indigo-600 text-white rounded-lg text-xs font-bold shadow-xs transition">
                         Todos
@@ -79,12 +80,14 @@
             </div>
 
             <!-- Derecha: Botones de Exportar (Excel y PDF) -->
-            <div class="flex items-center gap-2 w-full md:w-auto justify-end shrink-0 pt-2 md:pt-0 border-t md:border-t-0 border-gray-100 dark:border-gray-700">
+            <div
+                class="flex items-center gap-2 w-full md:w-auto justify-end shrink-0 pt-2 md:pt-0 border-t md:border-t-0 border-gray-100 dark:border-gray-700">
                 <!-- Botón Excel -->
                 <a href="{{ route('dashboard.export.excel') }}"
                     class="inline-flex items-center justify-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 text-xs font-medium rounded-lg shadow-xs transition text-decoration-none">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                     </svg>
                     Excel
                 </a>
@@ -93,7 +96,8 @@
                 <a href="{{ route('dashboard.export.pdf') }}"
                     class="inline-flex items-center justify-center gap-1.5 bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 text-xs font-medium rounded-lg shadow-xs transition text-decoration-none">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
                     PDF
                 </a>

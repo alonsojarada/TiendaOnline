@@ -62,6 +62,7 @@ Route::middleware(['auth', \App\Http\Middleware\CheckOperationalAccess::class])-
     // Listar y gestionar clientes
     Route::get('/clients', [ClientController::class, 'index'])->name('clients.index');
     Route::post('/clients/store', [ClientController::class, 'store'])->name('clients.store');
+    Route::put('/clients/{id}', [ClientController::class, 'update'])->name('clients.update');
 
     // IMPORTANTE: Las rutas de exportación van ANTES de '/clients/{id}'
     Route::get('/clients/export/excel', [ClientController::class, 'exportExcel'])->name('clients.export.excel');
@@ -84,6 +85,7 @@ Route::middleware(['auth', \App\Http\Middleware\CheckOperationalAccess::class])-
     Route::delete('/debts/{debt}/installments/{installment}/payment', [DebtController::class, 'destroyInstallmentPayment'])->name('installments.destroyPayment');
 
     Route::post('/debts/{id}/liquidar', [DebtController::class, 'liquidar'])->name('debts.liquidar');
+    Route::post('/debts/{debt}/capital-payment', [DebtController::class, 'storeCapitalPayment'])->name('debts.store.capital');
 
     Route::get('/detalles-fiado/{id}', [DebtController::class, 'show'])->name('loan-details');
     Route::get('/mercancia-fiada/detalle/{id}', [DebtController::class, 'showStoreDetails'])->name('store-details');

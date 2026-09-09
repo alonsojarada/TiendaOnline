@@ -1,12 +1,14 @@
 <x-app-layout>
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+            Directorio de Clientes
+        </h2>
+        <p class="text-sm text-gray-500 dark:text-gray-400">
+            Gestión de clientes, información de contacto y cuentas asociadas.
+        </p>
+    </x-slot>
 
-        <!-- TÍTULO DE LA SECCIÓN -->
-        <div class="mb-6">
-            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Directorio de Clientes</h1>
-            <p class="text-sm text-gray-500 dark:text-gray-400">Gestión de clientes, información de contacto y cuentas
-                asociadas.</p>
-        </div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
 
         <!-- CONTENEDOR PRINCIPAL ESTILO TARJETA -->
         <div
@@ -22,7 +24,7 @@
                 </div>
 
                 <div class="flex flex-wrap items-center gap-2.5 w-full lg:w-auto justify-end">
-                    <!-- BOTÓN EXCEL (Estilo IDÉNTICO a Cobranza) -->
+                    <!-- BOTÓN EXCEL -->
                     <a href="{{ route('clients.export.excel') }}"
                         class="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm font-semibold shadow-xs transition">
                         <svg style="width: 16px; height: 16px;" fill="none" stroke="currentColor" stroke-width="2"
@@ -33,7 +35,7 @@
                         Excel
                     </a>
 
-                    <!-- BOTÓN PDF (Estilo IDÉNTICO a Cobranza) -->
+                    <!-- BOTÓN PDF -->
                     <a href="{{ route('clients.export.pdf') }}"
                         class="inline-flex items-center gap-2 px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-lg text-sm font-semibold shadow-xs transition">
                         <svg style="width: 16px; height: 16px;" fill="none" stroke="currentColor" stroke-width="2"
@@ -44,7 +46,7 @@
                         Descargar PDF
                     </a>
 
-                    <!-- BOTÓN NUEVO CLIENTE (Mismo estilo unificado) -->
+                    <!-- BOTÓN NUEVO CLIENTE -->
                     <button type="button"
                         onclick="document.getElementById('modalNuevoCliente').classList.remove('hidden')"
                         class="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-semibold shadow-xs transition">
@@ -54,16 +56,18 @@
             </div>
 
             <!-- TABLA DE CLIENTES -->
-            <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse">
-                    <thead>
+            <!-- TABLA DE CLIENTES CON SCROLL INDEPENDIENTE -->
+            <div class="max-h-[65vh] overflow-y-auto overflow-x-auto">
+                <table class="w-full text-left border-collapse relative">
+                    <thead class="sticky top-0 z-10">
                         <tr
                             class="bg-gray-100 dark:bg-gray-900 text-xs font-black text-gray-700 dark:text-gray-300 uppercase tracking-wider border-b-2 border-gray-200 dark:border-gray-700">
-                            <th class="py-2.5 px-5 border-r border-gray-200 dark:border-gray-700">Cliente</th>
-                            <th class="py-2.5 px-5 border-r border-gray-200 dark:border-gray-700">Alias</th>
-                            <th class="py-2.5 px-5 border-r border-gray-200 dark:border-gray-700">Dirección</th>
-                            <th class="py-2.5 px-5 border-r border-gray-200 dark:border-gray-700">Teléfono</th>
-                            <th class="py-2.5 px-5 text-right">Acciones</th>
+                            <th class="py-2.5 px-5 border-r border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-900">Cliente</th>
+                            <th class="py-2.5 px-5 border-r border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-900">Alias</th>
+                            <th class="py-2.5 px-5 border-r border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-900">Dirección</th>
+                            <th class="py-2.5 px-5 border-r border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-900">Teléfono</th>
+                            <th class="py-2.5 px-5 border-r border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-900">Estatus</th>
+                            <th class="py-2.5 px-5 text-right bg-gray-100 dark:bg-gray-900">Acciones</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200 dark:divide-gray-700 text-sm">
@@ -99,11 +103,24 @@
                                     {{ $client->phone ?? 'Sin teléfono' }}
                                 </td>
 
+                                <!-- Columna Estatus -->
+                                <td class="py-1.5 px-5 border-r border-gray-100 dark:border-gray-700/50">
+                                    @if($client->status === 'activo')
+                                        <span class="px-2.5 py-1 inline-flex text-xs leading-4 font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300">
+                                            Activo
+                                        </span>
+                                    @else
+                                        <span class="px-2.5 py-1 inline-flex text-xs leading-4 font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300">
+                                            Suspendido
+                                        </span>
+                                    @endif
+                                </td>
+
                                 <!-- Columna Acciones -->
                                 <td class="py-1.5 px-5 text-right">
                                     <div class="inline-flex items-center justify-end gap-1.5">
                                         <button type="button"
-                                            onclick="abrirModalEditar('{{ $client->id }}', '{{ addslashes($client->name) }}', '{{ addslashes($client->alias) }}', '{{ $client->phone }}', '{{ addslashes($client->address ?? '') }}')"
+                                            onclick="abrirModalEditar('{{ $client->id }}', '{{ addslashes($client->name) }}', '{{ addslashes($client->alias) }}', '{{ $client->phone }}', '{{ addslashes($client->address ?? '') }}', '{{ $client->status ?? 'activo' }}')"
                                             class="px-3 py-1 bg-amber-100 hover:bg-amber-200 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300 rounded-lg text-xs font-bold transition shadow-xs">
                                             Editar
                                         </button>
@@ -117,7 +134,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="text-center py-6 text-gray-500 dark:text-gray-400 text-sm">No hay
+                                <td colspan="6" class="text-center py-6 text-gray-500 dark:text-gray-400 text-sm">No hay
                                     clientes registrados.</td>
                             </tr>
                         @endforelse
@@ -163,6 +180,16 @@
                             class="block text-xs font-bold uppercase text-gray-500 dark:text-gray-400 mb-1">Dirección</label>
                         <input type="text" name="address" placeholder="Ej. Boquillas #123"
                             class="w-full text-sm px-3.5 py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-xl text-gray-800 dark:text-gray-200 focus:outline-hidden focus:ring-2 focus:ring-indigo-500">
+                    </div>
+
+                    <div>
+                        <label
+                            class="block text-xs font-bold uppercase text-gray-500 dark:text-gray-400 mb-1">Estatus</label>
+                        <select name="status"
+                            class="w-full text-sm px-3.5 py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-xl text-gray-800 dark:text-gray-200 focus:outline-hidden focus:ring-2 focus:ring-indigo-500">
+                            <option value="activo">Activo</option>
+                            <option value="suspendido">Suspendido</option>
+                        </select>
                     </div>
                 </div>
 
@@ -219,6 +246,16 @@
                         <input type="text" name="address" id="edit_address"
                             class="w-full text-sm px-3.5 py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-xl text-gray-800 dark:text-gray-200 focus:outline-hidden focus:ring-2 focus:ring-indigo-500">
                     </div>
+
+                    <div>
+                        <label
+                            class="block text-xs font-bold uppercase text-gray-500 dark:text-gray-400 mb-1">Estatus</label>
+                        <select name="status" id="edit_status"
+                            class="w-full text-sm px-3.5 py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-xl text-gray-800 dark:text-gray-200 focus:outline-hidden focus:ring-2 focus:ring-indigo-500">
+                            <option value="activo">Activo</option>
+                            <option value="suspendido">Suspendido</option>
+                        </select>
+                    </div>
                 </div>
 
                 <div class="flex justify-end gap-2 mt-6">
@@ -237,7 +274,7 @@
     </div>
 
     <script>
-        function abrirModalEditar(id, name, alias, phone, address) {
+        function abrirModalEditar(id, name, alias, phone, address, status) {
             const form = document.getElementById('formEditarCliente');
             form.action = `/clients/${id}`;
 
@@ -245,6 +282,7 @@
             document.getElementById('edit_alias').value = alias !== 'null' ? alias : '';
             document.getElementById('edit_phone').value = phone !== 'null' ? phone : '';
             document.getElementById('edit_address').value = address !== 'null' ? address : '';
+            document.getElementById('edit_status').value = status;
 
             document.getElementById('modalEditarCliente').classList.remove('hidden');
         }

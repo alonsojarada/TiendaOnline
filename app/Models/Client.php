@@ -17,6 +17,8 @@ class Client extends Model
         'phone',
         'address',
         'notes',
+        'status',
+        'company_id',
     ];
 
     public function debts()

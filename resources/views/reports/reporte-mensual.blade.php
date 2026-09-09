@@ -1,4 +1,12 @@
 <x-app-layout>
+    <x-slot name="header">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight text-left">
+                Flujo de Ventas y Cobranza
+            </h2>
+        </div>
+    </x-slot>
+
     <div class="space-y-4">
 
         @php
@@ -9,97 +17,103 @@
             $eficienciaAnual = $totalVendidoAnual > 0 ? ($totalCobradoAnual / $totalVendidoAnual) * 100 : ($totalCobradoAnual > 0 ? 100 : 0);
         @endphp
 
-        <!-- 1. Encabezado y Filtro de Año Compactos -->
-        <div
-            class="bg-white dark:bg-gray-800 px-4 py-3 rounded-xl shadow-xs border border-gray-200 dark:border-gray-700 flex flex-col sm:flex-row justify-between items-center gap-3">
-            <div class="flex items-center gap-2">
-                <h3
-                    class="text-xs font-black uppercase tracking-wider text-gray-800 dark:text-gray-200 flex items-center gap-2">
-                    <span>📈</span> Reporte de Flujo: Ventas vs. Cobranza Real
-                </h3>
-                <!-- Alerta o Semáforo de Salud Financiera -->
-                @if($eficienciaAnual >= 80)
-                    <span
-                        class="text-[10px] font-bold bg-emerald-50 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 px-2 py-0.5 rounded-full border border-emerald-200 dark:border-emerald-800">✅
-                        Saludable</span>
-                @elseif($eficienciaAnual >= 50)
-                    <span
-                        class="text-[10px] font-bold bg-blue-50 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 px-2 py-0.5 rounded-full border border-blue-200 dark:border-blue-800">ℹ️
-                        Estable</span>
-                @else
-                    <span
-                        class="text-[10px] font-bold bg-amber-50 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 px-2 py-0.5 rounded-full border border-amber-200 dark:border-amber-800">⚠️
-                        Atención a Cartera</span>
-                @endif
-            </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3">
 
-            <form method="GET" action="{{ route('reports.reporte-mensual') }}" class="flex items-center gap-2">
-                <label class="text-[11px] font-bold text-gray-500 dark:text-gray-400">Año:</label>
-                <select name="year" onchange="this.form.submit()"
-                    class="text-xs font-bold rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white shadow-xs focus:ring-indigo-500 focus:border-indigo-500 py-1 px-2.5">
-                    @foreach($aniosDisponibles as $anio)
-                        <option value="{{ $anio }}" {{ $year == $anio ? 'selected' : '' }}>{{ $anio }}</option>
-                    @endforeach
-                </select>
-            </form>
-        </div>
-
-        <!-- 2. Tarjetas de Resumen Rápido (4 Columnas: KPIs + Eficiencia) -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-            <!-- Total Vendido -->
+            <!-- 1. Total Vendido -->
             <div
-                class="bg-white dark:bg-gray-800 px-4 py-3 rounded-xl shadow-xs border border-gray-200 dark:border-gray-700 flex items-center justify-between">
+                class="bg-white dark:bg-gray-800 px-3.5 py-2.5 rounded-xl shadow-xs border border-gray-200 dark:border-gray-700 flex items-center justify-between">
                 <div>
-                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Total Vendido / Prestado</p>
-                    <p class="text-base font-black text-indigo-600 dark:text-indigo-400 mt-0.5">
-                        ${{ number_format($totalVendidoAnual, 2) }}</p>
+                    <p class="text-xs font-extrabold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Total
+                        Vendido / Prestado</p>
+                    <p class="text-lg font-black text-indigo-600 dark:text-indigo-400 mt-1 leading-none">
+                        ${{ number_format($totalVendidoAnual, 2) }}
+                    </p>
                 </div>
                 <div
-                    class="p-2 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-lg text-sm">
-                    🛍️</div>
+                    class="p-2 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-lg text-sm shrink-0">
+                    🛍️
+                </div>
             </div>
 
-            <!-- Total Cobrado -->
+            <!-- 2. Total Cobrado -->
             <div
-                class="bg-white dark:bg-gray-800 px-4 py-3 rounded-xl shadow-xs border border-gray-200 dark:border-gray-700 flex items-center justify-between">
+                class="bg-white dark:bg-gray-800 px-3.5 py-2.5 rounded-xl shadow-xs border border-gray-200 dark:border-gray-700 flex items-center justify-between">
                 <div>
-                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Total Cobrado (Real)</p>
-                    <p class="text-base font-black text-emerald-600 dark:text-emerald-400 mt-0.5">
-                        ${{ number_format($totalCobradoAnual, 2) }}</p>
+                    <p class="text-xs font-extrabold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Total
+                        Cobrado (Real)</p>
+                    <p class="text-lg font-black text-emerald-600 dark:text-emerald-400 mt-1 leading-none">
+                        ${{ number_format($totalCobradoAnual, 2) }}
+                    </p>
                 </div>
                 <div
-                    class="p-2 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-lg text-sm">
-                    💵</div>
+                    class="p-2 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-lg text-sm shrink-0">
+                    💵
+                </div>
             </div>
 
-            <!-- Balance Neto -->
+            <!-- 3. Balance Neto -->
             <div
-                class="bg-white dark:bg-gray-800 px-4 py-3 rounded-xl shadow-xs border border-gray-200 dark:border-gray-700 flex items-center justify-between">
+                class="bg-white dark:bg-gray-800 px-3.5 py-2.5 rounded-xl shadow-xs border border-gray-200 dark:border-gray-700 flex items-center justify-between">
                 <div>
-                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Balance Neto Anual</p>
+                    <p class="text-xs font-extrabold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Balance
+                        Neto Anual</p>
                     <p
-                        class="text-base font-black {{ $balanceAnual >= 0 ? 'text-blue-600 dark:text-blue-400' : 'text-amber-600 dark:text-amber-400' }} mt-0.5">
+                        class="text-lg font-black {{ $balanceAnual >= 0 ? 'text-blue-600 dark:text-blue-400' : 'text-amber-600 dark:text-amber-400' }} mt-1 leading-none">
                         {{ $balanceAnual < 0 ? '-' : '' }}${{ number_format(abs($balanceAnual), 2) }}
                     </p>
                 </div>
                 <div
-                    class="p-2 {{ $balanceAnual >= 0 ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400' : 'bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400' }} rounded-lg text-sm">
-                    ⚖️</div>
+                    class="p-2 {{ $balanceAnual >= 0 ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400' : 'bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400' }} rounded-lg text-sm shrink-0">
+                    ⚖️
+                </div>
             </div>
 
-            <!-- % Eficiencia de Cobranza -->
+            <!-- 4. % Eficiencia de Cobranza -->
             <div
-                class="bg-white dark:bg-gray-800 px-4 py-3 rounded-xl shadow-xs border border-gray-200 dark:border-gray-700 flex items-center justify-between">
+                class="bg-white dark:bg-gray-800 px-3.5 py-2.5 rounded-xl shadow-xs border border-gray-200 dark:border-gray-700 flex items-center justify-between">
                 <div>
-                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Eficiencia de Cobranza</p>
-                    <p class="text-base font-black text-purple-600 dark:text-purple-400 mt-0.5">
+                    <p class="text-xs font-extrabold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                        Eficiencia de Cobranza</p>
+                    <p class="text-lg font-black text-purple-600 dark:text-purple-400 mt-1 leading-none">
                         {{ number_format($eficienciaAnual, 1) }}%
                     </p>
                 </div>
                 <div
-                    class="p-2 bg-purple-50 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 rounded-lg text-sm">
-                    🎯</div>
+                    class="p-2 bg-purple-50 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 rounded-lg text-sm shrink-0">
+                    🎯
+                </div>
             </div>
+
+            <!-- 5. Tarjeta de Estado y Filtro de Año (Ocupa 2 columnas en pantallas medianas si es necesario para equilibrar) -->
+            <div
+                class="bg-white dark:bg-gray-800 px-3.5 py-2.5 rounded-xl shadow-xs border border-gray-200 dark:border-gray-700 flex items-center justify-between sm:col-span-2 lg:col-span-1 xl:col-span-1">
+                <div class="flex items-center">
+                    @if($eficienciaAnual >= 80)
+                        <span
+                            class="text-xs font-bold bg-emerald-50 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 px-2.5 py-1 rounded-full border border-emerald-200 dark:border-emerald-800">✅
+                            Saludable</span>
+                    @elseif($eficienciaAnual >= 50)
+                        <span
+                            class="text-xs font-bold bg-blue-50 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 px-2.5 py-1 rounded-full border border-blue-200 dark:border-blue-800">ℹ️
+                            Estable</span>
+                    @else
+                        <span
+                            class="text-xs font-bold bg-amber-50 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 px-2.5 py-1 rounded-full border border-amber-200 dark:border-amber-800">⚠️
+                            Atención a Cartera</span>
+                    @endif
+                </div>
+
+                <form method="GET" action="{{ route('reports.reporte-mensual') }}" class="flex items-center gap-2">
+                    <label class="text-xs font-bold text-gray-500 dark:text-gray-400">Año:</label>
+                    <select name="year" onchange="this.form.submit()"
+                        class="w-20 text-sm font-bold rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white shadow-xs focus:ring-indigo-500 focus:border-indigo-500 py-1.5 px-2.5">
+                        @foreach($aniosDisponibles as $anio)
+                            <option value="{{ $anio }}" {{ $year == $anio ? 'selected' : '' }}>{{ $anio }}</option>
+                        @endforeach
+                    </select>
+                </form>
+            </div>
+
         </div>
 
         <!-- 3. Gráfica de Comparación (Altura Reducida) -->
@@ -120,8 +134,8 @@
             class="bg-white dark:bg-gray-800 rounded-xl shadow-xs border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col">
             <div
                 class="px-4 py-3 border-b border-gray-100 dark:border-gray-700 flex flex-col sm:flex-row justify-between items-center gap-2">
-                <h4 class="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Desglose
-                    Mensual y Eficiencia</h4>
+                <h4 class="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Flujo de Ventas y Cobranza
+                    Mensual</h4>
 
                 <!-- Botones de Acción / Exportar -->
                 <div class="flex items-center gap-2">

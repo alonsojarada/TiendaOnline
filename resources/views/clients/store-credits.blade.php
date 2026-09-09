@@ -1,21 +1,19 @@
 <x-app-layout>
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+    <x-slot name="header">
+        <div class="flex justify-between items-center max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+                Detalle del Crédito: #{{ $credit->id }}-MERCANCIA
+            </h2>
+            <a href="{{ request('from') === 'historial' ? route('reports.historial-cuentas') : route('clients.show', $credit->client_id) }}"
+                class="inline-flex items-center gap-2 px-4 py-2 text-xs font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/50 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 border border-indigo-200 dark:border-indigo-800 rounded-xl shadow-xs transition-all duration-200 group">
+                <span class="transform group-hover:-translate-x-0.5 transition-transform duration-200">←</span>
+                <span>Volver</span>
+            </a>
+        </div>
+    </x-slot>
 
-            <!-- Botón Volver (Se oculta al imprimir) -->
-            <div class="mb-4 flex justify-end print:hidden">
-                <a href="{{ request('from') === 'historial' ? route('reports.historial-cuentas') : route('clients.show', $credit->client_id) }}"
-                    class="text-sm text-indigo-600 dark:text-indigo-400 hover:underline">
-                    Volver
-                </a>
-            </div>
-
-            <!-- Título Principal -->
-            <div class="mb-6">
-                <h2 class="text-xl font-bold text-gray-800 dark:text-gray-200">
-                    Detalle del Crédito: #{{ $credit->id }}-{{ strtoupper(substr($credit->client->name ?? 'X', 0, 3)) }}
-                </h2>
-            </div>
+    <div class="py-4">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
 
             <!-- Tarjeta Contenedora Principal -->
             <div
@@ -27,6 +25,12 @@
                     <p class="text-xs text-gray-600">Estado de Cuenta de Crédito / Fiado</p>
                     <p class="text-xs text-gray-500 mt-1">Fecha de emisión: {{ date('d/m/Y') }}</p>
                 </div>
+
+                @php
+                    $totalAbonado = $credit->payments->sum('amount');
+                    $saldoRestante = $credit->total_amount - $totalAbonado;
+                    $estaLiquidado = $saldoRestante <= 0;
+                @endphp
 
                 <!-- Cabecera de la tarjeta: Cliente, Concepto, Botón Eliminar y Botón Exportar PDF -->
                 <div class="flex justify-between items-start border-b pb-4 mb-6 dark:border-gray-700">
@@ -54,24 +58,20 @@
                             Exportar PDF
                         </a>
 
-                        <!-- Botón Eliminar Crédito -->
-                        <form action="{{ route('debts.destroy', $credit->id) }}" method="POST"
-                            onsubmit="return confirm('¿Estás seguro de eliminar este crédito?');" class="print:hidden">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit"
-                                class="px-3 py-1.5 bg-red-50 hover:bg-red-100 text-red-600 rounded-md text-xs font-semibold border border-red-200 transition">
-                                🗑️ Eliminar
-                            </button>
-                        </form>
+                        <!-- Botón Eliminar Crédito (Solo si NO está liquidado) -->
+                        @unless($estaLiquidado)
+                            <form action="{{ route('debts.destroy', $credit->id) }}" method="POST"
+                                onsubmit="return confirm('¿Estás seguro de eliminar este crédito?');" class="print:hidden">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit"
+                                    class="px-3 py-1.5 bg-red-50 hover:bg-red-100 text-red-600 rounded-md text-xs font-semibold border border-red-200 transition">
+                                    🗑️ Eliminar
+                                </button>
+                            </form>
+                        @endunless
                     </div>
                 </div>
-
-                @php
-                    $totalAbonado = $credit->payments->sum('amount');
-                    $saldoRestante = $credit->total_amount - $totalAbonado;
-                    $estaLiquidado = $saldoRestante <= 0;
-                @endphp
 
                 <!-- Grid de Información General -->
                 <div
@@ -107,7 +107,7 @@
                             <div>
                                 <h4 class="text-sm font-bold text-green-800 dark:text-green-300">CRÉDITO LIQUIDADO</h4>
                                 <p class="text-xs text-green-600 dark:text-green-400">Este crédito ha sido pagado en su
-                                    totalidad.</p>
+                                    totalidad y se encuentra en modo informativo.</p>
                             </div>
                         </div>
                     @else
@@ -157,15 +157,18 @@
                                             ${{ number_format($payment->amount, 2) }}
                                         </span>
 
-                                        <form action="{{ route('payments.destroy', $payment->id) }}" method="POST"
-                                            onsubmit="return confirm('¿Eliminar este abono?');">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit"
-                                                class="px-2 py-1 bg-red-100 hover:bg-red-200 text-red-600 rounded text-[10px] font-bold uppercase transition">
-                                                Eliminar
-                                            </button>
-                                        </form>
+                                        <!-- Botón Eliminar Abono (Solo si NO está liquidado) -->
+                                        @unless($estaLiquidado)
+                                            <form action="{{ route('payments.destroy', $payment->id) }}" method="POST"
+                                                onsubmit="return confirm('¿Eliminar este abono?');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit"
+                                                    class="px-2 py-1 bg-red-100 hover:bg-red-200 text-red-600 rounded text-[10px] font-bold uppercase transition">
+                                                    Eliminar
+                                                </button>
+                                            </form>
+                                        @endunless
                                     </div>
                                 </div>
                             @empty
@@ -202,7 +205,8 @@
                                     <!-- Fila Inicial / Apertura -->
                                     <tr class="font-medium">
                                         <td class="py-2.5 px-1">
-                                            {{ \Carbon\Carbon::parse($credit->created_at)->format('d/m/Y') }}</td>
+                                            {{ \Carbon\Carbon::parse($credit->created_at)->format('d/m/Y') }}
+                                        </td>
                                         <td class="py-2.5 px-1">Crédito Inicial ({{ $credit->concept }})</td>
                                         <td class="py-2.5 px-1 text-right text-gray-400">-</td>
                                         <td
@@ -222,7 +226,8 @@
                                         @endphp
                                         <tr>
                                             <td class="py-2.5 px-1">
-                                                {{ \Carbon\Carbon::parse($payment->payment_date)->format('d/m/Y') }}</td>
+                                                {{ \Carbon\Carbon::parse($payment->payment_date)->format('d/m/Y') }}
+                                            </td>
                                             <td class="py-2.5 px-1">
                                                 Abono #{{ $index + 1 }}
                                                 @if($payment->notes)
@@ -266,59 +271,61 @@
         </div>
     </div>
 
-    <!-- MODAL: Registrar Abono -->
-    <div id="paymentModal"
-        class="hidden fixed inset-0 z-50 overflow-y-auto bg-gray-900/60 backdrop-blur-sm flex items-center justify-center p-4 print:hidden">
-        <div
-            class="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl max-w-md w-full p-6 shadow-2xl relative">
-            <div class="flex justify-between items-center pb-4 border-b border-gray-100 dark:border-gray-800">
-                <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100">Registrar Nuevo Abono</h3>
-                <button type="button" onclick="document.getElementById('paymentModal').classList.add('hidden')"
-                    class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition">
-                    ✕
-                </button>
-            </div>
-
-            <form action="{{ route('payments.store', $credit->id) }}" method="POST" class="mt-4 space-y-4">
-                @csrf
-                <input type="hidden" name="credit_id" value="{{ $credit->id }}">
-
-                <div>
-                    <label
-                        class="block text-xs font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400 mb-1">Monto
-                        del Abono ($)</label>
-                    <input type="number" step="0.01" max="{{ $saldoRestante }}" name="amount" required
-                        placeholder="Máx: ${{ $saldoRestante }}"
-                        class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition">
-                </div>
-
-                <div>
-                    <label
-                        class="block text-xs font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400 mb-1">Fecha</label>
-                    <input type="date" name="payment_date" value="{{ date('Y-m-d') }}" required
-                        class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition">
-                </div>
-
-                <div>
-                    <label
-                        class="block text-xs font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400 mb-1">Notas
-                        / Observación (Opcional)</label>
-                    <textarea name="notes" rows="2"
-                        class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition"
-                        placeholder="Ej. Abonó en efectivo..."></textarea>
-                </div>
-
-                <div class="flex justify-end space-x-3 pt-4 border-t border-gray-100 dark:border-gray-800 mt-6">
+    <!-- MODAL: Registrar Abono (Solo se incluye o se muestra si no está liquidado, aunque ya se oculta el botón principal) -->
+    @unless($estaLiquidado)
+        <div id="paymentModal"
+            class="hidden fixed inset-0 z-50 overflow-y-auto bg-gray-900/60 backdrop-blur-sm flex items-center justify-center p-4 print:hidden">
+            <div
+                class="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl max-w-md w-full p-6 shadow-2xl relative">
+                <div class="flex justify-between items-center pb-4 border-b border-gray-100 dark:border-gray-800">
+                    <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100">Registrar Nuevo Abono</h3>
                     <button type="button" onclick="document.getElementById('paymentModal').classList.add('hidden')"
-                        class="px-4 py-2.5 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl text-xs font-semibold uppercase tracking-wider transition">
-                        Cancelar
-                    </button>
-                    <button type="submit"
-                        class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-semibold uppercase tracking-wider transition shadow-sm">
-                        Guardar Abono
+                        class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition">
+                        ✕
                     </button>
                 </div>
-            </form>
+
+                <form action="{{ route('payments.store', $credit->id) }}" method="POST" class="mt-4 space-y-4">
+                    @csrf
+                    <input type="hidden" name="credit_id" value="{{ $credit->id }}">
+
+                    <div>
+                        <label
+                            class="block text-xs font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400 mb-1">Monto
+                            del Abono ($)</label>
+                        <input type="number" step="0.01" max="{{ $saldoRestante }}" name="amount" required
+                            placeholder="Máx: ${{ $saldoRestante }}"
+                            class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition">
+                    </div>
+
+                    <div>
+                        <label
+                            class="block text-xs font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400 mb-1">Fecha</label>
+                        <input type="date" name="payment_date" value="{{ date('Y-m-d') }}" required
+                            class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition">
+                    </div>
+
+                    <div>
+                        <label
+                            class="block text-xs font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400 mb-1">Notas
+                            / Observación (Opcional)</label>
+                        <textarea name="notes" rows="2"
+                            class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition"
+                            placeholder="Ej. Abonó en efectivo..."></textarea>
+                    </div>
+
+                    <div class="flex justify-end space-x-3 pt-4 border-t border-gray-100 dark:border-gray-800 mt-6">
+                        <button type="button" onclick="document.getElementById('paymentModal').classList.add('hidden')"
+                            class="px-4 py-2.5 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl text-xs font-semibold uppercase tracking-wider transition">
+                            Cancelar
+                        </button>
+                        <button type="submit"
+                            class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-semibold uppercase tracking-wider transition shadow-sm">
+                            Guardar Abono
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
-    </div>
+    @endunless
 </x-app-layout>

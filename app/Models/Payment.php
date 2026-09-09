@@ -7,11 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class Payment extends Model
 {
-    //
     use HasFactory;
 
     protected $fillable = [
-        'debt_id', 'amount', 'interest_covered', 'capital_covered', 'payment_date', 'notes'
+        'debt_id', 
+        'installment_id', // <--- Agrégalo aquí
+        'amount', 
+        'interest_covered', 
+        'capital_covered', 
+        'payment_date', 
+        'notes'
     ];
 
     public function debt()
