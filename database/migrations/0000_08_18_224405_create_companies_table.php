@@ -16,6 +16,7 @@ return new class extends Migration {
             $table->string('slug')->unique(); // Útil si usas subdominios o URLs amigables
             $table->string('phone')->nullable();
             $table->string('address')->nullable();
+            $table->string('status', 50)->default('active');
             $table->timestamps();
         });
     }

@@ -11,14 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+       Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->unsignedBigInteger('company_id')->nullable();
+            
+            // Llave foránea para la multi-tenancy vinculada a la tabla companies
+            $table->foreignId('company_id')->nullable()->constrained('companies')->onDelete('set null');
+            
             $table->string('role')->default('user');
+            $table->string('status', 50)->default('active'); // <--- Obligatoria para que funcione el LoginRequest
+            
             $table->rememberToken();
             $table->timestamps();
         });
