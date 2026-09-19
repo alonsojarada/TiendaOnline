@@ -28,22 +28,24 @@ class ClientController extends Controller
     // 2. Guardar un nuevo cliente desde el formulario
     public function store(Request $request)
     {
+
         $request->validate([
             'name' => 'required|string|max:255',
             'alias' => 'nullable|string|max:100',
             'phone' => 'nullable|string|max:20',
             'address' => 'nullable|string',
             'notes' => 'nullable|string',
-            'status' => 'nullable|string|max:50', // Agregado el campo status
+            'status' => 'nullable|string|max:50',
         ]);
 
         Client::create([
+            'company_id' => auth()->user()->company_id, // Vincula automáticamente el cliente a la empresa del usuario activo
             'name' => $request->name,
             'alias' => $request->alias,
             'phone' => $request->phone,
             'address' => $request->address,
             'notes' => $request->notes,
-            'status' => $request->status, // Agregado aquí
+            'status' => $request->status,
         ]);
 
         return redirect()->route('clients.index')->with('success', 'Cliente registrado exitosamente.');
@@ -69,7 +71,7 @@ class ClientController extends Controller
             'phone' => $request->phone,
             'address' => $request->address,
             'notes' => $request->notes,
-            'status' => $request->status, // Actualización de status
+            'status' => $request->status,
         ]);
 
         return redirect()->route('clients.index', $client->id)->with('success', 'Cliente actualizado exitosamente.');

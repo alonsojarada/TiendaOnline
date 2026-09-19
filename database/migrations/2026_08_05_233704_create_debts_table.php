@@ -33,6 +33,7 @@ return new class extends Migration {
             $table->integer('installments_count')->nullable(); // Número total de cuotas (para cuotas fijas)
 
             $table->enum('status', ['pending', 'paid'])->default('pending');
+            $table->foreignId('company_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }

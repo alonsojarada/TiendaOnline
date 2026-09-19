@@ -56,45 +56,52 @@ class DebtController extends Controller
             'total_amount' => 'required|numeric|min:0',
             'interest_rate' => 'nullable|numeric|min:0',
             'loan_modal' => 'nullable|in:interest_only,fixed_installments',
-            'payment_frequency' => 'required_if:loan_modal,interest_only|nullable|in:weekly,biweekly,monthly',
+            'payment_frequency' => 'nullable|in:weekly,biweekly,monthly', // Frecuencia opcional o requerida según lógica de negocio
             'installments_count' => 'required_if:loan_modal,fixed_installments|nullable|integer|min:1',
-            'loan_date' => 'required|date',
+            'loan_date' => 'required_if:type,cash_loan|nullable|date',
             'created_at' => 'required|date',
         ]);
 
         $capitalInicial = $request->total_amount;
         $interesPorcentaje = $request->interest_rate ?? 0;
 
-        // Si es mercancía fiada o préstamo de "Solo Interés", la deuda principal guarda netamente el capital puro (saldo insoluto)
+        // Si es mercancía fiada o préstamo de "Solo Interés", la deuda principal guarda netamente el capital puro
         $totalDeuda = ($request->type === 'store_credit' || $request->loan_modal === 'interest_only')
             ? $capitalInicial
             : $capitalInicial * (1 + ($interesPorcentaje / 100));
 
         $debt = Debt::create([
+            'company_id' => auth()->user()->company_id,
             'client_id' => $request->client_id,
             'type' => $request->type,
             'concept' => $request->concept,
-            'total_amount' => $totalDeuda, // Capital actual o total con interés según la modalidad
+            'total_amount' => $totalDeuda,
             'interest_rate' => $interesPorcentaje,
             'loan_modal' => $request->loan_modal,
             'payment_frequency' => $request->payment_frequency,
             'installments_count' => $request->installments_count,
             'status' => 'pending',
-            'created_at' => $request->created_at,
+            'loan_date' => $request->type === 'cash_loan' ? $request->loan_date : null,
+            'created_at' => $request->type === 'cash_loan' ? $request->loan_date : $request->created_at,
         ]);
 
-        // 1. Si es modalidad "Solo Interés", generamos de inmediato la primera cuota con el interés del capital
+        // Función auxiliar para sumar periodos limpiamente
+        $avanzarFecha = function ($fecha, $frecuencia) {
+            if ($frecuencia === 'weekly') {
+                return $fecha->addWeek();
+            } elseif ($frecuencia === 'biweekly') {
+                return $fecha->addDays(15);
+            } else {
+                return $fecha->addMonth();
+            }
+        };
+
+        // 1. Si es modalidad "Solo Interés"
         if ($request->type === 'cash_loan' && $request->loan_modal === 'interest_only') {
             $montoInteresPeriodo = round($capitalInicial * ($interesPorcentaje / 100), 2);
             $fechaVencimiento = Carbon::parse($request->loan_date);
 
-            if ($request->payment_frequency === 'weekly') {
-                $fechaVencimiento->addWeek();
-            } elseif ($request->payment_frequency === 'biweekly') {
-                $fechaVencimiento->addDays(15);
-            } else {
-                $fechaVencimiento->addMonth();
-            }
+            $fechaVencimiento = $avanzarFecha($fechaVencimiento, $request->payment_frequency);
 
             LoanInstallment::create([
                 'debt_id' => $debt->id,
@@ -105,21 +112,14 @@ class DebtController extends Controller
             ]);
         }
 
-        // 2. Si es cuotas fijas, mantenemos la lógica anterior de amortización
+        // 2. Si es cuotas fijas
         if ($request->type === 'cash_loan' && $request->loan_modal === 'fixed_installments' && $request->installments_count > 0) {
             $numCuotas = $request->installments_count;
             $montoPorCuota = round($totalDeuda / $numCuotas, 2);
-
             $fechaVencimiento = Carbon::parse($request->loan_date);
 
             for ($i = 1; $i <= $numCuotas; $i++) {
-                if ($request->payment_frequency === 'weekly') {
-                    $fechaVencimiento = $fechaVencimiento->addWeek();
-                } elseif ($request->payment_frequency === 'biweekly') {
-                    $fechaVencimiento = $fechaVencimiento->addDays(15);
-                } else {
-                    $fechaVencimiento->addMonth();
-                }
+                $fechaVencimiento = $avanzarFecha($fechaVencimiento, $request->payment_frequency);
 
                 LoanInstallment::create([
                     'debt_id' => $debt->id,
@@ -134,13 +134,15 @@ class DebtController extends Controller
         $mensaje = match ($request->type) {
             'store_credit' => 'Mercancía fiada registrada correctamente.',
             default => $request->loan_modal === 'interest_only'
-            ? 'Préstamo de solo interés registrado y primera cuota de interés generada.'
-            : 'Préstamo registrado y cuotas calculadas correctamente.'
+                ? 'Préstamo de solo interés registrado y primera cuota de interés generada.'
+                : 'Préstamo registrado y cuotas calculadas correctamente.'
         };
 
         return redirect()->route('clients.show', $request->client_id)
             ->with('success', $mensaje);
     }
+
+    
 
     // Registrar un abono general (vía input manual)
     public function storePayment(Request $request, $debtId)

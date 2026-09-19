@@ -10,6 +10,7 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\TandaController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -102,6 +103,51 @@ Route::middleware(['auth', \App\Http\Middleware\CheckOperationalAccess::class])-
     Route::get('/reports/abonos', [ReportController::class, 'cobros'])->name('reports.abonos');
 
     Route::get('/reports/mensual', [ReportController::class, 'reporteMensual'])->name('reports.reporte-mensual');
+
+
+    Route::get('/tandas', [TandaController::class, 'index'])->name('tandas.index');
+    Route::get('/tandas/create', [TandaController::class, 'create'])->name('tandas.create');
+    Route::get('/tandas/cobranza', [TandaController::class, 'cobranza'])->name('tandas.cobranza');
+    Route::post('/tandas', [TandaController::class, 'store'])->name('tandas.store');
+    Route::post('/tandas/pagar-lote', [TandaController::class, 'procesarPagoLote'])->name('tandas.pagar.lote');
+
+    Route::get('/tandas/reporte-global', [TandaController::class, 'reporteGlobal'])->name('tandas.reporte.global');
+    Route::get('/tandas/reporte-global/excel', [TandaController::class, 'reporteGlobalExcel'])->name('tandas.reporte.global.excel');
+    Route::get('/tandas/reporte-global/pdf', [TandaController::class, 'reporteGlobalPdf'])->name('tandas.reporte.global.pdf');
+    Route::get('/tandas/reporte-atrasos', [TandaController::class, 'reporteAtrasosGlobal'])
+        ->name('tandas.reporte.atrasos');
+    Route::get('/tandas/reporte-atrasos/excel', [TandaController::class, 'exportarAtrasosExcel'])->name('tandas.reporte.atrasos.excel');
+    Route::get('/tandas/reporte-atrasos/pdf', [TandaController::class, 'reporteAtrasosPdf'])->name('tandas.reporte.atrasos.pdf');
+
+    Route::get('/tandas/reporte-entregados', [TandaController::class, 'reporteEntregadosGlobal'])->name('tandas.reporte.entregados');
+
+    // Rutas de Exportación (Excel y PDF) para Entregados
+    Route::get('/tandas/reporte-entregados/excel', [TandaController::class, 'exportarEntregadosExcel'])->name('tandas.reporte.entregados.excel');
+    Route::get('/tandas/reporte-entregados/pdf', [TandaController::class, 'exportarEntregadosPdf'])->name('tandas.reporte.entregados.pdf');
+
+
+    Route::get('/tandas/{tanda}', [TandaController::class, 'show'])->name('tandas.show');
+
+    Route::get('/tandas/{tanda}/participante/{participante}/cuotas', [TandaController::class, 'cuotasParticipante'])->name('tandas.participante.cuotas');
+
+    Route::post('/tandas/cuotas/{cuota}/pagar', [TandaController::class, 'pagarCuota'])
+        ->name('tandas.cuotas.pagar');
+
+    Route::post('/tandas/participantes/{participante}/entregar', [TandaController::class, 'marcarEntregado'])
+        ->name('tandas.participantes.entregar');
+
+    Route::patch('/tandas/{tanda}/participantes/{participante}/asignar', [TandaController::class, 'asignarCliente'])->name('tandas.participantes.asignar');
+    Route::patch('/tandas/{tanda}/participantes/{participante}/quitar', [TandaController::class, 'quitarCliente'])->name('tandas.participantes.quitar-cliente');
+    Route::delete('/tandas/{tanda}', [TandaController::class, 'destroy'])->name('tandas.destroy');
+    Route::delete('/tandas/cuotas/{cuota}/eliminar-pago', [TandaController::class, 'eliminarPago'])->name('tandas.cuotas.eliminar');
+
+
+    Route::get('/tandas/{tanda}/participante/{participante}/exportar-excel', [TandaController::class, 'exportarExcelClienteCuotas'])->name('tandas.participante.excel');
+    Route::get('/tandas/{tanda}/participante/{participante}/exportar-pdf', [TandaController::class, 'exportarPdfClienteCuotas'])->name('tandas.participante.pdf');
+    Route::patch('/tandas/{tanda}/participantes/{participante}/anular-entrega', [TandaController::class, 'anularEntrega'])->name('tandas.participantes.anular-entrega');
+
+
+
 });
 
 require __DIR__ . '/auth.php';

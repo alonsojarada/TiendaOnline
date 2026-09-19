@@ -26,4 +26,11 @@ class Client extends Model
         return $this->hasMany(Debt::class);
     }
 
+    public function tandas()
+    {
+        return $this->belongsToMany(Tanda::class, 'tanda_participantes', 'cliente_id', 'tanda_id')
+                    ->withPivot(['numero_asignado', 'estado'])
+                    ->withTimestamps();
+    }
+
 }

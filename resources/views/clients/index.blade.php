@@ -105,7 +105,7 @@
 
                                 <!-- Columna Estatus -->
                                 <td class="py-1.5 px-5 border-r border-gray-100 dark:border-gray-700/50">
-                                    @if($client->status === 'activo')
+                                    @if($client->status === 'active')
                                         <span class="px-2.5 py-1 inline-flex text-xs leading-4 font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300">
                                             Activo
                                         </span>
@@ -187,8 +187,8 @@
                             class="block text-xs font-bold uppercase text-gray-500 dark:text-gray-400 mb-1">Estatus</label>
                         <select name="status"
                             class="w-full text-sm px-3.5 py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-xl text-gray-800 dark:text-gray-200 focus:outline-hidden focus:ring-2 focus:ring-indigo-500">
-                            <option value="activo">Activo</option>
-                            <option value="suspendido">Suspendido</option>
+                            <option value="active">Activo</option>
+                            <option value="inactive">Suspendido</option>
                         </select>
                     </div>
                 </div>
@@ -252,8 +252,8 @@
                             class="block text-xs font-bold uppercase text-gray-500 dark:text-gray-400 mb-1">Estatus</label>
                         <select name="status" id="edit_status"
                             class="w-full text-sm px-3.5 py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-xl text-gray-800 dark:text-gray-200 focus:outline-hidden focus:ring-2 focus:ring-indigo-500">
-                            <option value="activo">Activo</option>
-                            <option value="suspendido">Suspendido</option>
+                            <option value="active">Activo</option>
+                            <option value="inactive">Suspendido</option>
                         </select>
                     </div>
                 </div>

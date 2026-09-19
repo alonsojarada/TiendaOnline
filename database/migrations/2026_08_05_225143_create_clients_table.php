@@ -11,6 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
+        
         Schema::create('clients', function (Blueprint $table) {
             $table->id();
             $table->string('name');
@@ -18,6 +19,8 @@ return new class extends Migration
             $table->string('phone')->nullable();
             $table->string('address')->nullable();
             $table->string('notes')->nullable();
+            $table->enum('status', ['active', 'inactive'])->default('active');
+            $table->foreignId('company_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }

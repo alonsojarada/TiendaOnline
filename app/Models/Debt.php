@@ -5,15 +5,24 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\BelongsToCompany;
+
 class Debt extends Model
 {
-    //
     use HasFactory, BelongsToCompany;
 
     protected $fillable = [
-        'client_id', 'type', 'concept', 'total_amount', 
-        'loan_modal', 'interest_rate', 'payment_frequency', 
-        'installments_count', 'status', 'created_at' // <-- Agregado aquí
+        'company_id',
+        'client_id', 
+        'type', 
+        'concept', 
+        'total_amount', 
+        'loan_modal', 
+        'interest_rate', 
+        'payment_frequency', 
+        'installments_count', 
+        'status', 
+        'created_at',
+        'loan_date' // <-- Reemplazado por loan_date para capturar la fecha seleccionada
     ];
 
     public function client()
