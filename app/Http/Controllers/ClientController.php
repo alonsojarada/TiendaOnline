@@ -20,7 +20,7 @@ class ClientController extends Controller
                 ->orWhere('phone', 'LIKE', "%{$search}%");
         })
             ->orderBy('name', 'asc')
-            ->paginate(10); // Paginación de 10 en 10 para mayor orden
+            ->get(); // Paginación de 10 en 10 para mayor orden
 
         return view('clients.index', compact('clients', 'search'));
     }
@@ -46,6 +46,7 @@ class ClientController extends Controller
             'address' => $request->address,
             'notes' => $request->notes,
             'status' => $request->status,
+            'user_id' => auth()->user()->id, // Captura el ID del usuario que crea el cliente
         ]);
 
         return redirect()->route('clients.index')->with('success', 'Cliente registrado exitosamente.');

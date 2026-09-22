@@ -11,7 +11,7 @@ class LoanInstallment extends Model
     use HasFactory;
 
     protected $fillable = [
-        'debt_id', 'installment_number', 'due_date', 'amount_due', 'status'
+        'debt_id', 'installment_number', 'due_date', 'amount_due', 'status', 'user_id'
     ];
 
     public function debt()

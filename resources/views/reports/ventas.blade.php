@@ -10,17 +10,22 @@
     <div class="pt-0 pb-6 px-3 sm:px-4 lg:px-6 w-full mx-auto space-y-6">
 
         <!-- ENCABEZADO Y FILTROS UNIFICADOS: Tarjetas a la izquierda y Búsqueda a la derecha -->
-        <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-xs border border-gray-100 dark:border-gray-700/80 mb-4">
+        <div
+            class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-xs border border-gray-100 dark:border-gray-700/80 mb-4">
             <div class="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-4">
 
                 <!-- 1. Grupo de 3 Tarjetas de Resumen (Lado Izquierdo) -->
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 w-full xl:w-auto shrink-0">
                     <!-- Tarjeta 1: Mercancía -->
-                    <div class="bg-gradient-to-br from-emerald-500 to-teal-600 text-white p-2.5 rounded-xl shadow-xs relative overflow-hidden flex items-center justify-between min-w-[170px]">
+                    <div
+                        class="bg-gradient-to-br from-emerald-500 to-teal-600 text-white p-2.5 rounded-xl shadow-xs relative overflow-hidden flex items-center justify-between min-w-[170px]">
                         <div>
                             <div class="flex items-center gap-1">
-                                <span class="text-[9px] font-black uppercase tracking-wider text-emerald-100">Mercancía</span>
-                                <span class="text-[8px] font-bold uppercase tracking-wider bg-emerald-700/40 px-1 py-0.5 rounded text-emerald-200">Store Credit</span>
+                                <span
+                                    class="text-[9px] font-black uppercase tracking-wider text-emerald-100">Mercancía</span>
+                                <span
+                                    class="text-[8px] font-bold uppercase tracking-wider bg-emerald-700/40 px-1 py-0.5 rounded text-emerald-200">Store
+                                    Credit</span>
                             </div>
                             <div class="text-sm font-black mt-0.5">${{ number_format($totalMercancia, 2) }}</div>
                         </div>
@@ -28,11 +33,15 @@
                     </div>
 
                     <!-- Tarjeta 2: Efectivo -->
-                    <div class="bg-gradient-to-br from-indigo-500 to-blue-600 text-white p-2.5 rounded-xl shadow-xs relative overflow-hidden flex items-center justify-between min-w-[170px]">
+                    <div
+                        class="bg-gradient-to-br from-indigo-500 to-blue-600 text-white p-2.5 rounded-xl shadow-xs relative overflow-hidden flex items-center justify-between min-w-[170px]">
                         <div>
                             <div class="flex items-center gap-1">
-                                <span class="text-[9px] font-black uppercase tracking-wider text-indigo-100">Efectivo</span>
-                                <span class="text-[8px] font-bold uppercase tracking-wider bg-indigo-700/40 px-1 py-0.5 rounded text-indigo-200">Cash Loan</span>
+                                <span
+                                    class="text-[9px] font-black uppercase tracking-wider text-indigo-100">Efectivo</span>
+                                <span
+                                    class="text-[8px] font-bold uppercase tracking-wider bg-indigo-700/40 px-1 py-0.5 rounded text-indigo-200">Cash
+                                    Loan</span>
                             </div>
                             <div class="text-sm font-black mt-0.5">${{ number_format($totalPrestamos, 2) }}</div>
                         </div>
@@ -40,11 +49,14 @@
                     </div>
 
                     <!-- Tarjeta 3: Venta Total -->
-                    <div class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white p-2.5 rounded-xl shadow-xs relative overflow-hidden border border-gray-800 flex items-center justify-between min-w-[170px]">
+                    <div
+                        class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white p-2.5 rounded-xl shadow-xs relative overflow-hidden border border-gray-800 flex items-center justify-between min-w-[170px]">
                         <div>
                             <div class="flex items-center gap-1">
-                                <span class="text-[9px] font-black uppercase tracking-wider text-gray-400">Venta Total</span>
-                                <span class="text-[8px] font-bold uppercase tracking-wider bg-gray-800 px-1 py-0.5 rounded text-gray-300 border border-gray-700">Acumulado</span>
+                                <span class="text-[9px] font-black uppercase tracking-wider text-gray-400">Venta
+                                    Total</span>
+                                <span
+                                    class="text-[8px] font-bold uppercase tracking-wider bg-gray-800 px-1 py-0.5 rounded text-gray-300 border border-gray-700">Acumulado</span>
                             </div>
                             <div class="text-sm font-black mt-0.5">${{ number_format($granTotal, 2) }}</div>
                         </div>
@@ -91,11 +103,14 @@
         </div>
 
         <!-- TABLA UNIFICADA CRONOLÓGICA CON ESTADO DE LIQUIDACIÓN Y SCROLL INTERNO -->
-        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xs border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col">
+        <div
+            class="bg-white dark:bg-gray-800 rounded-2xl shadow-xs border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col">
 
-            <div class="p-4 border-b border-gray-100 dark:border-gray-700 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-white dark:bg-gray-800 z-10">
+            <div
+                class="p-4 border-b border-gray-100 dark:border-gray-700 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-white dark:bg-gray-800 z-10">
                 <div>
-                    <h3 class="text-xs font-black uppercase tracking-wider text-gray-800 dark:text-gray-200 flex items-center gap-1.5">
+                    <h3
+                        class="text-xs font-black uppercase tracking-wider text-gray-800 dark:text-gray-200 flex items-center gap-1.5">
                         <span>⏱️</span> Historial de ventas y creditos
                     </h3>
                 </div>
@@ -113,13 +128,15 @@
             <div class="max-h-[500px] overflow-y-auto overflow-x-auto relative">
                 <table class="w-full text-left border-collapse">
                     <thead class="sticky top-0 z-10">
-                        <tr class="bg-gray-50 dark:bg-gray-700 text-[11px] font-bold text-gray-500 dark:text-gray-300 border-b border-gray-200 dark:border-gray-700 shadow-xs">
+                        <tr
+                            class="bg-gray-50 dark:bg-gray-700 text-[11px] font-bold text-gray-500 dark:text-gray-300 border-b border-gray-200 dark:border-gray-700 shadow-xs">
                             <th class="py-3 px-4">Fecha</th>
                             <th class="py-3 px-4">Tipo</th>
                             <th class="py-3 px-4">Cliente</th>
                             <th class="py-3 px-4">Dirección</th>
                             <th class="py-3 px-4">Concepto / Descripción</th>
                             <th class="py-3 px-4 text-center">Estado</th>
+                            <th class="py-3 px-4">Usuario</th> <!-- Nueva columna de Usuario -->
                             <th class="py-3 px-4 text-right">Monto</th>
                         </tr>
                     </thead>
@@ -131,20 +148,22 @@
                         @forelse($movimientos as $item)
                             @php
                                 $clientAddress = optional($item->client)->address;
+                                $userName = optional($item->user)->name ?? 'N/A'; // Obtiene el nombre del usuario relacionado
                                 $valMonto = $item->total_amount ?? 0;
                             @endphp
-                            <!-- Se añadió la clase 'fila-cuenta' y los atributos 'data-valor' para que el script pueda capturarlos -->
                             <tr class="fila-cuenta hover:bg-gray-50/50 dark:hover:bg-gray-700/20 transition">
                                 <td class="py-3.5 px-4 text-gray-600 dark:text-gray-300 whitespace-nowrap">
                                     {{ $item->created_at->format('d/m/Y H:i') }}
                                 </td>
                                 <td class="py-3.5 px-4 whitespace-nowrap">
                                     @if($item->type === 'store_credit')
-                                        <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">
+                                        <span
+                                            class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">
                                             📦 Mercancía
                                         </span>
                                     @else
-                                        <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-black bg-blue-100 text-blue-800 dark:bg-blue-950/60 dark:text-blue-300">
+                                        <span
+                                            class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-black bg-blue-100 text-blue-800 dark:bg-blue-950/60 dark:text-blue-300">
                                             💵 Efectivo
                                         </span>
                                     @endif
@@ -152,33 +171,38 @@
                                 <td class="py-3.5 px-4 font-bold text-gray-900 dark:text-white">
                                     {{ $item->client->name ?? 'General' }}
                                 </td>
-                                <!-- Columna de Dirección -->
                                 <td class="py-3.5 px-4 text-gray-600 dark:text-gray-400">
                                     {{ $clientAddress ?: 'S/D' }}
                                 </td>
                                 <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300">
-                                    {{ '#' . $item->id }} - {{ $item->concept ?? ($item->type === 'cash_loan' ? 'Préstamo en efectivo' : 'Venta de mercancía') }}
+                                    {{ '#' . $item->id }} -
+                                    {{ $item->concept ?? ($item->type === 'cash_loan' ? 'Préstamo en efectivo' : 'Venta de mercancía') }}
                                 </td>
-                                <!-- Columna de Estado / Liquidación -->
                                 <td class="py-3.5 px-4 text-center whitespace-nowrap">
                                     @if(isset($item->status) && $item->status === 'paid')
-                                        <span class="px-2 py-0.5 text-[10px] font-bold bg-green-100 text-green-700 dark:bg-green-950/60 dark:text-green-300 rounded-md">
+                                        <span
+                                            class="px-2 py-0.5 text-[10px] font-bold bg-green-100 text-green-700 dark:bg-green-950/60 dark:text-green-300 rounded-md">
                                             Liquidado
                                         </span>
                                     @else
-                                        <span class="px-2 py-0.5 text-[10px] font-bold bg-amber-100 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300 rounded-md">
+                                        <span
+                                            class="px-2 py-0.5 text-[10px] font-bold bg-amber-100 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300 rounded-md">
                                             Pendiente
                                         </span>
                                     @endif
                                 </td>
-                                <!-- Se agregó la clase 'monto-total' y el atributo data-valor para el cálculo de totales en Excel -->
-                                <td class="py-3.5 px-4 text-right font-black text-gray-900 dark:text-white monto-total" data-valor="{{ $valMonto }}">
+                                <!-- Celda de Usuario -->
+                                <td class="py-3.5 px-4 text-gray-600 dark:text-gray-300">
+                                    {{ $userName }}
+                                </td>
+                                <td class="py-3.5 px-4 text-right font-black text-gray-900 dark:text-white monto-total"
+                                    data-valor="{{ $valMonto }}">
                                     ${{ number_format($valMonto, 2) }}
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7" class="text-center py-12 text-gray-400">
+                                <td colspan="8" class="text-center py-12 text-gray-400">
                                     <div class="text-3xl mb-2">📂</div>
                                     <p class="font-medium">No se encontraron movimientos registrados con estos filtros.</p>
                                 </td>

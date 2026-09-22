@@ -12,6 +12,7 @@ class Payment extends Model
     protected $fillable = [
         'debt_id', 
         'installment_id', // <--- Agrégalo aquí
+        'user_id', // <--- Agrégalo aquí
         'amount', 
         'interest_covered', 
         'capital_covered', 
@@ -22,5 +23,10 @@ class Payment extends Model
     public function debt()
     {
         return $this->belongsTo(Debt::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

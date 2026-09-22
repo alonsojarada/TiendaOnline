@@ -19,6 +19,7 @@ class Client extends Model
         'notes',
         'status',
         'company_id',
+        'user_id', // <-- Agregado para capturar el ID del usuario que crea el cliente
     ];
 
     public function debts()

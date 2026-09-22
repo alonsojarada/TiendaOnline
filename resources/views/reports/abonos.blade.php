@@ -148,6 +148,7 @@
                             <th class="px-4 py-3 bg-gray-50 dark:bg-gray-700">Cliente</th>
                             <th class="px-4 py-3 bg-gray-50 dark:bg-gray-700">Dirección</th>
                             <th class="px-4 py-3 bg-gray-50 dark:bg-gray-700">Concepto / Descripción</th>
+                            <th class="px-4 py-3 bg-gray-50 dark:bg-gray-700">Registrado por</th>
                             <th class="px-4 py-3 text-right bg-gray-50 dark:bg-gray-700">Monto</th>
                         </tr>
                     </thead>
@@ -159,7 +160,7 @@
                                 $clientName = $client ? trim($client->name . ' ' . $client->alias) : 'Cliente General';
                                 $clientAddress = $client && $client->address ? $client->address : 'S/D';
 
-                                $debtType =  optional($payment->debt)->type;
+                                $debtType = optional($payment->debt)->type;
                                 $isStoreCredit = $debtType === 'store_credit';
                                 $tipoTexto = $isStoreCredit ? 'Mercancía' : 'Crédito Efectivo';
 
@@ -168,9 +169,9 @@
                                     : 'text-blue-700 bg-blue-100 dark:bg-blue-900/30 dark:text-blue-400';
 
                                 $valMonto = $payment->amount ?? 0;
+                                $userName = optional($payment->user)->name ?? 'N/A';
                             @endphp
 
-                            <!-- Se agregó la clase 'fila-cuenta' y el atributo 'data-valor' -->
                             <tr class="fila-cuenta hover:bg-gray-50 dark:hover:bg-gray-700/50 transition">
                                 <!-- Fecha -->
                                 <td class="px-4 py-3 whitespace-nowrap">
@@ -196,17 +197,23 @@
 
                                 <!-- Concepto -->
                                 <td class="px-4 py-3 font-medium text-gray-700 dark:text-gray-300">
-                                    {{  '#' . $payment->debt_id }} - {{ ($payment->debt)->concept }}
+                                    {{  '#' . $payment->debt_id }} - {{ optional($payment->debt)->concept }}
+                                </td>
+
+                                <!-- Registrado por -->
+                                <td class="px-4 py-3 text-gray-600 dark:text-gray-400 whitespace-nowrap">
+                                    {{ $userName }}
                                 </td>
 
                                 <!-- Monto -->
-                                <td class="px-4 py-3 text-right font-bold text-gray-900 dark:text-white whitespace-nowrap monto-total" data-valor="{{ $valMonto }}">
+                                <td class="px-4 py-3 text-right font-bold text-gray-900 dark:text-white whitespace-nowrap monto-total"
+                                    data-valor="{{ $valMonto }}">
                                     ${{ number_format($valMonto, 2) }}
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="px-4 py-8 text-center text-gray-500">
+                                <td colspan="7" class="px-4 py-8 text-center text-gray-500">
                                     No se encontraron abonos registrados en el sistema con los filtros seleccionados.
                                 </td>
                             </tr>
@@ -228,7 +235,7 @@
                         <tfoot
                             class="bg-gray-50 dark:bg-gray-700 font-bold text-gray-900 dark:text-white border-t-2 border-gray-200 dark:border-gray-600 sticky bottom-0 z-10 shadow-xs">
                             <tr>
-                                <td colspan="5" class="px-4 py-3 text-right bg-gray-50 dark:bg-gray-700 whitespace-nowrap">
+                                <td colspan="6" class="px-4 py-3 text-right bg-gray-50 dark:bg-gray-700 whitespace-nowrap">
                                     <span class="mr-4 text-purple-700 dark:text-purple-400">Mercancía:
                                         ${{ number_format($totalMercancia, 2) }}</span>
                                     <span class="mr-4 text-blue-700 dark:text-blue-400">Efectivo:
@@ -269,7 +276,7 @@
             <body>
                 <table>
                     <tr>
-                        <td colspan="6" class="titulo" style="font-size: 14pt; height: 35px;">REPORTE GENERAL DE ABONOS</td>
+                        <td colspan="7" class="titulo" style="font-size: 14pt; height: 35px;">REPORTE GENERAL DE ABONOS</td>
                     </tr>
                     <tr style="height: 10px;"></tr>
                     <tr style="height: 25px;">
@@ -278,6 +285,7 @@
                         <td class="header">Cliente</td>
                         <td class="header">Dirección</td>
                         <td class="header">Concepto / Descripción</td>
+                        <td class="header">Registrado por</td>
                         <td class="header">Monto</td>
                     </tr>`;
 
@@ -296,13 +304,14 @@
                     tablaHtml += `<td class="celda texto">${celdas[2].innerText.trim()}</td>`;
                     tablaHtml += `<td class="celda texto">${celdas[3].innerText.trim()}</td>`;
                     tablaHtml += `<td class="celda texto">${celdas[4].innerText.trim()}</td>`;
+                    tablaHtml += `<td class="celda texto">${celdas[5].innerText.trim()}</td>`;
                     tablaHtml += `<td class="celda numero" x:num="${valMonto}" style="font-weight: bold; mso-number-format:'\\$#,##0.00';">${valMonto}</td>`;
                     tablaHtml += "</tr>";
                 }
             });
 
             tablaHtml += `<tr class="totales" style="height: 28px;">
-                <td colspan="5" class="celda-vacia" style="text-align: right; font-weight: bold;">TOTAL GENERAL:</td>
+                <td colspan="6" class="celda-vacia" style="text-align: right; font-weight: bold;">TOTAL GENERAL:</td>
                 <td class="celda-vacia numero" x:num="${sumaMonto}" style="font-weight: bold; border-top: 1px solid #374151; border-bottom: 1px solid #374151; mso-number-format:'\\$#,##0.00';">${sumaMonto}</td>
             </tr>`;
 

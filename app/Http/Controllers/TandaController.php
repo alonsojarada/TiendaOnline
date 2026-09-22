@@ -524,35 +524,39 @@ class TandaController extends Controller
         return view('tandas.cobranza', compact('cuotasVencidas', 'cuotasEstaSemana'));
     }
 
-    public function procesarPagoLote(Request $request)
-    {
-        $request->validate([
-            'tanda_participante_id' => 'required|exists:tanda_participantes,id',
-            'cantidad_cuotas' => 'required|integer|min:1',
-        ]);
+   public function procesarPagoLote(Request $request)
+{
+    $request->validate([
+        'tanda_participante_id' => 'required|exists:tanda_participantes,id',
+        'cantidad_cuotas' => 'required|integer|min:1',
+    ]);
 
-        $participanteId = $request->tanda_participante_id;
-        $cantidadACobrar = $request->cantidad_cuotas;
+    $participanteId = $request->tanda_participante_id;
+    $cantidadACobrar = $request->cantidad_cuotas;
 
-        // Tomamos exactamente el número de cuotas pendientes ordenadas de la más antigua a la más nueva
-        $cuotasAPagar = TandaCuota::whereHas('participante', function ($q) use ($participanteId) {
-            $q->where('id', $participanteId);
-        })
-            ->where('estado', '!=', 'pagado')
-            ->orderBy('fecha_limite', 'asc')
-            ->limit($cantidadACobrar)
-            ->get();
+    // Tomamos exactamente el número de cuotas pendientes ordenadas de la más antigua a la más nueva
+    $cuotasAPagar = TandaCuota::whereHas('participante', function ($q) use ($participanteId) {
+        $q->where('id', $participanteId);
+    })
+        ->where('estado', '!=', 'pagado')
+        ->orderBy('fecha_limite', 'asc')
+        ->limit($cantidadACobrar)
+        ->get();
 
-        foreach ($cuotasAPagar as $cuota) {
-            // Se liquida la cuota completa de forma estricta
-            $cuota->monto_pagado = $cuota->monto_esperado;
-            $cuota->estado = 'pagado';
-            // Si manejas fecha de pago: $cuota->fecha_pago = now();
-            $cuota->save();
-        }
-
-        return redirect()->route('tandas.cobranza')->with('success', "Se han marcado exitosamente {$cuotasAPagar->count()} cuota(s) como pagadas.");
+    foreach ($cuotasAPagar as $cuota) {
+        // Se liquida la cuota completa de forma estricta
+        $cuota->monto_pagado = $cuota->monto_esperado;
+        $cuota->estado = 'pagado';
+        
+        // Actualizamos fecha de pago y el usuario que realiza el registro
+        $cuota->fecha_pago = now();
+        $cuota->user_id =  auth()->id();
+        
+        $cuota->save();
     }
+
+    return redirect()->route('tandas.cobranza')->with('success', "Se han marcado exitosamente {$cuotasAPagar->count()} cuota(s) como pagadas.");
+}
 
     public function reporteGlobal(Request $request)
     {
@@ -1622,5 +1626,41 @@ class TandaController extends Controller
         $pdf = Pdf::loadHTML($html)->setPaper('letter', 'portrait');
 
         return $pdf->download($nombreArchivo);
+    }
+
+    public function reporteCobrosTandas(Request $request)
+    {
+        $fechaInicio = $request->input('fecha_inicio', Carbon::today()->format('Y-m-d'));
+        $fechaFin = $request->input('fecha_fin', Carbon::today()->format('Y-m-d'));
+        $clientId = $request->input('client_id');
+
+        // Usamos 'participante.client' y 'usuario' según tu modelo TandaCuota
+        $query = TandaCuota::with(['tanda', 'participante.cliente', 'usuario'])
+            ->where('estado', 'pagado')
+            ->whereBetween('fecha_pago', [
+                Carbon::parse($fechaInicio)->startOfDay(),
+                Carbon::parse($fechaFin)->endOfDay()
+            ]);
+
+        // Filtramos usando la relación 'participante' y la columna 'cliente_id'
+        if ($clientId) {
+            $query->whereHas('participante', function ($q) use ($clientId) {
+                $q->where('cliente_id', $clientId);
+            });
+        }
+
+        $abonos = $query->orderBy('fecha_pago', 'desc')->get();
+
+        $totalCobrado = $abonos->sum('monto_pagado');
+        $clientes = Client::orderBy('name')->get();
+
+        return view('tandas.tandas-abonos', compact(
+            'abonos',
+            'totalCobrado', // Asegúrate de que no tenga el signo $ aquí
+            'fechaInicio',
+            'fechaFin',
+            'clientId',
+            'clientes'
+        ));
     }
 }

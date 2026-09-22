@@ -120,6 +120,7 @@ Route::middleware(['auth', \App\Http\Middleware\CheckOperationalAccess::class])-
     Route::get('/tandas/reporte-atrasos/pdf', [TandaController::class, 'reporteAtrasosPdf'])->name('tandas.reporte.atrasos.pdf');
 
     Route::get('/tandas/reporte-entregados', [TandaController::class, 'reporteEntregadosGlobal'])->name('tandas.reporte.entregados');
+    Route::get('/tandas/tandas-abonos', [TandaController::class, 'reporteCobrosTandas'])->name('tandas.tandas.abonos');
 
     // Rutas de Exportación (Excel y PDF) para Entregados
     Route::get('/tandas/reporte-entregados/excel', [TandaController::class, 'exportarEntregadosExcel'])->name('tandas.reporte.entregados.excel');

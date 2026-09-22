@@ -296,10 +296,10 @@
         <!-- MODAL DE PAGO -->
         <div x-show="modalOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
             style="display: none;" x-cloak>
-            <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-6 mx-4">
+            <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-6 mx-4" @click.stop>
                 <div class="flex justify-between items-center border-b pb-3 mb-4">
                     <h3 class="text-lg font-bold text-gray-900">Registrar Pago por Cuotas</h3>
-                    <button @click="modalOpen = false" class="text-gray-400 hover:text-gray-600 font-bold text-xl">&times;</button>
+                    <button type="button" @click="modalOpen = false" class="text-gray-400 hover:text-gray-600 font-bold text-xl">&times;</button>
                 </div>
 
                 <form method="POST" action="{{ route('tandas.pagar.lote') }}">

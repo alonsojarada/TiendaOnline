@@ -58,7 +58,7 @@
             </div>
 
             <!-- Panel Cobranza -->
-            <a href="{{ route('dashboard') }}"
+            <a href="{{ route('dashboard') }}" wire:navigate
                 class="flex items-center px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition">
                 <svg class="w-5 h-5 mr-3 text-gray-500 flex-shrink-0" fill="none" stroke="currentColor"
                     viewBox="0 0 24 24">
@@ -68,8 +68,8 @@
                 Panel Cobranza
             </a>
 
-            <!-- Panel Cobranza -->
-            <a href="{{ route('clients.index') }}"
+            <!-- Clientes -->
+            <a href="{{ route('clients.index') }}" wire:navigate
                 class="flex items-center px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition">
                 <svg class="w-5 h-5 mr-3 text-gray-500 flex-shrink-0" fill="none" stroke="currentColor"
                     viewBox="0 0 24 24">
@@ -80,7 +80,7 @@
             </a>
 
             <!-- Flujo de Caja -->
-            <a href="{{ route('reports.reporte-mensual') }}"
+            <a href="{{ route('reports.reporte-mensual') }}" wire:navigate
                 class="flex items-center px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition">
                 <svg class="w-5 h-5 mr-3 text-gray-500 flex-shrink-0" fill="none" stroke="currentColor"
                     viewBox="0 0 24 24">
@@ -92,7 +92,7 @@
 
             <!-- Reportes -->
             <div x-data="{ open: false }" class="space-y-1">
-                <button @click="open = !open"
+                <button @click="open = !open" type="button"
                     class="w-full flex items-center justify-between px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition focus:outline-none">
                     <div class="flex items-center">
                         <svg class="w-5 h-5 mr-3 text-gray-500 flex-shrink-0" fill="none" stroke="currentColor"
@@ -109,9 +109,17 @@
                 </button>
 
                 <div x-show="open" x-cloak class="pl-8 space-y-1 bg-gray-50 dark:bg-gray-950/40 rounded-lg py-1">
-                    <a href="{{ route('reports.historial-cuentas') }}"
+                    <a href="{{ route('reports.historial-cuentas') }}" wire:navigate
                         class="block px-4 py-2 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition">
                         • Historial Cuentas
+                    </a>
+                    <a href="{{ route('reports.abonos') }}" wire:navigate
+                        class="block px-4 py-2 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition">
+                        • Historial Abonos
+                    </a>
+                    <a href="{{ route('reports.ventas') }}" wire:navigate
+                        class="block px-4 py-2 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition">
+                        • Historial Ventas
                     </a>
                 </div>
             </div>
@@ -119,11 +127,11 @@
             <!-- SEPARADOR Y ETIQUETA PARA EL ÁREA DE TANDAS -->
             <div class="my-4 border-t border-gray-200 dark:border-gray-800"></div>
             <div class="pt-1 pb-1">
-                <p class="px-4 text-[10px] font-bold uppercase tracking-wider text-gray-400">Area de Tandas</p>
+                <p class="px-4 text-[10px] font-bold uppercase tracking-wider text-gray-400">Área de Tandas</p>
             </div>
 
             <!-- Tandas Activas -->
-            <a href="{{ route('tandas.index') }}"
+            <a href="{{ route('tandas.index') }}" wire:navigate
                 class="flex items-center px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition">
                 <svg class="w-5 h-5 mr-3 text-gray-500 flex-shrink-0" fill="none" stroke="currentColor"
                     viewBox="0 0 24 24">
@@ -134,7 +142,7 @@
             </a>
 
             <!-- Control Cobranza -->
-            <a href="{{ route('tandas.cobranza') }}"
+            <a href="{{ route('tandas.cobranza') }}" wire:navigate
                 class="flex items-center px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition">
                 <svg class="w-5 h-5 mr-3 text-gray-500 flex-shrink-0" fill="none" stroke="currentColor"
                     viewBox="0 0 24 24">
@@ -146,7 +154,7 @@
 
             <!-- Reportes de Tandas -->
             <div x-data="{ open: false }" class="space-y-1">
-                <button @click="open = !open"
+                <button @click="open = !open" type="button"
                     class="w-full flex items-center justify-between px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition focus:outline-none">
                     <div class="flex items-center">
                         <svg class="w-5 h-5 mr-3 text-gray-500 flex-shrink-0" fill="none" stroke="currentColor"
@@ -163,26 +171,23 @@
                 </button>
 
                 <div x-show="open" x-cloak class="pl-8 space-y-1 bg-gray-50 dark:bg-gray-950/40 rounded-lg py-1">
-                    <a href="{{ route('tandas.reporte.global') }}"
+                    <a href="{{ route('tandas.reporte.global') }}" wire:navigate
                         class="block px-4 py-2 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition">
                         • Reporte Global
                     </a>
-                </div>
-
-                <div x-show="open" x-cloak class="pl-8 space-y-1 bg-gray-50 dark:bg-gray-950/40 rounded-lg py-1">
-                    <a href="{{ route('tandas.reporte.atrasos') }}"
+                    <a href="{{ route('tandas.reporte.atrasos') }}" wire:navigate
                         class="block px-4 py-2 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition">
                         • Clientes con Atrasos
                     </a>
-                </div>
-
-                <div x-show="open" x-cloak class="pl-8 space-y-1 bg-gray-50 dark:bg-gray-950/40 rounded-lg py-1">
-                    <a href="{{ route('tandas.reporte.entregados') }}"
+                    <a href="{{ route('tandas.reporte.entregados') }}" wire:navigate
                         class="block px-4 py-2 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition">
                         • Turnos Entregados
                     </a>
+                    <a href="{{ route('tandas.tandas.abonos') }}" wire:navigate
+                        class="block px-4 py-2 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition">
+                        • Abonos de Tandas
+                    </a>
                 </div>
-
             </div>
 
         </nav>

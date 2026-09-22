@@ -13,6 +13,7 @@ class Debt extends Model
     protected $fillable = [
         'company_id',
         'client_id', 
+        'user_id',
         'type', 
         'concept', 
         'total_amount', 
@@ -22,12 +23,18 @@ class Debt extends Model
         'installments_count', 
         'status', 
         'created_at',
-        'loan_date' // <-- Reemplazado por loan_date para capturar la fecha seleccionada
+        'loan_date'
     ];
 
     public function client()
     {
         return $this->belongsTo(Client::class);
+    }
+
+    // <-- Agregamos esta relación faltante
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 
     public function payments()

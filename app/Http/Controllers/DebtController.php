@@ -56,7 +56,7 @@ class DebtController extends Controller
             'total_amount' => 'required|numeric|min:0',
             'interest_rate' => 'nullable|numeric|min:0',
             'loan_modal' => 'nullable|in:interest_only,fixed_installments',
-            'payment_frequency' => 'nullable|in:weekly,biweekly,monthly', // Frecuencia opcional o requerida según lógica de negocio
+            'payment_frequency' => 'nullable|in:weekly,biweekly,monthly',
             'installments_count' => 'required_if:loan_modal,fixed_installments|nullable|integer|min:1',
             'loan_date' => 'required_if:type,cash_loan|nullable|date',
             'created_at' => 'required|date',
@@ -65,13 +65,14 @@ class DebtController extends Controller
         $capitalInicial = $request->total_amount;
         $interesPorcentaje = $request->interest_rate ?? 0;
 
-        // Si es mercancía fiada o préstamo de "Solo Interés", la deuda principal guarda netamente el capital puro
         $totalDeuda = ($request->type === 'store_credit' || $request->loan_modal === 'interest_only')
             ? $capitalInicial
             : $capitalInicial * (1 + ($interesPorcentaje / 100));
 
+        // 1. Se guarda el user_id en la tabla principal debts
         $debt = Debt::create([
             'company_id' => auth()->user()->company_id,
+            'user_id' => auth()->user()->id, // <-- ID del usuario autenticado
             'client_id' => $request->client_id,
             'type' => $request->type,
             'concept' => $request->concept,
@@ -85,7 +86,6 @@ class DebtController extends Controller
             'created_at' => $request->type === 'cash_loan' ? $request->loan_date : $request->created_at,
         ]);
 
-        // Función auxiliar para sumar periodos limpiamente
         $avanzarFecha = function ($fecha, $frecuencia) {
             if ($frecuencia === 'weekly') {
                 return $fecha->addWeek();
@@ -96,7 +96,7 @@ class DebtController extends Controller
             }
         };
 
-        // 1. Si es modalidad "Solo Interés"
+        // 2. Si es modalidad "Solo Interés"
         if ($request->type === 'cash_loan' && $request->loan_modal === 'interest_only') {
             $montoInteresPeriodo = round($capitalInicial * ($interesPorcentaje / 100), 2);
             $fechaVencimiento = Carbon::parse($request->loan_date);
@@ -105,6 +105,7 @@ class DebtController extends Controller
 
             LoanInstallment::create([
                 'debt_id' => $debt->id,
+                'user_id' => auth()->user()->id, // Descomenta si tu tabla loan_installments tiene user_id
                 'installment_number' => 1,
                 'amount_due' => $montoInteresPeriodo,
                 'due_date' => $fechaVencimiento->toDateString(),
@@ -112,17 +113,18 @@ class DebtController extends Controller
             ]);
         }
 
-        // 2. Si es cuotas fijas
+        // 3. Si es cuotas fijas
         if ($request->type === 'cash_loan' && $request->loan_modal === 'fixed_installments' && $request->installments_count > 0) {
-            $numCuotas = $request->installments_count;
-            $montoPorCuota = round($totalDeuda / $numCuotas, 2);
+            $numIntegrantes = $request->installments_count;
+            $montoPorCuota = round($totalDeuda / $numIntegrantes, 2);
             $fechaVencimiento = Carbon::parse($request->loan_date);
 
-            for ($i = 1; $i <= $numCuotas; $i++) {
+            for ($i = 1; $i <= $numIntegrantes; $i++) {
                 $fechaVencimiento = $avanzarFecha($fechaVencimiento, $request->payment_frequency);
 
                 LoanInstallment::create([
                     'debt_id' => $debt->id,
+                    'user_id' => auth()->user()->id, // Descomenta si tu tabla loan_installments tiene user_id
                     'installment_number' => $i,
                     'amount_due' => $montoPorCuota,
                     'due_date' => $fechaVencimiento->toDateString(),
@@ -142,7 +144,7 @@ class DebtController extends Controller
             ->with('success', $mensaje);
     }
 
-    
+
 
     // Registrar un abono general (vía input manual)
     public function storePayment(Request $request, $debtId)
@@ -176,6 +178,7 @@ class DebtController extends Controller
 
         Payment::create([
             'debt_id' => $debt->id,
+            'user_id' => auth()->user()->id,
             'installment_id' => $request->installment_id,
             'amount' => $amountPaid,
             'interest_covered' => $interestCovered,
@@ -222,6 +225,7 @@ class DebtController extends Controller
         // 2. Crear el registro en la tabla payments distinguiendo capital e interés
         Payment::create([
             'debt_id' => $debtId,
+            'user_id' => auth()->user()->id,
             'installment_id' => $installmentId,
             'amount' => $installment->amount_due,
             'capital_covered' => $capitalCovered,
@@ -254,6 +258,7 @@ class DebtController extends Controller
 
             LoanInstallment::create([
                 'debt_id' => $debt->id,
+                'user_id' => auth()->user()->id,
                 'installment_number' => $siguienteNumero,
                 'amount_due' => $nuevoMontoInteres,
                 'due_date' => $fechaVencimiento->toDateString(),
@@ -301,6 +306,7 @@ class DebtController extends Controller
         // Registrar el abono directo a capital sin alterar la deuda principal original
         Payment::create([
             'debt_id' => $debtId,
+            'user_id' => auth()->user()->id,
             'installment_id' => null, // No va asociado a una cuota
             'amount' => $montoAbono,
             'capital_covered' => $montoAbono,
@@ -399,6 +405,7 @@ class DebtController extends Controller
 
                     Payment::create([
                         'debt_id' => $loan->id,
+                        'user_id' => auth()->user()->id,
                         'installment_id' => $installment->id,
                         'amount' => $installment->amount_due,
                         'capital_covered' => 0,
@@ -420,6 +427,7 @@ class DebtController extends Controller
             if ($capitalRestante > 0) {
                 Payment::create([
                     'debt_id' => $loan->id,
+                    'user_id' => auth()->user()->id,
                     'installment_id' => null, // Abono directo a capital
                     'amount' => $capitalRestante,
                     'capital_covered' => $capitalRestante,
@@ -442,6 +450,7 @@ class DebtController extends Controller
 
                     Payment::create([
                         'debt_id' => $loan->id,
+                        'user_id' => auth()->user()->id,
                         'installment_id' => $installment->id,
                         'amount' => $installment->amount_due,
                         'capital_covered' => $installment->amount_due,

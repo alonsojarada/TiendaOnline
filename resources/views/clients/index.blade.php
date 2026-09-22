@@ -55,22 +55,31 @@
                 </div>
             </div>
 
-            <!-- TABLA DE CLIENTES -->
-            <!-- TABLA DE CLIENTES CON SCROLL INDEPENDIENTE -->
-            <div class="max-h-[65vh] overflow-y-auto overflow-x-auto">
-                <table class="w-full text-left border-collapse relative">
-                    <thead class="sticky top-0 z-10">
+            <!-- TABLA DE CLIENTES CON SCROLL INDEPENDIENTE Y ALTURA FIJA (64vh) -->
+            <div class="overflow-y-auto overflow-x-auto relative rounded-b-2xl" style="max-height: 64vh;">
+                <table class="w-full text-left border-collapse">
+                    <thead class="sticky top-0 z-20 shadow-xs">
                         <tr
                             class="bg-gray-100 dark:bg-gray-900 text-xs font-black text-gray-700 dark:text-gray-300 uppercase tracking-wider border-b-2 border-gray-200 dark:border-gray-700">
-                            <th class="py-2.5 px-5 border-r border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-900">Cliente</th>
-                            <th class="py-2.5 px-5 border-r border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-900">Alias</th>
-                            <th class="py-2.5 px-5 border-r border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-900">Dirección</th>
-                            <th class="py-2.5 px-5 border-r border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-900">Teléfono</th>
-                            <th class="py-2.5 px-5 border-r border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-900">Estatus</th>
+                            <th
+                                class="py-2.5 px-5 border-r border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-900">
+                                Cliente</th>
+                            <th
+                                class="py-2.5 px-5 border-r border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-900">
+                                Alias</th>
+                            <th
+                                class="py-2.5 px-5 border-r border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-900">
+                                Dirección</th>
+                            <th
+                                class="py-2.5 px-5 border-r border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-900">
+                                Teléfono</th>
+                            <th
+                                class="py-2.5 px-5 border-r border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-900">
+                                Estatus</th>
                             <th class="py-2.5 px-5 text-right bg-gray-100 dark:bg-gray-900">Acciones</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-gray-200 dark:divide-gray-700 text-sm">
+                    <tbody class="divide-y divide-gray-200 dark:divide-gray-700 text-sm bg-white dark:bg-gray-800">
                         @forelse($clients as $client)
                             <tr class="hover:bg-gray-50/75 dark:hover:bg-gray-700/50 transition fila-cliente">
                                 <!-- Columna Cliente -->
@@ -106,11 +115,13 @@
                                 <!-- Columna Estatus -->
                                 <td class="py-1.5 px-5 border-r border-gray-100 dark:border-gray-700/50">
                                     @if($client->status === 'active')
-                                        <span class="px-2.5 py-1 inline-flex text-xs leading-4 font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300">
+                                        <span
+                                            class="px-2.5 py-1 inline-flex text-xs leading-4 font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300">
                                             Activo
                                         </span>
                                     @else
-                                        <span class="px-2.5 py-1 inline-flex text-xs leading-4 font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300">
+                                        <span
+                                            class="px-2.5 py-1 inline-flex text-xs leading-4 font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300">
                                             Suspendido
                                         </span>
                                     @endif
@@ -120,7 +131,7 @@
                                 <td class="py-1.5 px-5 text-right">
                                     <div class="inline-flex items-center justify-end gap-1.5">
                                         <button type="button"
-                                            onclick="abrirModalEditar('{{ $client->id }}', '{{ addslashes($client->name) }}', '{{ addslashes($client->alias) }}', '{{ $client->phone }}', '{{ addslashes($client->address ?? '') }}', '{{ $client->status ?? 'activo' }}')"
+                                            onclick="abrirModalEditar('{{ $client->id }}', '{{ addslashes($client->name) }}', '{{ addslashes($client->alias) }}', '{{ $client->phone }}', '{{ addslashes($client->address ?? '') }}', '{{ $client->status ?? 'active' }}')"
                                             class="px-3 py-1 bg-amber-100 hover:bg-amber-200 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300 rounded-lg text-xs font-bold transition shadow-xs">
                                             Editar
                                         </button>
@@ -134,7 +145,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="text-center py-6 text-gray-500 dark:text-gray-400 text-sm">No hay
+                                <td colspan="6" class="text-center py-12 text-gray-500 dark:text-gray-400 text-sm">No hay
                                     clientes registrados.</td>
                             </tr>
                         @endforelse
