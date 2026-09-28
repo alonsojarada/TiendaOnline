@@ -5,10 +5,8 @@
                 <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                     Reporte Global de Tandas
                 </h2>
-                <p class="text-xs text-gray-500 mt-0.5">Resumen financiero consolidado de todas las tandas activas e
-                    históricas</p>
+                <p class="text-xs text-gray-500 mt-0.5">Resumen financiero consolidado de todas las tandas activas e históricas</p>
             </div>
-
         </div>
     </x-slot>
 
@@ -16,45 +14,43 @@
     <div class="py-2">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-3">
 
-            <!-- TARJETAS DE MÉTRICAS GLOBALES (KPIs) -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+            <!-- TARJETAS DE MÉTRICAS GLOBALES (KPIs) EN HORIZONTAL (GRID DE 5 COLUMNAS) -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
                 <!-- Fondo Global Total -->
-                <div class="bg-white border border-gray-100 shadow-sm rounded-xl p-4 flex flex-col justify-between">
-                    <div class="text-xs font-bold uppercase tracking-wider text-gray-500">Fondo Global Total</div>
-                    <div class="text-xl font-black text-gray-900 my-1">${{ number_format($totalFondoGlobal, 2) }}</div>
-                    <div class="text-xs text-gray-400">Suma total de todas las tandas</div>
+                <div class="bg-white p-3 rounded-xl border border-gray-200 shadow-sm flex flex-col justify-between">
+                    <div class="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-0.5">Fondo Global Total</div>
+                    <div class="text-base font-bold text-gray-900 mb-0.5">${{ number_format($totalFondoGlobal, 2) }}</div>
+                    <div class="text-[11px] text-gray-400 truncate">Suma total de todas las tandas</div>
                 </div>
 
-                <!-- Total Recaudado (Ingresos) -->
-                <div
-                    class="bg-emerald-50 border border-emerald-200 shadow-sm rounded-xl p-4 flex flex-col justify-between">
-                    <div class="text-xs font-bold uppercase tracking-wider text-emerald-700">Total Cobrado</div>
-                    <div class="text-xl font-black text-emerald-700 my-1">${{ number_format($totalRecaudadoGlobal, 2) }}
+                <!-- Total Cobrado -->
+                <div class="bg-emerald-50/40 p-3 rounded-xl border border-emerald-100 shadow-sm flex flex-col justify-between">
+                    <div class="text-[10px] font-bold text-emerald-700 uppercase tracking-wider mb-0.5">Total Cobrado</div>
+                    <div class="text-base font-bold text-emerald-600 mb-0.5">${{ number_format($totalRecaudadoGlobal, 2) }}</div>
+                    <div class="text-[11px] text-emerald-600/80 truncate">Ingresos reales en caja</div>
+                </div>
+
+                <!-- Total Entregado -->
+                <div class="bg-blue-50/40 p-3 rounded-xl border border-blue-100 shadow-sm flex flex-col justify-between">
+                    <div class="text-[10px] font-bold text-blue-700 uppercase tracking-wider mb-0.5">Total Entregado</div>
+                    <div class="text-base font-bold text-blue-600 mb-0.5">${{ number_format($totalEntregadoGlobal, 2) }}</div>
+                    <div class="text-[11px] text-blue-600/80 truncate">Pozos entregados a participantes</div>
+                </div>
+
+                <!-- Balance / Utilidad -->
+                <div class="bg-indigo-50/40 p-3 rounded-xl border border-indigo-100 shadow-sm flex flex-col justify-between">
+                    <div class="text-[10px] font-bold text-indigo-700 uppercase tracking-wider mb-0.5">Balance / Utilidad</div>
+                    <div class="text-base font-bold {{ $balanceNeto >= 0 ? 'text-indigo-600' : 'text-rose-600' }} mb-0.5">
+                        ${{ number_format($balanceNeto, 2) }}
                     </div>
-                    <div class="text-xs text-emerald-600 font-medium">Ingresos reales en caja</div>
+                    <div class="text-[11px] text-indigo-600/80 truncate">Flujo neto acumulado</div>
                 </div>
 
-                <!-- Total Entregado (Salidas) -->
-                <div class="bg-blue-50 border border-blue-200 shadow-sm rounded-xl p-4 flex flex-col justify-between">
-                    <div class="text-xs font-bold uppercase tracking-wider text-blue-700">Total Entregado</div>
-                    <div class="text-xl font-black text-blue-700 my-1">${{ number_format($totalEntregadoGlobal, 2) }}
-                    </div>
-                    <div class="text-xs text-blue-600 font-medium">Pozos entregados a participantes</div>
-                </div>
-
-                <!-- Balance Neto -->
-                <div
-                    class="bg-indigo-50 border border-indigo-200 shadow-sm rounded-xl p-4 flex flex-col justify-between">
-                    <div class="text-xs font-bold uppercase tracking-wider text-indigo-700">Balance / Utilidad</div>
-                    <div class="text-xl font-black text-indigo-700 my-1">${{ number_format($balanceNeto, 2) }}</div>
-                    <div class="text-xs text-indigo-600 font-medium">Flujo neto acumulado</div>
-                </div>
-
-                <!-- Cartera Vencida Global -->
-                <div class="bg-red-50 border border-red-200 shadow-sm rounded-xl p-4 flex flex-col justify-between">
-                    <div class="text-xs font-bold uppercase tracking-wider text-red-700">Vencido Global</div>
-                    <div class="text-xl font-black text-red-700 my-1">${{ number_format($totalVencidoGlobal, 2) }}</div>
-                    <div class="text-xs text-red-600 font-medium">Deuda retrasada total</div>
+                <!-- Vencido Global -->
+                <div class="bg-rose-50/40 p-3 rounded-xl border border-rose-100 shadow-sm col-span-2 sm:col-span-1 flex flex-col justify-between">
+                    <div class="text-[10px] font-bold text-rose-700 uppercase tracking-wider mb-0.5">Vencido Global</div>
+                    <div class="text-base font-bold text-rose-600 mb-0.5">${{ number_format($totalVencidoGlobal, 2) }}</div>
+                    <div class="text-[11px] text-rose-600/80 truncate">Deuda retrasada total</div>
                 </div>
             </div>
 
@@ -62,8 +58,7 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-xl p-4">
 
                 <!-- Filtro de Fechas y Botones de Exportación Compactos -->
-                <div
-                    class="flex flex-col lg:flex-row justify-between items-center gap-2 mb-3 pb-2 border-b border-gray-100">
+                <div class="flex flex-col lg:flex-row justify-between items-center gap-2 mb-3 pb-2 border-b border-gray-100">
 
                     <form method="GET" action="{{ route('tandas.reporte.global') }}"
                         class="flex flex-wrap items-center gap-2 w-full justify-between">
@@ -127,8 +122,7 @@
                 <div class="bg-white shadow-sm rounded-xl border border-gray-200 overflow-hidden">
                     <table class="w-full text-left border-collapse">
                         <thead>
-                            <tr
-                                class="bg-gray-50/50 border-b border-gray-100 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                            <tr class="bg-gray-50/50 border-b border-gray-100 text-xs font-semibold text-gray-500 uppercase tracking-wider">
                                 <th class="px-4 py-3">Nombre de la Tanda</th>
                                 <th class="px-4 py-3 text-center">Estado</th>
                                 <th class="px-4 py-3 text-center">Participantes</th>
@@ -148,6 +142,9 @@
                                         return $p->turno !== 0;
                                     });
                                     $numIntegrantes = $participantesNormales->count();
+                                    if ($numIntegrantes === 0) {
+                                        $numIntegrantes = $tanda->participantes->count();
+                                    }
                                     $totalConCero = $tanda->participantes->count();
 
                                     $fondoTanda = $tanda->participantes->sum(function ($p) {
@@ -157,7 +154,7 @@
                                         return $p->cuotas->where('estado', 'pagado')->sum('monto_pagado');
                                     });
 
-                                    $cuotasPorCiclo = 4;
+                                    $cuotasPorCiclo = $tanda->cuotas_por_entrega ?? 4;
                                     $montoPozoCiclo = $cuotasPorCiclo * $tanda->monto_cuota * $numIntegrantes;
 
                                     $entregadoTanda = 0;
@@ -187,14 +184,12 @@
                                         </div>
                                     </td>
                                     <td class="px-4 py-2.5 text-center">
-                                        <span
-                                            class="px-2.5 py-0.5 text-xs font-semibold rounded-full {{ strtolower($estadoTanda) == 'activa' ? 'bg-emerald-50 text-emerald-700' : 'bg-gray-100 text-gray-600' }}">
+                                        <span class="px-2.5 py-0.5 text-xs font-semibold rounded-full {{ strtolower($estadoTanda) == 'activa' ? 'bg-emerald-50 text-emerald-700' : 'bg-gray-100 text-gray-600' }}">
                                             {{ ucfirst($estadoTanda) }}
                                         </span>
                                     </td>
                                     <td class="px-4 py-2.5 text-center font-medium text-gray-700">
-                                        {{ $numIntegrantes }} <span class="text-xs text-gray-400">({{ $totalConCero }} con
-                                            0)</span>
+                                        {{ $numIntegrantes }} <span class="text-xs text-gray-400">({{ $totalConCero }} con 0)</span>
                                     </td>
                                     <td class="px-4 py-2.5 text-center text-xs text-gray-600 font-medium">
                                         {{ $fechaInicio }}
@@ -211,8 +206,7 @@
                                     <td class="px-4 py-2.5 text-right font-medium text-blue-600">
                                         ${{ number_format($entregadoTanda, 2) }}
                                     </td>
-                                    <td
-                                        class="px-4 py-2.5 text-right font-bold {{ $utilidadTanda >= 0 ? 'text-indigo-600' : 'text-rose-600' }}">
+                                    <td class="px-4 py-2.5 text-right font-bold {{ $utilidadTanda >= 0 ? 'text-indigo-600' : 'text-rose-600' }}">
                                         ${{ number_format($utilidadTanda, 2) }}
                                     </td>
                                     <td class="px-4 py-2.5 text-center">
