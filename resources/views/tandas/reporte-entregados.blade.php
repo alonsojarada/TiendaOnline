@@ -17,39 +17,43 @@
     <div class="py-3 sm:py-4">
         <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 space-y-3">
 
-            <!-- TARJETAS DE MÉTRICAS (Forzadas a 3 columnas horizontales compactas) -->
-            <div class="grid grid-cols-3 gap-2">
+            <!-- TARJETAS RESPONSIVAS: Apiladas/Compactas en móvil (grid-cols-3 con gaps chicos) y Grandes en Escritorio (sm:grid-cols-3 con gaps normales) -->
+            <div class="grid grid-cols-3 gap-2 sm:gap-4 mb-4">
 
                 <!-- Tarjeta 1: Clientes Entregados -->
-                <div class="bg-white p-2.5 rounded-xl border border-gray-200 shadow-sm flex flex-col justify-between">
-                    <div class="text-[9px] sm:text-xs font-bold text-gray-500 uppercase tracking-wider truncate">
-                        Clientes</div>
-                    <div class="text-sm sm:text-xl font-black text-gray-900 my-0.5">
+                <div
+                    class="bg-white p-2.5 sm:p-5 rounded-xl border border-gray-200 shadow-sm flex flex-col justify-between transition-all">
+                    <div class="text-[9px] sm:text-xs font-bold text-gray-500 uppercase tracking-wider">
+                        Clientes
+                    </div>
+                    <div class="text-sm sm:text-2xl font-black text-gray-900 my-1">
                         {{ $busquedaRealizada ? $clientesEntregados->count() : 0 }}
                     </div>
-                    <div class="text-[9px] sm:text-[11px] text-gray-400 truncate">Beneficiarios</div>
+                    <div class="text-[9px] sm:text-xs text-gray-400">Beneficiarios</div>
                 </div>
 
                 <!-- Tarjeta 2: Tandas Entregadas -->
                 <div
-                    class="bg-emerald-50/50 p-2.5 rounded-xl border border-emerald-100 shadow-sm flex flex-col justify-between">
-                    <div class="text-[9px] sm:text-xs font-bold text-emerald-700 uppercase tracking-wider truncate">
-                        Tandas</div>
-                    <div class="text-sm sm:text-xl font-black text-emerald-600 my-0.5">
+                    class="bg-emerald-50/50 p-2.5 sm:p-5 rounded-xl border border-emerald-100 shadow-sm flex flex-col justify-between transition-all">
+                    <div class="text-[9px] sm:text-xs font-bold text-emerald-700 uppercase tracking-wider">
+                        Tandas
+                    </div>
+                    <div class="text-sm sm:text-2xl font-black text-emerald-600 my-1">
                         {{ $busquedaRealizada ? $clientesEntregados->sum('total_tandas') : 0 }}
                     </div>
-                    <div class="text-[9px] sm:text-[11px] text-emerald-600/80 truncate">Entregadas</div>
+                    <div class="text-[9px] sm:text-xs text-emerald-600/80">Entregadas</div>
                 </div>
 
                 <!-- Tarjeta 3: Monto Entregado -->
                 <div
-                    class="bg-indigo-50/50 p-2.5 rounded-xl border border-indigo-100 shadow-sm flex flex-col justify-between">
-                    <div class="text-[9px] sm:text-xs font-bold text-indigo-700 uppercase tracking-wider truncate">Monto
+                    class="bg-indigo-50/50 p-2.5 sm:p-5 rounded-xl border border-indigo-100 shadow-sm flex flex-col justify-between transition-all">
+                    <div class="text-[9px] sm:text-xs font-bold text-indigo-700 uppercase tracking-wider">
+                        Monto
                     </div>
-                    <div class="text-xs sm:text-lg font-black text-indigo-600 my-0.5 truncate">
+                    <div class="text-xs sm:text-2xl font-black text-indigo-600 my-1 truncate">
                         ${{ $busquedaRealizada ? number_format($clientesEntregados->sum('monto_entregado'), 2) : '0.00' }}
                     </div>
-                    <div class="text-[9px] sm:text-[11px] text-indigo-600/80 truncate">Total pagado</div>
+                    <div class="text-[9px] sm:text-xs text-indigo-600/80">Total pagado</div>
                 </div>
 
             </div>
