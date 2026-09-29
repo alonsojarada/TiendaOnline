@@ -23,26 +23,27 @@
 <body class="font-sans antialiased">
     <div class="min-h-screen bg-gray-100 dark:bg-gray-900 flex">
 
-        <!-- 1. Fondo oscuro translúcido (Overlay) -->
+        <!-- 1. Fondo oscuro translúcido (Overlay): Se oculta a partir de pantallas lg: en adelante -->
         <div id="menu-overlay"
-            class="fixed inset-0 bg-black/50 z-40 invisible opacity-0 transition-opacity duration-300 md:hidden"></div>
+            class="fixed inset-0 bg-black/50 z-40 invisible opacity-0 transition-opacity duration-300 lg:hidden"></div>
 
-        <!-- 2. Sidebar -->
+        <!-- 2. Sidebar: Fijo y abierto por defecto solo en lg: en adelante -->
         <div id="side-menu"
-            class="fixed inset-y-0 left-0 z-50 transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out">
+            class="fixed inset-y-0 left-0 z-50 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out">
             @include('layouts.sidebar')
         </div>
 
-        <!-- 3. Contenido Principal -->
-        <div class="flex-1 flex flex-col min-w-0 md:pl-64 transition-all duration-300">
+        <!-- 3. Contenido Principal: Margen izquierdo adaptado a lg: -->
+        <div class="flex-1 flex flex-col min-w-0 lg:pl-64 transition-all duration-300">
 
             <!-- 4. BARRA SUPERIOR FIJA -->
-            <header class="fixed top-0 right-0 left-0 md:left-64 z-30 bg-white dark:bg-gray-800 shadow-sm">
+            <header class="fixed top-0 right-0 left-0 lg:left-64 z-30 bg-white dark:bg-gray-800 shadow-sm">
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
 
                     <div class="flex items-center space-x-3 w-full">
+                        <!-- Botón de hamburguesa visible en pantallas chicas y medianas, se oculta en lg: -->
                         <button id="menu-btn"
-                            class="p-2 rounded-md text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none md:hidden shrink-0">
+                            class="p-2 rounded-md text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none lg:hidden shrink-0">
                             <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2"
                                 fill="none">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M3 12h18M3 6h18M3 18h18"></path>
@@ -60,7 +61,7 @@
             </header>
 
             <!-- 5. Page Content -->
-            <main class="flex-1 p-6 pt-20 md:pt-24">
+            <main class="flex-1 p-6 pt-20 lg:pt-24">
                 {{ $slot }}
             </main>
         </div>
