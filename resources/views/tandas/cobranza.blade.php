@@ -65,10 +65,10 @@
             this.modalOpen = true;
         }
     }">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 px-3">
 
-            <!-- TARJETAS SUPERIORES -->
-            <div class="flex flex-wrap items-center gap-3 mb-4">
+            <!-- TARJETAS SUPERIORES RESPONSIVAS -->
+            <div class="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-3 mb-4">
                 <!-- Total Vencido -->
                 <div class="relative w-full sm:w-52 bg-red-50 border border-red-200 overflow-hidden shadow-sm sm:rounded-lg px-3 py-2 pr-9 flex flex-col justify-between">
                     <div class="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 bg-red-100 rounded-lg text-red-600 flex items-center justify-center pointer-events-none">
@@ -77,11 +77,11 @@
                         </svg>
                     </div>
                     <div>
-                        <div class="text-[11px] font-bold uppercase tracking-wider text-red-700">Total Vencido</div>
-                        <div class="text-xl font-black text-red-700 leading-none my-1">
+                        <div class="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-red-700">Total Vencido</div>
+                        <div class="text-lg sm:text-xl font-black text-red-700 leading-none my-1">
                             ${{ number_format($cuotasVencidas->sum('total_pendiente'), 2) }}
                         </div>
-                        <div class="text-xs text-red-600 font-bold">
+                        <div class="text-[11px] sm:text-xs text-red-600 font-bold">
                             {{ $cuotasVencidas->sum('cantidad_atrasadas') }} cuotas atrasadas
                         </div>
                     </div>
@@ -95,11 +95,11 @@
                         </svg>
                     </div>
                     <div>
-                        <div class="text-[11px] font-bold uppercase tracking-wider text-amber-700">Vencen Esta Semana</div>
-                        <div class="text-xl font-black text-amber-700 leading-none my-1">
+                        <div class="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-amber-700">Vencen Esta Semana</div>
+                        <div class="text-lg sm:text-xl font-black text-amber-700 leading-none my-1">
                             ${{ number_format($cuotasEstaSemana->sum('total_pendiente'), 2) }}
                         </div>
-                        <div class="text-xs text-amber-700 font-bold">
+                        <div class="text-[11px] sm:text-xs text-amber-700 font-bold">
                             {{ $cuotasEstaSemana->sum('cantidad_proximas') }} cuotas próximas
                         </div>
                     </div>
@@ -107,11 +107,11 @@
             </div>
 
             <!-- CONTENEDOR DE LA TABLA, BUSCADOR Y BOTONES -->
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-4">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-3 sm:p-4">
                 
-                <!-- ACCESOS SUPERIORES -->
-                <div class="flex flex-col sm:flex-row justify-between items-center gap-3 mb-3">
-                    <!-- Buscador Reducido -->
+                <!-- ACCESOS SUPERIORES RESPONSIVOS -->
+                <div class="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3 mb-3">
+                    <!-- Buscador Adaptable -->
                     <div class="w-full sm:w-80">
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
@@ -124,15 +124,15 @@
                         </div>
                     </div>
 
-                    <!-- Botones de Exportar -->
-                    <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
-                        <a href="#" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-semibold shadow-sm transition">
+                    <!-- Botones de Exportar Adaptables (Ocupan 50% cada uno en móvil y flex normal en escritorio) -->
+                    <div class="grid grid-cols-2 sm:flex sm:items-center gap-2 w-full sm:w-auto">
+                        <a href="#" class="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-semibold shadow-sm transition">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                             </svg>
                             Excel
                         </a>
-                        <a href="#" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white rounded-lg text-xs font-semibold shadow-sm transition">
+                        <a href="#" class="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white rounded-lg text-xs font-semibold shadow-sm transition">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                             </svg>
@@ -145,39 +145,39 @@
                     <table class="min-w-full divide-y divide-gray-200 text-sm">
                         <thead class="bg-gray-50 text-xs font-semibold text-gray-500 uppercase tracking-wider sticky top-0 z-10 shadow-sm">
                             <tr>
-                                <th @click="ordenarPor('nombre')" class="px-4 py-2.5 text-left bg-gray-50 cursor-pointer hover:bg-gray-100 transition">
+                                <th @click="ordenarPor('nombre')" class="px-3 sm:px-4 py-2.5 text-left bg-gray-50 cursor-pointer hover:bg-gray-100 transition">
                                     <div class="flex items-center gap-1">
                                         Participante
                                         <span x-show="ordenColumna === 'nombre'" x-text="ordenDireccion === 'asc' ? '▲' : '▼'" class="text-[10px] text-indigo-600"></span>
                                     </div>
                                 </th>
-                                <th @click="ordenarPor('origen')" class="px-4 py-2.5 text-left bg-gray-50 cursor-pointer hover:bg-gray-100 transition">
+                                <th @click="ordenarPor('origen')" class="hidden sm:table-cell px-4 py-2.5 text-left bg-gray-50 cursor-pointer hover:bg-gray-100 transition">
                                     <div class="flex items-center gap-1">
                                         Origen
                                         <span x-show="ordenColumna === 'origen'" x-text="ordenDireccion === 'asc' ? '▲' : '▼'" class="text-[10px] text-indigo-600"></span>
                                     </div>
                                 </th>
-                                <th @click="ordenarPor('tanda')" class="px-4 py-2.5 text-left bg-gray-50 cursor-pointer hover:bg-gray-100 transition">
+                                <th @click="ordenarPor('tanda')" class="px-3 sm:px-4 py-2.5 text-left bg-gray-50 cursor-pointer hover:bg-gray-100 transition">
                                     <div class="flex items-center gap-1">
                                         Tanda
                                         <span x-show="ordenColumna === 'tanda'" x-text="ordenDireccion === 'asc' ? '▲' : '▼'" class="text-[10px] text-indigo-600"></span>
                                     </div>
                                 </th>
-                                <th class="px-4 py-2.5 text-center bg-gray-50">Turno</th>
-                                <th class="px-4 py-2.5 text-center bg-gray-50">Estado / Cuotas</th>
-                                <th @click="ordenarPor('fecha')" class="px-4 py-2.5 text-center bg-gray-50 cursor-pointer hover:bg-gray-100 transition">
+                                <th class="hidden sm:table-cell px-4 py-2.5 text-center bg-gray-50">Turno</th>
+                                <th class="hidden sm:table-cell px-4 py-2.5 text-center bg-gray-50">Estado / Cuotas</th>
+                                <th @click="ordenarPor('fecha')" class="hidden sm:table-cell px-4 py-2.5 text-center bg-gray-50 cursor-pointer hover:bg-gray-100 transition">
                                     <div class="flex items-center justify-center gap-1">
                                         Fecha Límite
                                         <span x-show="ordenColumna === 'fecha'" x-text="ordenDireccion === 'asc' ? '▲' : '▼'" class="text-[10px] text-indigo-600"></span>
                                     </div>
                                 </th>
-                                <th @click="ordenarPor('pendiente')" class="px-4 py-2.5 text-right bg-gray-50 cursor-pointer hover:bg-gray-100 transition">
+                                <th @click="ordenarPor('pendiente')" class="px-3 sm:px-4 py-2.5 text-right bg-gray-50 cursor-pointer hover:bg-gray-100 transition">
                                     <div class="flex items-center justify-end gap-1">
                                         Pendiente Total
                                         <span x-show="ordenColumna === 'pendiente'" x-text="ordenDireccion === 'asc' ? '▲' : '▼'" class="text-[10px] text-indigo-600"></span>
                                     </div>
                                 </th>
-                                <th class="px-4 py-2.5 text-center bg-gray-50">Acciones</th>
+                                <th class="px-3 sm:px-4 py-2.5 text-center bg-gray-50">Acciones</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-100 bg-white" x-ref="tablaCuerpo">
@@ -219,21 +219,21 @@
                                         {{ json_encode(strtolower($nombreCliente)) }}.includes(filtroGeneral.toLowerCase()) || 
                                         {{ json_encode(strtolower($origenCliente)) }}.includes(filtroGeneral.toLowerCase())">
                                     
-                                    <td class="px-4 py-2 whitespace-nowrap">
-                                        <div class="font-bold text-gray-900 text-sm leading-tight">{{ $nombreCliente }}</div>
+                                    <td class="px-3 sm:px-4 py-2 whitespace-nowrap">
+                                        <div class="font-bold text-gray-900 text-xs sm:text-sm leading-tight">{{ $nombreCliente }}</div>
                                     </td>
-                                    <td class="px-4 py-2 whitespace-nowrap">
+                                    <td class="hidden sm:table-cell px-4 py-2 whitespace-nowrap">
                                         <div class="text-xs text-gray-600 font-medium">{{ $origenCliente }}</div>
                                     </td>
-                                    <td class="px-4 py-2 whitespace-nowrap">
-                                        <div class="text-sm text-indigo-600 font-semibold leading-tight">{{ $nombreTanda }}</div>
+                                    <td class="px-3 sm:px-4 py-2 whitespace-nowrap">
+                                        <div class="text-xs sm:text-sm text-indigo-600 font-semibold leading-tight">{{ $nombreTanda }}</div>
                                     </td>
-                                    <td class="px-4 py-2 whitespace-nowrap text-center">
+                                    <td class="hidden sm:table-cell px-4 py-2 whitespace-nowrap text-center">
                                         <span class="px-2 py-0.5 bg-gray-100 text-gray-700 rounded text-xs font-medium">
                                             Turno {{ $cuota->participante->turno ?? 'N/A' }}
                                         </span>
                                     </td>
-                                    <td class="px-4 py-2 whitespace-nowrap text-center">
+                                    <td class="hidden sm:table-cell px-4 py-2 whitespace-nowrap text-center">
                                         @if($esVencida)
                                             <span class="px-2 py-0.5 text-xs font-bold bg-red-100 text-red-700 rounded-full inline-block">
                                                 {{ $textoEstadoCuotas }}
@@ -244,37 +244,37 @@
                                             </span>
                                         @endif
                                     </td>
-                                    <td class="px-4 py-2 whitespace-nowrap text-center {{ $esVencida ? 'text-red-600' : 'text-amber-700' }} font-bold text-sm">
+                                    <td class="hidden sm:table-cell px-4 py-2 whitespace-nowrap text-center {{ $esVencida ? 'text-red-600' : 'text-amber-700' }} font-bold text-sm">
                                         {{ $fechaFormateada }}
                                     </td>
-                                    <td class="px-4 py-2 whitespace-nowrap text-right font-black {{ $esVencida ? 'text-red-600' : 'text-amber-700' }} text-base">
+                                    <td class="px-3 sm:px-4 py-2 whitespace-nowrap text-right font-black {{ $esVencida ? 'text-red-600' : 'text-amber-700' }} text-sm sm:text-base">
                                         ${{ number_format($totalPendiente, 2) }}
                                     </td>
 
-                                    <!-- ACCIONES CON NUEVO DISEÑO MEJORADO -->
-                                    <td class="px-4 py-2 whitespace-nowrap text-center">
+                                    <!-- ACCESOS CON NUEVO DISEÑO MEJORADO -->
+                                    <td class="px-3 sm:px-4 py-2 whitespace-nowrap text-center">
                                         <div class="flex items-center justify-center gap-1.5">
                                             
-                                            <!-- Botón Pagar (Estilo Esmeralda Limpio) -->
+                                            <!-- Botón Pagar -->
                                             <button @click="abrir({{ json_encode($participanteId) }}, {{ json_encode($nombreCliente) }}, {{ json_encode($nombreTanda) }}, {{ json_encode($cantidadCuotas) }}, {{ json_encode($valorUnitarioCuota) }})"
                                                 title="Registrar Pago de Cuotas"
-                                                class="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 hover:bg-emerald-600 text-emerald-700 hover:text-white border border-emerald-200 rounded-lg text-xs font-bold transition-all shadow-xs">
+                                                class="inline-flex items-center gap-1 px-2.5 sm:px-3 py-1 bg-emerald-50 hover:bg-emerald-600 text-emerald-700 hover:text-white border border-emerald-200 rounded-lg text-xs font-bold transition-all shadow-xs">
                                                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                                 </svg>
                                                 Pagar
                                             </button>
 
-                                            <!-- Botón Ir al Detalle con el parámetro de origen -->
-<a href="{{ route('tandas.participante.cuotas', ['tanda' => $tandaId, 'participante' => $participanteId]) }}?origen=cobranza"
-    title="Ir al detalle del participante"
-    class="inline-flex items-center gap-1.5 px-3 py-1 bg-gray-50 hover:bg-indigo-600 text-gray-700 hover:text-white border border-gray-200 hover:border-indigo-600 rounded-lg text-xs font-bold transition-all shadow-xs">
-    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-    </svg>
-    Ver detalle
-</a>
+                                            <!-- Botón Ir al Detalle -->
+                                            <a href="{{ route('tandas.participante.cuotas', ['tanda' => $tandaId, 'participante' => $participanteId]) }}?origen=cobranza"
+                                                title="Ir al detalle del participante"
+                                                class="inline-flex items-center gap-1 px-2.5 sm:px-3 py-1 bg-gray-50 hover:bg-indigo-600 text-gray-700 hover:text-white border border-gray-200 hover:border-indigo-600 rounded-lg text-xs font-bold transition-all shadow-xs">
+                                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                                </svg>
+                                                <span class="hidden sm:inline">Ver detalle</span>
+                                            </a>
 
                                         </div>
                                     </td>

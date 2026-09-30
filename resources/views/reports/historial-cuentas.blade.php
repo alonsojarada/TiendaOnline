@@ -2,7 +2,7 @@
     <x-slot name="header">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight text-left">
-                Historial General de Cuentas y Préstamos
+                Historial de Cuentas y Préstamos
             </h2>
             <p class="text-xs text-gray-500 dark:text-gray-400">Vista rápida de saldos pendientes, mercancía fiada y
                 control de cobros.</p>

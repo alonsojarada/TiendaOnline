@@ -5,8 +5,8 @@
         </h2>
     </x-slot>
 
-    <div class="py-2">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+    <div class="py-2 sm:py-4">
+        <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
 
             @php
                 // INICIALIZACIÓN DE ACUMULADORES GLOBALES
@@ -46,72 +46,81 @@
             @endphp
 
             <!-- CONTENEDOR DE LA TABLA Y TARJETAS -->
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-4 text-gray-900">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-2.5 sm:p-4 text-gray-900">
                 
-                <!-- TARJETAS GLOBALES EN HORIZONTAL (GRID DE 5 COLUMNAS) CON TÍTULOS ORIGINALES -->
-                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-4">
+                <!-- TARJETAS GLOBALES -->
+                <div class="grid grid-cols-3 lg:grid-cols-5 gap-2 mb-3">
+                    
                     <!-- Fondo Global Total -->
-                    <div class="bg-white p-3 rounded-xl border border-gray-200 shadow-sm">
-                        <div class="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-0.5">Fondo Global Total</div>
-                        <div class="text-base font-bold text-gray-900 mb-0.5">${{ number_format($fondoGlobalTotal, 2) }}</div>
-                        <div class="text-[11px] text-gray-400 truncate">Suma total de todas las tandas</div>
+                    <div class="bg-white p-2.5 sm:p-3 rounded-xl border border-gray-200 shadow-sm flex flex-col justify-between">
+                        <div class="text-[9px] sm:text-[10px] font-bold text-gray-500 uppercase tracking-wider truncate">Fondo Global</div>
+                        <div class="text-xs sm:text-base font-bold text-gray-900 my-0.5">${{ number_format($fondoGlobalTotal, 2) }}</div>
+                        <div class="hidden sm:block text-[11px] text-gray-400 truncate">Suma total de tandas</div>
                     </div>
 
                     <!-- Total Cobrado -->
-                    <div class="bg-emerald-50/40 p-3 rounded-xl border border-emerald-100 shadow-sm">
-                        <div class="text-[10px] font-bold text-emerald-700 uppercase tracking-wider mb-0.5">Total Cobrado</div>
-                        <div class="text-base font-bold text-emerald-600 mb-0.5">${{ number_format($totalCobradoGlobal, 2) }}</div>
-                        <div class="text-[11px] text-emerald-600/80 truncate">Ingresos reales en caja</div>
+                    <div class="bg-emerald-50/40 p-2.5 sm:p-3 rounded-xl border border-emerald-100 shadow-sm flex flex-col justify-between">
+                        <div class="text-[9px] sm:text-[10px] font-bold text-emerald-700 uppercase tracking-wider truncate">Cobrado</div>
+                        <div class="text-xs sm:text-base font-bold text-emerald-600 my-0.5">${{ number_format($totalCobradoGlobal, 2) }}</div>
+                        <div class="hidden sm:block text-[11px] text-emerald-600/80 truncate">Ingresos reales en caja</div>
                     </div>
 
                     <!-- Total Entregado -->
-                    <div class="bg-blue-50/40 p-3 rounded-xl border border-blue-100 shadow-sm">
-                        <div class="text-[10px] font-bold text-blue-700 uppercase tracking-wider mb-0.5">Total Entregado</div>
-                        <div class="text-base font-bold text-blue-600 mb-0.5">${{ number_format($totalEntregadoGlobal, 2) }}</div>
-                        <div class="text-[11px] text-blue-600/80 truncate">Pozos entregados a participantes</div>
+                    <div class="bg-blue-50/40 p-2.5 sm:p-3 rounded-xl border border-blue-100 shadow-sm flex flex-col justify-between">
+                        <div class="text-[9px] sm:text-[10px] font-bold text-blue-700 uppercase tracking-wider truncate">Entregado</div>
+                        <div class="text-xs sm:text-base font-bold text-blue-600 my-0.5">${{ number_format($totalEntregadoGlobal, 2) }}</div>
+                        <div class="hidden sm:block text-[11px] text-blue-600/80 truncate">Pozos entregados</div>
                     </div>
 
-                    <!-- Balance / Utilidad -->
-                    <div class="bg-indigo-50/40 p-3 rounded-xl border border-indigo-100 shadow-sm">
-                        <div class="text-[10px] font-bold text-indigo-700 uppercase tracking-wider mb-0.5">Balance / Utilidad</div>
-                        <div class="text-base font-bold {{ $balanceGlobal >= 0 ? 'text-indigo-600' : 'text-rose-600' }} mb-0.5">
-                            ${{ number_format($balanceGlobal, 2) }}
+                    <!-- CONTENEDOR INFERIOR PARA MÓVIL (Balance y Vencido Global) -->
+                    <div class="col-span-3 lg:col-span-2 grid grid-cols-2 gap-2">
+                        <!-- Balance / Utilidad -->
+                        <div class="bg-indigo-50/40 p-2.5 sm:p-3 rounded-xl border border-indigo-100 shadow-sm flex flex-col justify-between">
+                            <div class="text-[9px] sm:text-[10px] font-bold text-indigo-700 uppercase tracking-wider truncate">Balance</div>
+                            <div class="text-xs sm:text-base font-bold {{ $balanceGlobal >= 0 ? 'text-indigo-600' : 'text-rose-600' }} my-0.5">
+                                ${{ number_format($balanceGlobal, 2) }}
+                            </div>
+                            <div class="hidden sm:block text-[11px] text-indigo-600/80 truncate">Flujo neto acumulado</div>
                         </div>
-                        <div class="text-[11px] text-indigo-600/80 truncate">Flujo neto acumulado</div>
-                    </div>
 
-                    <!-- Vencido Global -->
-                    <div class="bg-rose-50/40 p-3 rounded-xl border border-rose-100 shadow-sm col-span-2 sm:col-span-1">
-                        <div class="text-[10px] font-bold text-rose-700 uppercase tracking-wider mb-0.5">Vencido Global</div>
-                        <div class="text-base font-bold text-rose-600 mb-0.5">${{ number_format($vencidoGlobalTotal, 2) }}</div>
-                        <div class="text-[11px] text-rose-600/80 truncate">Deuda retrasada total</div>
+                        <!-- Vencido Global -->
+                        <div class="bg-rose-50/40 p-2.5 sm:p-3 rounded-xl border border-rose-100 shadow-sm flex flex-col justify-between">
+                            <div class="text-[9px] sm:text-[10px] font-bold text-rose-700 uppercase tracking-wider truncate">Vencido Global</div>
+                            <div class="text-xs sm:text-base font-bold text-rose-600 my-0.5">${{ number_format($vencidoGlobalTotal, 2) }}</div>
+                            <div class="hidden sm:block text-[11px] text-rose-600/80 truncate">Deuda retrasada total</div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="flex justify-between items-center mb-3">
-                    <h3 class="text-sm font-semibold text-gray-700 uppercase tracking-wider">Tandas Registradas</h3>
+                <!-- ENCABEZADO DE TABLA Y BOTÓN RESPONSIVO -->
+                <div class="flex flex-row justify-between items-center gap-2 mb-3 bg-gray-50/50 p-2 sm:p-0 rounded-lg">
+                    <h3 class="text-xs sm:text-sm font-bold text-gray-700 uppercase tracking-wider truncate">
+                        Tandas Registradas
+                    </h3>
                     <a href="{{ route('tandas.create') }}"
-                        class="inline-flex items-center px-3.5 py-1.5 bg-indigo-600 border border-transparent rounded-xl font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 transition shadow-sm">
-                        Crear Nueva Tanda
+                        class="inline-flex justify-center items-center px-3 py-1.5 sm:px-3.5 sm:py-1.5 bg-indigo-600 border border-transparent rounded-xl font-semibold text-[11px] sm:text-xs text-white uppercase tracking-widest hover:bg-indigo-700 transition shadow-sm whitespace-nowrap">
+                        <span class="sm:hidden">+ Nueva</span>
+                        <span class="hidden sm:inline">Crear Nueva Tanda</span>
                     </a>
                 </div>
 
-                <div class="overflow-x-auto overflow-y-auto max-h-[calc(100vh-240px)]">
-                    <table class="min-w-full divide-y divide-gray-200 relative">
+                <!-- CONTENEDOR DE TABLA ADAPTATIVO -->
+                <div class="overflow-x-auto overflow-y-auto max-h-[calc(100vh-260px)] rounded-lg border border-gray-100">
+                    <table class="min-w-full divide-y divide-gray-200 relative text-xs sm:text-sm">
                         <thead class="bg-gray-50 sticky top-0 z-10">
-                            <tr class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                                <th class="px-4 py-2.5 bg-gray-50">Nombre</th>
-                                <th class="px-4 py-2.5 bg-gray-50 text-right">Monto Entrega</th>
-                                <th class="px-4 py-2.5 bg-gray-50">Cuota</th>
-                                <th class="px-4 py-2.5 bg-gray-50">Frecuencia</th>
-                                <th class="px-4 py-2.5 bg-gray-50 text-center">Cuotas atrasadas</th>
-                                <th class="px-4 py-2.5 bg-gray-50 text-center">Integrantes</th>
-                                <th class="px-4 py-2.5 bg-gray-50 text-center">Duración</th>
-                                <th class="px-4 py-2.5 bg-gray-50 text-center">Cobranza</th>
-                                <th class="px-4 py-2.5 bg-gray-50 text-center">Estado</th>
+                            <tr class="text-left font-semibold text-gray-500 uppercase tracking-wider">
+                                <th class="px-3 sm:px-4 py-2.5 bg-gray-50">Nombre</th>
+                                <th class="px-3 sm:px-4 py-2.5 bg-gray-50 text-right">Monto Entrega</th>
+                                <th class="px-3 sm:px-4 py-2.5 bg-gray-50">Cuota</th>
+                                <th class="hidden sm:table-cell px-3 sm:px-4 py-2.5 bg-gray-50">Frecuencia</th>
+                                <th class="hidden md:table-cell px-3 sm:px-4 py-2.5 bg-gray-50 text-center">Cuotas atrasadas</th>
+                                <th class="px-3 sm:px-4 py-2.5 bg-gray-50 text-center">#Ctes.</th>
+                                <th class="hidden md:table-cell px-3 sm:px-4 py-2.5 bg-gray-50 text-center">Duración</th>
+                                <th class="px-3 sm:px-4 py-2.5 bg-gray-50 text-center">Cobranza</th>
+                                <th class="hidden sm:table-cell px-3 sm:px-4 py-2.5 bg-gray-50 text-center">Estado</th>
                             </tr>
                         </thead>
-                        <tbody class="bg-white divide-y divide-gray-100 text-sm">
+                        <tbody class="bg-white divide-y divide-gray-100">
                             @forelse($tandas as $tanda)
                                 @php
                                     $integrantesSinCero = $tanda->participantes->where('turno', '!=', 0)->count();
@@ -146,61 +155,61 @@
                                 <tr onclick="window.location.href='{{ route('tandas.show', $tanda->id) }}?origen=index'"
                                     class="hover:bg-gray-50/75 transition-colors cursor-pointer">
 
-                                    <td class="px-4 py-2.5 whitespace-nowrap">
+                                    <td class="px-3 sm:px-4 py-2.5 whitespace-nowrap">
                                         <span class="text-indigo-600 hover:text-indigo-900 font-semibold">
                                             {{ $tanda->nombre }}
                                         </span>
                                     </td>
 
-                                    <td class="px-4 py-2.5 whitespace-nowrap text-right font-bold text-emerald-600">
+                                    <td class="px-3 sm:px-4 py-2.5 whitespace-nowrap text-right font-bold text-emerald-600">
                                         ${{ number_format($totalRecibir, 2) }}
                                     </td>
 
-                                    <td class="px-4 py-2.5 whitespace-nowrap font-medium text-gray-700">
+                                    <td class="px-3 sm:px-4 py-2.5 whitespace-nowrap font-medium text-gray-700">
                                         ${{ number_format($tanda->monto_cuota, 2) }}
                                     </td>
 
-                                    <td class="px-4 py-2.5 whitespace-nowrap capitalize text-gray-600">
+                                    <td class="hidden sm:table-cell px-3 sm:px-4 py-2.5 whitespace-nowrap capitalize text-gray-600">
                                         {{ $tanda->frecuencia }}
                                     </td>
 
-                                    <td class="px-4 py-2.5 whitespace-nowrap text-center">
+                                    <td class="hidden md:table-cell px-3 sm:px-4 py-2.5 whitespace-nowrap text-center">
                                         @if($cuotasAtrasadasTotal > 0)
-                                            <span class="px-2.5 py-1 text-xs font-bold bg-red-100 text-red-700 rounded-full inline-flex items-center gap-1">
+                                            <span class="px-2 py-0.5 sm:px-2.5 sm:py-1 text-[11px] sm:text-xs font-bold bg-red-100 text-red-700 rounded-full inline-flex items-center gap-1">
                                                 <span>{{ $cuotasAtrasadasTotal }}</span>
                                                 <span class="text-red-400 font-normal">/</span>
                                                 <span>${{ number_format($montoRetrasadoTotal, 2) }}</span>
                                             </span>
                                         @else
-                                            <span class="px-2.5 py-1 text-xs font-bold bg-green-50 text-green-700 rounded-full">
+                                            <span class="px-2 py-0.5 sm:px-2.5 sm:py-1 text-[11px] sm:text-xs font-bold bg-green-50 text-green-700 rounded-full">
                                                 0 / $0.00
                                             </span>
                                         @endif
                                     </td>
 
-                                    <td class="px-4 py-2.5 whitespace-nowrap text-center">
-                                        <span class="px-2.5 py-1 text-xs font-bold bg-indigo-50 text-indigo-700 rounded-full">
+                                    <td class="px-3 sm:px-4 py-2.5 whitespace-nowrap text-center">
+                                        <span class="px-2 py-0.5 sm:px-2.5 sm:py-1 text-[11px] sm:text-xs font-bold bg-indigo-50 text-indigo-700 rounded-full">
                                             {{ $integrantesSinCero }}
                                         </span>
                                     </td>
 
-                                    <td class="px-4 py-2.5 whitespace-nowrap text-center text-xs text-gray-600">
+                                    <td class="hidden md:table-cell px-3 sm:px-4 py-2.5 whitespace-nowrap text-center text-[11px] sm:text-xs text-gray-600">
                                         {{ $primeraCuotaFecha ? \Carbon\Carbon::parse($primeraCuotaFecha)->format('d/m/Y') : 'N/A' }}
-                                        <span class="text-gray-400 mx-1">-</span>
+                                        <span class="text-gray-400 mx-0.5">-</span>
                                         {{ $ultimaCuotaFecha ? \Carbon\Carbon::parse($ultimaCuotaFecha)->format('d/m/Y') : 'N/A' }}
                                     </td>
 
-                                    <td class="px-4 py-2.5 whitespace-nowrap text-center">
-                                        <div class="flex items-center justify-center space-x-2">
-                                            <div class="w-24 bg-gray-200 rounded-full h-2 overflow-hidden">
-                                                <div class="bg-indigo-600 h-2 rounded-full" style="width: {{ $progresoCobranza }}%"></div>
+                                    <td class="px-3 sm:px-4 py-2.5 whitespace-nowrap text-center">
+                                        <div class="flex items-center justify-center space-x-1.5 sm:space-x-2">
+                                            <div class="w-16 sm:w-24 bg-gray-200 rounded-full h-1.5 sm:h-2 overflow-hidden">
+                                                <div class="bg-indigo-600 h-1.5 sm:h-2 rounded-full" style="width: {{ $progresoCobranza }}%"></div>
                                             </div>
-                                            <span class="text-xs font-semibold text-gray-700">{{ $progresoCobranza }}%</span>
+                                            <span class="text-[11px] sm:text-xs font-semibold text-gray-700">{{ $progresoCobranza }}%</span>
                                         </div>
                                     </td>
 
-                                    <td class="px-4 py-2.5 whitespace-nowrap text-center">
-                                        <span class="px-2.5 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-emerald-100 text-emerald-800 capitalize">
+                                    <td class="hidden sm:table-cell px-3 sm:px-4 py-2.5 whitespace-nowrap text-center">
+                                        <span class="px-2.5 py-0.5 sm:py-1 inline-flex text-[11px] sm:text-xs leading-5 font-semibold rounded-full bg-emerald-100 text-emerald-800 capitalize">
                                             {{ $tanda->estado }}
                                         </span>
                                     </td>
