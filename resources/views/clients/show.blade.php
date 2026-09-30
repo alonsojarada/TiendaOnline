@@ -13,7 +13,7 @@
         </div>
     </x-slot>
 
-    <div class="py-3 sm:py-4">
+    <div class="py-1.5 sm:py-2">
         <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
 
             @if (session('success'))
@@ -24,60 +24,59 @@
             @endif
 
             <!-- ================= SECCIÓN SUPERIOR ================= -->
-            <div class="bg-white dark:bg-gray-800 p-3 sm:p-4 rounded-xl shadow-xs border border-gray-100 dark:border-gray-700 mb-4 space-y-3">
+            <div class="bg-white dark:bg-gray-800 p-2 sm:p-3.5 rounded-xl shadow-xs border border-gray-100 dark:border-gray-700 mb-3 space-y-2">
                 
                 <!-- DATOS DE CONTACTO -->
-                <div class="flex flex-wrap justify-between items-center text-[11px] sm:text-xs text-gray-500 pb-2 border-b border-gray-100 dark:border-gray-700/60">
+                <div class="flex flex-wrap justify-between items-center text-[11px] sm:text-xs text-gray-500 pb-1.5 border-b border-gray-100 dark:border-gray-700/60">
                     <div>📞 <strong class="text-gray-800 dark:text-gray-200">{{ $client->phone ?? 'N/A' }}</strong></div>
                     <div class="truncate max-w-[220px]">📍 <strong class="text-gray-800 dark:text-gray-200">{{ $client->address ?? 'N/A' }}</strong></div>
                 </div>
 
-                <!-- 
-                  EN MÓVIL: Se organiza en un grid de 2 columnas para las tarjetas principales, 
-                  y el resto abarca el ancho completo formando exactamente 2 filas compactas.
-                  EN MD+: Se convierte en un flex row (todo en una sola línea horizontal).
-                -->
-                <div class="flex flex-col md:flex-row items-stretch gap-2.5">
+                <!-- CONTENEDOR PRINCIPAL SUPERIOR: flex en medianas para poner tarjetas y botones alineados sin estirarlos -->
+                <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-2">
                     
-                    <!-- Contenedor superior en móvil (Mercancía y Préstamos lado a lado) -->
-                    <div class="grid grid-cols-2 md:flex md:flex-1 gap-2.5 contents-mobile">
+                    <!-- BLOQUE DE TARJETAS (Ocupa el espacio flexible principal) -->
+                    <div class="grid grid-cols-3 gap-1.5 sm:gap-2 flex-1">
+                        
                         <!-- Tarjeta Mercancía -->
-                        <div class="flex-1 bg-gray-50 dark:bg-gray-900/40 p-2 sm:p-3 rounded-xl border border-gray-100 dark:border-gray-700/60">
-                            <span class="text-[9px] sm:text-[10px] font-black text-indigo-600 dark:text-indigo-400 uppercase tracking-wider block mb-0.5">Mercancía</span>
-                            <div class="text-xs sm:text-base md:text-lg font-black text-gray-900 dark:text-white">${{ number_format($totalMercanciaRestante, 2) }}</div>
-                            <div class="text-[9px] sm:text-[10px] text-gray-500">Abonado: ${{ number_format($totalAbonosMercancia, 2) }}</div>
+                        <div class="bg-gray-50 dark:bg-gray-900/40 p-1.5 sm:p-3 rounded-xl border border-gray-100 dark:border-gray-700/60 flex flex-col justify-between">
+                            <span class="text-[9px] sm:text-xs font-black text-indigo-600 dark:text-indigo-400 uppercase tracking-wider block mb-0.5 truncate">Mercancía</span>
+                            <div>
+                                <div class="text-[11px] sm:text-xl font-black text-gray-900 dark:text-white truncate">${{ number_format($totalMercanciaRestante, 2) }}</div>
+                                <div class="text-[9px] sm:text-xs text-gray-500 truncate font-medium">Ab: ${{ number_format($totalAbonosMercancia, 2) }}</div>
+                            </div>
                         </div>
 
                         <!-- Tarjeta Préstamos -->
-                        <div class="flex-1 bg-gray-50 dark:bg-gray-900/40 p-2 sm:p-3 rounded-xl border border-gray-100 dark:border-gray-700/60">
-                            <span class="text-[9px] sm:text-[10px] font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-wider block mb-0.5">Préstamos</span>
-                            <div class="text-xs sm:text-base md:text-lg font-black text-gray-900 dark:text-white">${{ number_format($totalPrestamosRestante, 2) }}</div>
-                            <div class="text-[9px] sm:text-[10px] text-gray-500">Abonado: ${{ number_format($totalAbonosPrestamos, 2) }}</div>
+                        <div class="bg-gray-50 dark:bg-gray-900/40 p-1.5 sm:p-3 rounded-xl border border-gray-100 dark:border-gray-700/60 flex flex-col justify-between">
+                            <span class="text-[9px] sm:text-xs font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-wider block mb-0.5 truncate">Préstamos</span>
+                            <div>
+                                <div class="text-[11px] sm:text-xl font-black text-gray-900 dark:text-white truncate">${{ number_format($totalPrestamosRestante, 2) }}</div>
+                                <div class="text-[9px] sm:text-xs text-gray-500 truncate font-medium">Ab: ${{ number_format($totalAbonosPrestamos, 2) }}</div>
+                            </div>
                         </div>
+
+                        <!-- Adeudo Global -->
+                        <div class="bg-rose-50/60 dark:bg-rose-950/25 p-1.5 sm:p-3 rounded-xl border border-rose-100 dark:border-rose-900/30 flex flex-col justify-between">
+                            <span class="text-[9px] sm:text-xs font-black text-rose-600 dark:text-rose-400 uppercase tracking-wider block mb-0.5 truncate">Global</span>
+                            <div>
+                                <div class="text-[11px] sm:text-xl font-black text-rose-700 dark:text-rose-300 truncate">${{ number_format($totalAdeudoGlobal, 2) }}</div>
+                                <div class="text-[9px] sm:text-xs text-rose-500 font-bold truncate">Pendiente</div>
+                            </div>
+                        </div>
+
                     </div>
 
-                    <!-- Adeudo Global y Botones (Fila 2 en móvil, parte de la misma fila en md+) -->
-                    <div class="flex flex-col sm:flex-row md:flex-row items-stretch gap-2.5 flex-[1.7]">
-                        <!-- Adeudo Global -->
-                        <div class="flex-1 bg-rose-50/60 dark:bg-rose-950/25 p-2 sm:p-3 rounded-xl border border-rose-100 dark:border-rose-900/30 flex flex-row justify-between items-center min-w-0">
-                            <div>
-                                <span class="text-[9px] sm:text-[10px] font-black text-rose-600 dark:text-rose-400 uppercase tracking-wider block">Adeudo Global</span>
-                                <span class="text-[9px] text-rose-500 font-bold hidden sm:inline">Total pendiente</span>
-                            </div>
-                            <div class="text-xs sm:text-base md:text-xl font-black text-rose-700 dark:text-rose-300 truncate">${{ number_format($totalAdeudoGlobal, 2) }}</div>
-                        </div>
-
-                        <!-- Botones de Acción -->
-                        <div class="flex flex-row gap-2 shrink-0">
-                            <button type="button" onclick="document.getElementById('modalFiado').classList.remove('hidden')"
-                                class="flex-1 sm:flex-initial px-3 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-[11px] sm:text-xs font-extrabold shadow-xs transition text-center flex items-center justify-center gap-1">
-                                🛍️ <span>+ Fiar</span>
-                            </button>
-                            <button type="button" onclick="document.getElementById('modalPrestamo').classList.remove('hidden')"
-                                class="flex-1 sm:flex-initial px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-[11px] sm:text-xs font-extrabold shadow-xs transition text-center flex items-center justify-center gap-1">
-                                💵 <span>+ Préstamo</span>
-                            </button>
-                        </div>
+                    <!-- BOTONES DE ACCIÓN: En móvil en fila, en medianas en columna con ancho controlado (`md:w-44`) para que no queden gigantes -->
+                    <div class="flex flex-row md:flex-col gap-1.5 justify-center shrink-0 md:w-44">
+                        <button type="button" onclick="document.getElementById('modalFiado').classList.remove('hidden')"
+                            class="flex-1 md:flex-none px-3 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-[11px] sm:text-xs font-extrabold shadow-xs transition text-center inline-flex items-center justify-center gap-1">
+                            🛍️ <span>+ Fiar</span>
+                        </button>
+                        <button type="button" onclick="document.getElementById('modalPrestamo').classList.remove('hidden')"
+                            class="flex-1 md:flex-none px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-[11px] sm:text-xs font-extrabold shadow-xs transition text-center inline-flex items-center justify-center gap-1">
+                            💵 <span>+ Préstamo</span>
+                        </button>
                     </div>
 
                 </div>
