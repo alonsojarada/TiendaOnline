@@ -1,192 +1,185 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight text-left">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 overflow-hidden">
+            <h2 class="font-semibold text-sm sm:text-lg md:text-xl text-gray-800 dark:text-gray-200 leading-tight text-left truncate max-w-full" title="Historial de Cuentas y Préstamos">
                 Historial de Cuentas y Préstamos
             </h2>
-            <p class="text-xs text-gray-500 dark:text-gray-400">Vista rápida de saldos pendientes, mercancía fiada y
-                control de cobros.</p>
+            <p class="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 truncate max-w-full">Vista rápida de saldos pendientes, mercancía fiada y control de cobros.</p>
         </div>
     </x-slot>
-    <div class="py-6">
+    <div class="py-4 md:py-6">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900 dark:text-gray-100">
-
+                <div class="p-3 sm:p-4 md:p-6 text-gray-900 dark:text-gray-100">
 
                     <!-- Formulario de Filtros Principales -->
-<form method="GET" action="{{ route('reports.historial-cuentas') }}"
-    class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6 bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg border border-gray-200 dark:border-gray-700 items-end">
+                    <form method="GET" action="{{ route('reports.historial-cuentas') }}"
+                        class="flex flex-col md:flex-row md:items-center justify-start gap-2 mb-3 sm:mb-4 bg-gray-50 dark:bg-gray-700/50 p-2 md:p-3 rounded-lg border border-gray-200 dark:border-gray-700">
 
-    <!-- Columna 1: Cliente y a un costado el checkbox "Activar" -->
-    <div>
-        <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Cliente</label>
-        <div class="flex items-center gap-2">
-            <select name="client_id"
-                class="w-full text-xs rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                <option value="">-- Todos --</option>
-                @foreach($clients as $c)
-                    <option value="{{ $c->id }}" {{ (request('client_id') == $c->id) ? 'selected' : '' }}>
-                        {{ $c->name }}
-                    </option>
-                @endforeach
-            </select>
-            <label
-                class="flex items-center gap-1 text-xs font-medium text-gray-600 dark:text-gray-400 cursor-pointer whitespace-nowrap">
-<input type="checkbox" id="activarFechas" name="activar"
-    {{ (request('fecha_inicio') || request('fecha_fin')) ? 'checked' : '' }}
-    onchange="toggleFechasCalendario();"
-    class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500 w-3.5 h-3.5">
-                <span>Activar</span>
-            </label>
-        </div>
-    </div>
+                        <!-- Cliente -->
+                        <div class="w-full md:w-52 shrink-0">
+                            <select name="client_id"
+                                class="w-full text-[11px] sm:text-xs py-1.5 rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                <option value="">-- Todos los clientes --</option>
+                                @foreach($clients as $c)
+                                    <option value="{{ $c->id }}" {{ (request('client_id') == $c->id) ? 'selected' : '' }}>
+                                        {{ $c->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
 
-    <!-- Columna 2: Desde -->
-    <div>
-        <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Desde</label>
-        <input type="date" name="fecha_inicio" id="inputFechaInicio"
-            value="{{ request('fecha_inicio') }}"
-            {{ (request('fecha_inicio') || request('fecha_fin')) ? '' : 'disabled' }}
-            class="w-full text-xs py-1.5 px-2.5 rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:text-gray-400">
-    </div>
+                        <!-- Controles de Fechas y Botón -->
+                        <div class="flex items-center gap-1.5 w-full md:w-auto shrink-0 overflow-x-auto">
+                            <!-- Checkbox Fechas -->
+                            <div class="flex items-center shrink-0">
+                                <label class="flex items-center gap-1 text-[10px] sm:text-[11px] font-medium text-gray-600 dark:text-gray-400 cursor-pointer whitespace-nowrap">
+                                    <input type="checkbox" id="activarFechas" name="activar"
+                                        {{ (request('fecha_inicio') || request('fecha_fin')) ? 'checked' : '' }}
+                                        onchange="toggleFechasCalendario();"
+                                        class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500 w-3.5 h-3.5">
+                                    <span>Fechas</span>
+                                </label>
+                            </div>
 
-    <!-- Columna 3: Hasta -->
-    <div>
-        <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Hasta</label>
-        <input type="date" name="fecha_fin" id="inputFechaFin"
-            value="{{ request('fecha_fin') }}"
-            {{ (request('fecha_inicio') || request('fecha_fin')) ? '' : 'disabled' }}
-            class="w-full text-xs py-1.5 px-2.5 rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:text-gray-400">
-    </div>
+                            <!-- Desde -->
+                            <div class="w-24 sm:w-26 md:w-28 shrink-0">
+                                <input type="date" name="fecha_inicio" id="inputFechaInicio"
+                                    value="{{ request('fecha_inicio') }}"
+                                    {{ (request('fecha_inicio') || request('fecha_fin')) ? '' : 'disabled' }}
+                                    class="w-full text-[10px] sm:text-[11px] py-1.5 px-1 rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:text-gray-400">
+                            </div>
 
-    <!-- Columna 4: Botón Consultar -->
-    <div>
-        <button type="submit"
-            class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md text-xs shadow-sm transition">
-            Consultar Historial
-        </button>
-    </div>
-</form>
+                            <!-- Hasta -->
+                            <div class="w-24 sm:w-26 md:w-28 shrink-0">
+                                <input type="date" name="fecha_fin" id="inputFechaFin"
+                                    value="{{ request('fecha_fin') }}"
+                                    {{ (request('fecha_inicio') || request('fecha_fin')) ? '' : 'disabled' }}
+                                    class="w-full text-[10px] sm:text-[11px] py-1.5 px-1 rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:text-gray-400">
+                            </div>
 
-                    <!-- Barra de Búsqueda + Filtros y Botones de Exportar (Adaptativo y Robusto) -->
-                    <div
-                        class="bg-white dark:bg-gray-800 p-3 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm mb-6 flex flex-col xl:flex-row items-stretch xl:items-center justify-between gap-3">
-
-                        <!-- Izquierda: Búsqueda y Botones de Filtro -->
-                        <div class="flex flex-col md:flex-row items-stretch md:items-center gap-2.5 w-full xl:w-auto">
-                            <!-- Input de Búsqueda -->
-                            <div class="relative w-full md:w-64">
-                                <span
-                                    class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-indigo-500">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <!-- Botón Buscar -->
+                            <div class="shrink-0">
+                                <button type="submit"
+                                    title="Buscar"
+                                    class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold p-1.5 rounded-md text-xs shadow-sm transition flex items-center justify-center w-[30px] h-[30px] sm:w-[32px] sm:h-[32px]">
+                                    <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                                     </svg>
-                                </span>
-                                <input type="text" id="searchInput" onkeyup="aplicarFiltros()"
-                                    placeholder="Buscar cliente..."
-                                    class="w-full pl-9 pr-4 py-1.5 text-xs rounded-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                </button>
                             </div>
+                        </div>
 
+                    </form>
+
+                    <!-- Barra Secundaria -->
+                    <div class="bg-white dark:bg-gray-800 p-2 md:p-3 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm mb-4 md:mb-6 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-2">
+
+                        <!-- Buscador -->
+                        <div class="relative w-full md:w-56 shrink-0">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-2.5 pointer-events-none text-indigo-500">
+                                <svg class="w-3 h-3 sm:w-3.5 sm:h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                </svg>
+                            </span>
+                            <input type="text" id="searchInput" onkeyup="aplicarFiltros()"
+                                placeholder="Buscar cliente..."
+                                class="w-full pl-7 sm:pl-8 pr-2.5 py-1.5 text-[11px] sm:text-xs rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                        </div>
+
+                        <!-- Píldoras y Botones de Exportar -->
+                        <div class="flex flex-row items-center justify-between gap-2 w-full md:w-auto overflow-x-auto">
                             <!-- Botones de Píldora (Estatus) -->
-                            <div class="flex flex-wrap items-center gap-1.5" id="filtrosEstatusContainer">
+                            <div class="flex items-center gap-1 shrink-0" id="filtrosEstatusContainer">
                                 <button type="button" onclick="cambiarFiltroEstatus('todos', this)"
-                                    class="filtro-btn px-3 py-1.5 rounded-full text-xs font-semibold bg-indigo-600 text-white shadow-sm transition whitespace-nowrap">
+                                    class="filtro-btn px-2 sm:px-2.5 py-1 rounded-full text-[10px] sm:text-[11px] font-semibold bg-indigo-600 text-white shadow-sm transition whitespace-nowrap">
                                     Todos
                                 </button>
                                 <button type="button" onclick="cambiarFiltroEstatus('pendiente', this)"
-                                    class="filtro-btn px-3 py-1.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300 hover:bg-gray-200 transition whitespace-nowrap">
+                                    class="filtro-btn px-2 sm:px-2.5 py-1 rounded-full text-[10px] sm:text-[11px] font-semibold bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300 hover:bg-gray-200 transition whitespace-nowrap">
                                     ⏳ Pendientes
                                 </button>
                                 <button type="button" onclick="cambiarFiltroEstatus('liquidado', this)"
-                                    class="filtro-btn px-3 py-1.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300 hover:bg-gray-200 transition whitespace-nowrap">
+                                    class="filtro-btn px-2 sm:px-2.5 py-1 rounded-full text-[10px] sm:text-[11px] font-semibold bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300 hover:bg-gray-200 transition whitespace-nowrap">
                                     ✓ Liquidados
+                                </button>
+                            </div>
+
+                            <!-- Botones de Exportar -->
+                            <div class="flex items-center gap-1.5 shrink-0">
+                                <button type="button" onclick="exportarExcel()"
+                                    class="inline-flex items-center justify-center gap-1 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-1 px-2 sm:px-2.5 rounded-md text-[10px] sm:text-[11px] shadow-sm transition whitespace-nowrap">
+                                    <svg class="w-3 h-3 sm:w-3.5 sm:h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                                        </path>
+                                    </svg>
+                                    Excel
+                                </button>
+
+                                <button type="button" onclick="exportarPDF()"
+                                    class="inline-flex items-center justify-center gap-1 bg-rose-600 hover:bg-rose-700 text-white font-semibold py-1 px-2 sm:px-2.5 rounded-md text-[10px] sm:text-[11px] shadow-sm transition whitespace-nowrap">
+                                    <svg class="w-3 h-3 sm:w-3.5 sm:h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z">
+                                        </path>
+                                    </svg>
+                                    PDF
                                 </button>
                             </div>
                         </div>
 
-                        <!-- Derecha: Botones de Exportar (Excel y PDF) -->
-                        <div
-                            class="flex items-center justify-end gap-2 w-full xl:w-auto pt-2 xl:pt-0 border-t xl:border-t-0 border-gray-100 dark:border-gray-700">
-                            <!-- Botón Excel -->
-                            <button type="button" onclick="exportarExcel()"
-                                class="inline-flex items-center justify-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-1.5 px-3 rounded-md text-xs shadow-sm transition whitespace-nowrap">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-                                    </path>
-                                </svg>
-                                Exportar Excel
-                            </button>
-
-                            <!-- Botón PDF -->
-                            <button type="button" onclick="exportarPDF()"
-                                class="inline-flex items-center justify-center gap-1.5 bg-rose-600 hover:bg-rose-700 text-white font-semibold py-1.5 px-3 rounded-md text-xs shadow-sm transition whitespace-nowrap">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z">
-                                    </path>
-                                </svg>
-                                Exportar PDF
-                            </button>
-                        </div>
                     </div>
 
                     <!-- Tabla de Resultados -->
-                    <div
-                        class="overflow-auto max-h-[450px] bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm relative">
-                        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-left text-xs">
-                            <thead
-                                class="bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-300 uppercase sticky top-0 z-10">
+                    <div class="overflow-auto max-h-[450px] bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm relative">
+                        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-left text-[10px] sm:text-xs">
+                            <thead class="bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-300 uppercase sticky top-0 z-10">
                                 <tr>
-                                    <th class="px-4 py-3 bg-gray-50 dark:bg-gray-700">Cliente</th>
-                                    <th class="px-4 py-3 bg-gray-50 dark:bg-gray-700">Dirección</th>
-                                    <th class="px-4 py-3 bg-gray-50 dark:bg-gray-700">Concepto</th>
-                                    <th class="px-4 py-3 text-right bg-gray-50 dark:bg-gray-700">Monto Inicial</th>
-                                    <th class="px-4 py-3 text-right bg-gray-50 dark:bg-gray-700">Abonado</th>
-                                    <th class="px-4 py-3 text-right bg-gray-50 dark:bg-gray-700">Saldo Actual</th>
-                                    <th class="px-4 py-3 text-center bg-gray-50 dark:bg-gray-700">F. Apertura</th>
-                                    <th class="px-4 py-3 text-center bg-gray-50 dark:bg-gray-700">F. Liquidación</th>
-                                    <th class="px-4 py-3 text-center bg-gray-50 dark:bg-gray-700">Estatus</th>
+                                    <th class="px-2 py-2 sm:px-4 sm:py-3 bg-gray-50 dark:bg-gray-700">Cliente</th>
+                                    <th class="px-2 py-2 sm:px-4 sm:py-3 bg-gray-50 dark:bg-gray-700 hidden md:table-cell">Dirección</th>
+                                    <th class="px-2 py-2 sm:px-4 sm:py-3 bg-gray-50 dark:bg-gray-700">Concepto</th>
+                                    <th class="px-2 py-2 sm:px-4 sm:py-3 text-right bg-gray-50 dark:bg-gray-700 hidden md:table-cell">Monto Inicial</th>
+                                    <th class="px-2 py-2 sm:px-4 sm:py-3 text-right bg-gray-50 dark:bg-gray-700">Abonado</th>
+                                    <th class="px-2 py-2 sm:px-4 sm:py-3 text-right bg-gray-50 dark:bg-gray-700">Saldo Actual</th>
+                                    <th class="px-2 py-2 sm:px-4 sm:py-3 text-center bg-gray-50 dark:bg-gray-700 hidden md:table-cell">F. Apertura</th>
+                                    <th class="px-2 py-2 sm:px-4 sm:py-3 text-center bg-gray-50 dark:bg-gray-700 hidden md:table-cell">F. Liquidación</th>
+                                    <th class="px-2 py-2 sm:px-4 sm:py-3 text-center bg-gray-50 dark:bg-gray-700 hidden md:table-cell">Estatus</th>
                                 </tr>
                             </thead>
-                            <tbody id="tablaCuentas"
-                                class="divide-y divide-gray-200 dark:divide-gray-700 text-gray-600 dark:text-gray-300">
+                            <tbody id="tablaCuentas" class="divide-y divide-gray-200 dark:divide-gray-700 text-gray-600 dark:text-gray-300">
 
                                 @forelse($loans as $debt)
                                     @php
-    $isLiquidated = $debt->current_capital <= 0;
+                                        $isLiquidated = $debt->current_capital <= 0;
 
-    // 1. Total abonado general (para la columna de ABONADO)
-    $montoAbonadoDebt = $debt->payments->sum('amount')
-        ?? ($debt->payments->sum('capital_covered') + $debt->payments->sum('interest_covered'));
+                                        $montoAbonadoDebt = $debt->payments->sum('amount')
+                                            ?? ($debt->payments->sum('capital_covered') + $debt->payments->sum('interest_covered'));
 
-    // 2. Cálculo directo de componentes
-    $montoInicial = $debt->total_amount;
-    $sumaAbonosCapital = $debt->payments->sum('capital_covered') ?? 0;
+                                        $montoInicial = $debt->total_amount;
+                                        $sumaAbonosCapital = $debt->payments->sum('capital_covered') ?? 0;
 
-    // Sumamos las cuotas pendientes de loan_installments de forma limpia
-    $cuotasPendientes = \App\Models\LoanInstallment::where('debt_id', $debt->id)
-        ->where('status', 'pending')
-        ->sum('amount_due');
+                                        $cuotasPendientes = \App\Models\LoanInstallment::where('debt_id', $debt->id)
+                                            ->where('status', 'pending')
+                                            ->sum('amount_due');
 
-    // 3. Asignación del saldo: Si tiene cuotas pendientes y el capital no es cero, aplicamos tu fórmula
-    if (!$isLiquidated && $cuotasPendientes > 0 && (str_contains(strtolower($debt->loan_modal), 'interest_only'))) {
-        $saldoTotal = ($montoInicial - $sumaAbonosCapital) + $cuotasPendientes;
-    } else {
-        $saldoTotal = $debt->current_balance ?? $debt->current_capital;
-    }
+                                        if (!$isLiquidated && $cuotasPendientes > 0 && (str_contains(strtolower($debt->loan_modal), 'interest_only'))) {
+                                            $saldoTotal = ($montoInicial - $sumaAbonosCapital) + $cuotasPendientes;
+                                        } else {
+                                            $saldoTotal = $debt->current_balance ?? $debt->current_capital;
+                                        }
 
-    $estatusTexto = $isLiquidated ? 'liquidado' : 'pendiente';
+                                        $estatusTexto = $isLiquidated ? 'liquidado' : 'pendiente';
 
-    $clientName = $debt->client->name ?? '';
-    $clientAddress = $debt->client->address ?? '';
-    $textoBusqueda = strtolower($clientName . ' ' . $clientAddress);
+                                        $clientName = $debt->client->name ?? '';
+                                        $clientAddress = $debt->client->address ?? '';
+                                        $textoBusqueda = strtolower($clientName . ' ' . $clientAddress);
 
-    $urlDetalle = ($debt->type === 'store_credit')
-        ? route('store-details', ['id' => $debt->id, 'from' => 'historial'])
-        : route('loan-details', ['id' => $debt->id, 'from' => 'historial']);
+                                        $urlDetalle = ($debt->type === 'store_credit')
+                                            ? route('store-details', ['id' => $debt->id, 'from' => 'historial'])
+                                            : route('loan-details', ['id' => $debt->id, 'from' => 'historial']);
                                     @endphp
 
                                     <tr class="fila-cuenta hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer transition"
@@ -194,53 +187,44 @@
                                         onclick="window.location.href='{{ $urlDetalle }}'" title="Clic para ver el detalle">
 
                                         <!-- Cliente -->
-                                        <td class="px-4 py-3 font-bold text-gray-900 dark:text-white">
+                                        <td class="px-2 py-2 sm:px-4 sm:py-3 font-bold text-gray-900 dark:text-white">
                                             {{ $debt->client->name ?? 'Cliente Desconocido' }}
                                         </td>
-
                                         <!-- Dirección -->
-                                        <td class="px-4 py-3 text-gray-600 dark:text-gray-300">
+                                        <td class="px-2 py-2 sm:px-4 sm:py-3 text-gray-600 dark:text-gray-300 hidden md:table-cell">
                                             {{ $debt->client->address ?? 'Sin dirección' }}
                                         </td>
-
-                                        <td class="px-4 py-3 font-medium text-gray-700 dark:text-gray-300">
+                                        <!-- Concepto -->
+                                        <td class="px-2 py-2 sm:px-4 sm:py-3 font-medium text-gray-700 dark:text-gray-300">
                                             {{ '#' . $debt->id }} - {{ $debt->concept ?? 'Cuenta' }}
                                         </td>
-
-                                        <!-- Monto Total -->
-                                        <td class="px-4 py-3 text-right monto-total" data-valor="{{ $debt->total_amount }}">
+                                        <!-- Monto Inicial -->
+                                        <td class="px-2 py-2 sm:px-4 sm:py-3 text-right monto-total hidden md:table-cell" data-valor="{{ $debt->total_amount }}">
                                             ${{ number_format($debt->total_amount, 2) }}
                                         </td>
-
                                         <!-- Abonado -->
-                                        <td class="px-4 py-3 text-right text-emerald-600 monto-abonado"
-                                            data-valor="{{ $montoAbonadoDebt }}">
+                                        <td class="px-2 py-2 sm:px-4 sm:py-3 text-right text-emerald-600 monto-abonado" data-valor="{{ $montoAbonadoDebt }}">
                                             ${{ number_format($montoAbonadoDebt, 2) }}
                                         </td>
-
-                                        <td class="px-4 py-3 text-right font-bold monto-saldo"
-                                            data-valor="{{ $saldoTotal }}">
+                                        <!-- Saldo Actual -->
+                                        <td class="px-2 py-2 sm:px-4 sm:py-3 text-right font-bold monto-saldo" data-valor="{{ $saldoTotal }}">
                                             ${{ number_format($saldoTotal, 2) }}
                                         </td>
-
                                         <!-- F. Apertura -->
-                                        <td class="px-4 py-3 text-center">
+                                        <td class="px-2 py-2 sm:px-4 sm:py-3 text-center hidden md:table-cell">
                                             {{ $debt->created_at ? $debt->created_at->format('d/m/Y') : 'N/A' }}
                                         </td>
-
                                         <!-- F. Liquidación -->
-                                        <td class="px-4 py-3 text-center">
+                                        <td class="px-2 py-2 sm:px-4 sm:py-3 text-center hidden md:table-cell">
                                             @if($isLiquidated)
                                                 {{ optional($debt->payments->last())->created_at ? optional($debt->payments->last())->created_at->format('d/m/Y') : 'Liquidado' }}
                                             @else
                                                 <span class="text-gray-400"></span>
                                             @endif
                                         </td>
-
                                         <!-- Estatus -->
-                                        <td class="px-4 py-3 text-center">
-                                            <span
-                                                class="px-2 py-1 text-xs font-semibold rounded-full {{ $isLiquidated ? 'text-emerald-700 bg-emerald-100 dark:bg-emerald-900/30 dark:text-emerald-400' : 'text-amber-700 bg-amber-100 dark:bg-amber-900/30 dark:text-amber-400' }}">
+                                        <td class="px-2 py-2 sm:px-4 sm:py-3 text-center hidden md:table-cell">
+                                            <span class="px-2 py-1 text-[10px] sm:text-xs font-semibold rounded-full {{ $isLiquidated ? 'text-emerald-700 bg-emerald-100 dark:bg-emerald-900/30 dark:text-emerald-400' : 'text-amber-700 bg-amber-100 dark:bg-amber-900/30 dark:text-amber-400' }}">
                                                 {{ ucfirst($estatusTexto) }}
                                             </span>
                                         </td>
@@ -248,29 +232,23 @@
                                 @empty
                                     <tr>
                                         <td colspan="9" class="px-4 py-8 text-center text-gray-500">
-                                            No se encontraron cuentas registradas en el sistema con los filtros
-                                            seleccionados.
+                                            No se encontraron cuentas registradas en el sistema con los filtros seleccionados.
                                         </td>
                                     </tr>
                                 @endforelse
 
                             </tbody>
 
-                            <!-- Fila de Totales Dinámicos -->
                             @if($loans->isNotEmpty())
-                                <tfoot
-                                    class="bg-gray-50 dark:bg-gray-700 font-bold text-gray-900 dark:text-white border-t-2 border-gray-200 dark:border-gray-600 sticky bottom-0 z-10">
+                                <tfoot class="bg-gray-50 dark:bg-gray-700 font-bold text-gray-900 dark:text-white border-t-2 border-gray-200 dark:border-gray-600 sticky bottom-0 z-10">
                                     <tr>
-                                        <td colspan="3" class="px-4 py-3 text-right bg-gray-50 dark:bg-gray-700">TOTALES:
-                                        </td>
-                                        <td id="totalMontoView" class="px-4 py-3 text-right bg-gray-50 dark:bg-gray-700">
-                                            $0.00</td>
-                                        <td id="totalAbonadoView"
-                                            class="px-4 py-3 text-right text-emerald-600 bg-gray-50 dark:bg-gray-700">$0.00
-                                        </td>
-                                        <td id="totalSaldoView" class="px-4 py-3 text-right bg-gray-50 dark:bg-gray-700">
-                                            $0.00</td>
-                                        <td colspan="3" class="bg-gray-50 dark:bg-gray-700"></td>
+                                        <td colspan="2" class="px-2 py-2 sm:px-4 sm:py-3 text-right bg-gray-50 dark:bg-gray-750 hidden md:table-cell">TOTALES:</td>
+                                        <td class="px-2 py-2 sm:px-4 sm:py-3 text-left bg-gray-50 dark:bg-gray-700 md:hidden">TOTALES:</td>
+                                        <td class="bg-gray-50 dark:bg-gray-700 hidden md:table-cell"></td>
+                                        <td id="totalMontoView" class="px-2 py-2 sm:px-4 sm:py-3 text-right bg-gray-50 dark:bg-gray-700 hidden md:table-cell">$0.00</td>
+                                        <td id="totalAbonadoView" class="px-2 py-2 sm:px-4 sm:py-3 text-right text-emerald-600 bg-gray-50 dark:bg-gray-700">$0.00</td>
+                                        <td id="totalSaldoView" class="px-2 py-2 sm:px-4 sm:py-3 text-right bg-gray-50 dark:bg-gray-700">$0.00</td>
+                                        <td colspan="3" class="bg-gray-50 dark:bg-gray-700 hidden md:table-cell"></td>
                                     </tr>
                                 </tfoot>
                             @endif
@@ -282,7 +260,7 @@
         </div>
     </div>
 
-    <!-- Script para control de filtros, búsqueda y exportación -->
+    <!-- Scripts de Control -->
     <script>
         let estatusActual = 'todos';
 
@@ -435,36 +413,29 @@
             document.body.removeChild(downloadLink);
         }
 
-            function toggleFechasCalendario() {
-                const activar = document.getElementById('activarFechas').checked;
-                const inputInicio = document.getElementById('inputFechaInicio');
-                const inputFin = document.getElementById('inputFechaFin');
+        function toggleFechasCalendario() {
+            const activar = document.getElementById('activarFechas').checked;
+            const inputInicio = document.getElementById('inputFechaInicio');
+            const inputFin = document.getElementById('inputFechaFin');
 
-                if (activar) {
-                    inputInicio.removeAttribute('disabled');
-                    inputFin.removeAttribute('disabled');
-                } else {
-                    inputInicio.setAttribute('disabled', 'true');
-                    inputFin.setAttribute('disabled', 'true');
-                    inputInicio.value = ''; // Opcional: limpia la fecha si desmarca
-                    inputFin.value = '';   // Opcional: limpia la fecha si desmarca
-                }
+            if (activar) {
+                inputInicio.removeAttribute('disabled');
+                inputFin.removeAttribute('disabled');
+            } else {
+                inputInicio.setAttribute('disabled', 'true');
+                inputFin.setAttribute('disabled', 'true');
+                inputInicio.value = '';
+                inputFin.value = '';
             }
-
+        }
 
         function exportarPDF() {
-            aplicarFiltros(); // Sincroniza la vista
-
-            // Capturar los filtros activos en pantalla
             const urlParams = new URLSearchParams();
-
-            // Si tienes un selector o variable de cliente en la URL o vista
             const urlActualParams = new URLSearchParams(window.location.search);
             if (urlActualParams.has('client_id')) {
                 urlParams.append('client_id', urlActualParams.get('client_id'));
             }
 
-            // Capturar fechas si el filtro de fechas está activado
             const inputInicio = document.getElementById('inputFechaInicio');
             const inputFin = document.getElementById('inputFechaFin');
 
@@ -475,13 +446,11 @@
                 urlParams.append('fecha_fin', inputFin.value);
             }
 
-            // Construir la URL final con los parámetros hacia tu ruta de Laravel
             let url = "{{ route('reports.historial.pdf-download') }}";
             if (urlParams.toString()) {
                 url += '?' + urlParams.toString();
             }
 
-            // Forzar la descarga directa creando un enlace oculto (sin abrir pestañas nuevas)
             let downloadLink = document.createElement('a');
             downloadLink.href = url;
             document.body.appendChild(downloadLink);

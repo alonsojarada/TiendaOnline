@@ -60,8 +60,7 @@
                                 onsubmit="return confirm('¿Estás seguro de eliminar este crédito?');">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit"
-                                    class="px-2 py-1 sm:px-3 sm:py-1.5 bg-red-50 hover:bg-red-100 text-red-600 dark:bg-red-950/50 dark:text-red-300 rounded-md sm:rounded-xl text-[10px] sm:text-xs font-bold transition flex items-center gap-1 shadow-xs">
+                                <button type="submit" class="px-2 py-1 sm:px-3 sm:py-1.5 bg-red-50 hover:bg-red-100 text-red-600 dark:bg-red-950/50 dark:text-red-300 rounded-md sm:rounded-xl text-[10px] sm:text-xs font-bold transition flex items-center gap-1 shadow-xs">
                                     🗑️ <span>Eliminar</span>
                                 </button>
                             </form>
