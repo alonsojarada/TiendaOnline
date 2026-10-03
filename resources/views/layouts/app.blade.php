@@ -74,9 +74,16 @@
         const menuOverlay = document.getElementById('menu-overlay');
 
         function toggleMenu() {
+
             sideMenu.classList.toggle('-translate-x-full');
+
             menuOverlay.classList.toggle('invisible');
             menuOverlay.classList.toggle('opacity-0');
+
+            // Detectar si el menú está abierto
+            const menuAbierto = !sideMenu.classList.contains('-translate-x-full');
+
+            document.body.classList.toggle('menu-abierto', menuAbierto);
         }
 
         menuBtn.addEventListener('click', toggleMenu);
