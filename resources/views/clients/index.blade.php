@@ -26,8 +26,7 @@
              CONTENEDOR PRINCIPAL
         ========================================================== -->
 
-        <div id="contenedorDirectorio"
-            class="bg-white dark:bg-gray-800
+        <div id="contenedorDirectorio" class="bg-white dark:bg-gray-800
                    rounded-xl sm:rounded-2xl
                    shadow-xs
                    border border-gray-200 dark:border-gray-700
@@ -38,21 +37,18 @@
                  BARRA DE ACCIONES
             ====================================================== -->
 
-            <div id="barraAccionesClientes"
-                class="p-2.5 sm:p-5 lg:p-6
+            <div id="barraAccionesClientes" class="p-2.5 sm:p-5 lg:p-6
                        border-b border-gray-200 dark:border-gray-700
                        w-full">
 
-                <div id="contenidoAccionesClientes"
-                    class="w-full">
+                <div id="contenidoAccionesClientes" class="w-full">
 
 
                     <!-- =================================================
                          BUSCADOR
                     ================================================== -->
 
-                    <div id="bloqueBusquedaClientes"
-                        class="relative min-w-0">
+                    <div id="bloqueBusquedaClientes" class="relative min-w-0">
 
                         <span class="absolute inset-y-0 left-0
                                      flex items-center
@@ -63,9 +59,7 @@
                             🔍
                         </span>
 
-                        <input type="text"
-                            id="buscarCliente"
-                            placeholder="Buscar por nombre, alias o dirección..."
+                        <input type="text" id="buscarCliente" placeholder="Buscar por nombre, alias o dirección..."
                             class="w-full
                                    pl-9 pr-3
                                    py-2
@@ -84,8 +78,7 @@
                          BOTONES
                     ================================================== -->
 
-                    <div id="botonesClientes"
-                        class="flex items-center
+                    <div id="botonesClientes" class="flex items-center
                                gap-2
                                shrink-0">
 
@@ -94,9 +87,7 @@
                              EXCEL
                         ================================================== -->
 
-                        <a href="{{ route('clients.export.excel') }}"
-                            title="Exportar Excel"
-                            class="boton-cliente
+                        <a href="{{ route('clients.export.excel') }}" title="Exportar Excel" class="boton-cliente
                                    inline-flex items-center justify-center
                                    gap-2
                                    px-3 py-2
@@ -109,15 +100,10 @@
                                    transition
                                    whitespace-nowrap">
 
-                            <svg class="icono-cliente"
-                                style="width:16px;height:16px;"
-                                fill="none"
-                                stroke="currentColor"
-                                stroke-width="2"
-                                viewBox="0 0 24 24">
+                            <svg class="icono-cliente" style="width:16px;height:16px;" fill="none" stroke="currentColor"
+                                stroke-width="2" viewBox="0 0 24 24">
 
-                                <path stroke-linecap="round"
-                                    stroke-linejoin="round"
+                                <path stroke-linecap="round" stroke-linejoin="round"
                                     d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
 
                             </svg>
@@ -133,9 +119,7 @@
                              PDF
                         ================================================== -->
 
-                        <a href="{{ route('clients.export.pdf') }}"
-                            title="Descargar PDF"
-                            class="boton-cliente
+                        <a href="{{ route('clients.export.pdf') }}" title="Descargar PDF" class="boton-cliente
                                    inline-flex items-center justify-center
                                    gap-2
                                    px-3 py-2
@@ -148,15 +132,10 @@
                                    transition
                                    whitespace-nowrap">
 
-                            <svg class="icono-cliente"
-                                style="width:16px;height:16px;"
-                                fill="none"
-                                stroke="currentColor"
-                                stroke-width="2"
-                                viewBox="0 0 24 24">
+                            <svg class="icono-cliente" style="width:16px;height:16px;" fill="none" stroke="currentColor"
+                                stroke-width="2" viewBox="0 0 24 24">
 
-                                <path stroke-linecap="round"
-                                    stroke-linejoin="round"
+                                <path stroke-linecap="round" stroke-linejoin="round"
                                     d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
 
                             </svg>
@@ -182,8 +161,7 @@
 
                         <button type="button"
                             onclick="document.getElementById('modalNuevoCliente').classList.remove('hidden')"
-                            title="Nuevo Cliente"
-                            class="boton-cliente
+                            title="Nuevo Cliente" class="boton-cliente
                                    inline-flex items-center justify-center
                                    gap-2
                                    px-3 py-2
@@ -225,12 +203,10 @@
                  TABLA
             ========================================================== -->
 
-            <div id="scrollTablaClientes"
-                class="overflow-y-auto overflow-x-hidden
+            <div id="scrollTablaClientes" class="overflow-y-auto overflow-x-hidden
                        relative rounded-b-2xl">
 
-                <table id="tablaClientes"
-                    class="w-full text-left border-collapse tabla-clientes">
+                <table id="tablaClientes" class="w-full text-left border-collapse tabla-clientes">
 
                     <!-- =================================================
                          ENCABEZADO
@@ -311,227 +287,226 @@
 
                         @forelse($clients as $client)
 
-                            <tr class="hover:bg-gray-50/75
-                                       dark:hover:bg-gray-700/50
-                                       transition
-                                       fila-cliente">
+                                            <tr class="hover:bg-gray-50/75
+                                                           dark:hover:bg-gray-700/50
+                                                           transition
+                                                           fila-cliente">
 
-                                <!-- =====================================
-                                     CLIENTE
-                                ====================================== -->
+                                                <!-- =====================================
+                                                         CLIENTE
+                                                    ====================================== -->
 
-                                <td class="py-1.5 sm:py-1.5
-                                           px-2 sm:px-5
-                                           border-r
-                                           border-gray-100
-                                           dark:border-gray-700/50">
+                                                <td class="py-1.5 sm:py-1.5
+                                                               px-2 sm:px-5
+                                                               border-r
+                                                               border-gray-100
+                                                               dark:border-gray-700/50">
 
-                                    <div class="flex items-center">
+                                                    <div class="flex items-center">
 
-                                        <div class="font-bold
-                                                    text-gray-900
-                                                    dark:text-white
-                                                    text-[11px] sm:text-sm
-                                                    leading-tight
-                                                    truncate
-                                                    min-w-0">
+                                                        <div class="font-bold
+                                                                        text-gray-900
+                                                                        dark:text-white
+                                                                        text-[11px] sm:text-sm
+                                                                        leading-tight
+                                                                        truncate
+                                                                        min-w-0">
 
-                                            {{ $client->name }}
+                                                            {{ $client->name }}
 
-                                        </div>
+                                                        </div>
 
-                                    </div>
+                                                    </div>
 
-                                </td>
-
-
-                                <!-- =====================================
-                                     ALIAS
-                                ====================================== -->
-
-                                <td class="py-1.5 px-5
-                                           border-r
-                                           border-gray-100
-                                           dark:border-gray-700/50
-                                           text-gray-600
-                                           dark:text-gray-400
-                                           font-medium
-                                           text-sm
-                                           hidden sm:table-cell">
-
-                                    {{ $client->alias ? '"' . $client->alias . '"' : '—' }}
-
-                                </td>
+                                                </td>
 
 
-                                <!-- =====================================
-                                     DIRECCIÓN
-                                ====================================== -->
+                                                <!-- =====================================
+                                                         ALIAS
+                                                    ====================================== -->
 
-                                <td class="py-1.5 px-5
-                                           border-r
-                                           border-gray-100
-                                           dark:border-gray-700/50
-                                           text-gray-800
-                                           dark:text-gray-200
-                                           font-medium
-                                           text-sm
-                                           hidden md:table-cell">
+                                                <td class="py-1.5 px-5
+                                                               border-r
+                                                               border-gray-100
+                                                               dark:border-gray-700/50
+                                                               text-gray-600
+                                                               dark:text-gray-400
+                                                               font-medium
+                                                               text-sm
+                                                               hidden sm:table-cell">
 
-                                    {{ $client->address ?? 'Sin dirección' }}
+                                                    {{ $client->alias ? '"' . $client->alias . '"' : '—' }}
 
-                                </td>
-
-
-                                <!-- =====================================
-                                     TELÉFONO
-                                ====================================== -->
-
-                                <td class="py-1.5
-                                           px-2 sm:px-5
-                                           border-r
-                                           border-gray-100
-                                           dark:border-gray-700/50
-                                           text-gray-700
-                                           dark:text-gray-300
-                                           font-mono
-                                           font-semibold
-                                           text-[10px] sm:text-sm
-                                           whitespace-nowrap">
-
-                                    {{ $client->phone ?? 'Sin teléfono' }}
-
-                                </td>
+                                                </td>
 
 
-                                <!-- =====================================
-                                     ESTATUS
-                                ====================================== -->
+                                                <!-- =====================================
+                                                         DIRECCIÓN
+                                                    ====================================== -->
 
-                                <td class="py-1.5
-                                           px-2 sm:px-5
-                                           border-r
-                                           border-gray-100
-                                           dark:border-gray-700/50
-                                           whitespace-nowrap">
+                                                <td class="py-1.5 px-5
+                                                               border-r
+                                                               border-gray-100
+                                                               dark:border-gray-700/50
+                                                               text-gray-800
+                                                               dark:text-gray-200
+                                                               font-medium
+                                                               text-sm
+                                                               hidden md:table-cell">
 
-                                    @if($client->status === 'active')
+                                                    {{ $client->address ?? 'Sin dirección' }}
 
-                                        <span class="px-2 sm:px-2.5
-                                                     py-0.5 sm:py-1
-                                                     inline-flex
-                                                     text-[9px] sm:text-xs
-                                                     leading-4
-                                                     font-semibold
-                                                     rounded-full
-                                                     bg-green-100
-                                                     text-green-800
-                                                     dark:bg-green-900/40
-                                                     dark:text-green-300">
-
-                                            Activo
-
-                                        </span>
-
-                                    @else
-
-                                        <span class="px-2 sm:px-2.5
-                                                     py-0.5 sm:py-1
-                                                     inline-flex
-                                                     text-[9px] sm:text-xs
-                                                     leading-4
-                                                     font-semibold
-                                                     rounded-full
-                                                     bg-red-100
-                                                     text-red-800
-                                                     dark:bg-red-900/40
-                                                     dark:text-red-300">
-
-                                            Suspendido
-
-                                        </span>
-
-                                    @endif
-
-                                </td>
+                                                </td>
 
 
-                                <!-- =====================================
-                                     ACCIONES
-                                ====================================== -->
+                                                <!-- =====================================
+                                                         TELÉFONO
+                                                    ====================================== -->
 
-                                <td class="py-1.5
-                                           px-2 sm:px-5
-                                           text-right
-                                           whitespace-nowrap">
+                                                <td class="py-1.5
+                                                               px-2 sm:px-5
+                                                               border-r
+                                                               border-gray-100
+                                                               dark:border-gray-700/50
+                                                               text-gray-700
+                                                               dark:text-gray-300
+                                                               font-mono
+                                                               font-semibold
+                                                               text-[10px] sm:text-sm
+                                                               whitespace-nowrap">
 
-                                    <div class="inline-flex
-                                                items-center
-                                                justify-end
-                                                gap-1 sm:gap-1.5">
+                                                    {{ $client->phone ?? 'Sin teléfono' }}
 
-                                        <button type="button"
-                                            onclick="abrirModalEditar('{{ $client->id }}', '{{ addslashes($client->name) }}', '{{ addslashes($client->alias) }}', '{{ $client->phone }}', '{{ addslashes($client->address ?? '') }}', '{{ $client->status ?? 'active' }}')"
-                                            class="boton-tabla
-                                                   px-2 sm:px-3
-                                                   py-1
-                                                   bg-amber-100
-                                                   hover:bg-amber-200
-                                                   text-amber-800
-                                                   dark:bg-amber-900/40
-                                                   dark:text-amber-300
-                                                   rounded-lg
-                                                   text-[9px] sm:text-xs
-                                                   font-bold
-                                                   transition
-                                                   shadow-xs">
-
-                                            Editar
-
-                                        </button>
+                                                </td>
 
 
-                                        <a href="{{ route('clients.show', $client->id) }}"
-                                            class="boton-tabla
-                                                   px-2 sm:px-3
-                                                   py-1
-                                                   bg-indigo-100
-                                                   hover:bg-indigo-200
-                                                   text-indigo-800
-                                                   dark:bg-indigo-900/40
-                                                   dark:text-indigo-300
-                                                   rounded-lg
-                                                   text-[9px] sm:text-xs
-                                                   font-bold
-                                                   transition
-                                                   shadow-xs">
+                                                <!-- =====================================
+                                                         ESTATUS
+                                                    ====================================== -->
 
-                                            <span class="hidden sm:inline">
-                                                Cuenta ➔
-                                            </span>
+                                                <td class="py-1.5
+                                                               px-2 sm:px-5
+                                                               border-r
+                                                               border-gray-100
+                                                               dark:border-gray-700/50
+                                                               whitespace-nowrap">
 
-                                            <span class="sm:hidden">
-                                                Cuenta
-                                            </span>
+                                                    @if($client->status === 'active')
 
-                                        </a>
+                                                        <span class="px-2 sm:px-2.5
+                                                                             py-0.5 sm:py-1
+                                                                             inline-flex
+                                                                             text-[9px] sm:text-xs
+                                                                             leading-4
+                                                                             font-semibold
+                                                                             rounded-full
+                                                                             bg-green-100
+                                                                             text-green-800
+                                                                             dark:bg-green-900/40
+                                                                             dark:text-green-300">
 
-                                    </div>
+                                                            Activo
 
-                                </td>
+                                                        </span>
 
-                            </tr>
+                                                    @else
+
+                                                        <span class="px-2 sm:px-2.5
+                                                                             py-0.5 sm:py-1
+                                                                             inline-flex
+                                                                             text-[9px] sm:text-xs
+                                                                             leading-4
+                                                                             font-semibold
+                                                                             rounded-full
+                                                                             bg-red-100
+                                                                             text-red-800
+                                                                             dark:bg-red-900/40
+                                                                             dark:text-red-300">
+
+                                                            Suspendido
+
+                                                        </span>
+
+                                                    @endif
+
+                                                </td>
+
+
+                                                <!-- =====================================
+                                                         ACCIONES
+                                                    ====================================== -->
+
+                                                <td class="py-1.5
+                                                               px-2 sm:px-5
+                                                               text-right
+                                                               whitespace-nowrap">
+
+                                                    <div class="inline-flex
+                                                                    items-center
+                                                                    justify-end
+                                                                    gap-1 sm:gap-1.5">
+
+                                                        <button type="button"
+                                                            onclick="abrirModalEditar('{{ $client->id }}', '{{ addslashes($client->name) }}', '{{ addslashes($client->alias) }}', '{{ $client->phone }}', '{{ addslashes($client->address ?? '') }}', '{{ $client->status ?? 'active' }}')"
+                                                            class="boton-tabla
+                                                                       px-2 sm:px-3
+                                                                       py-1
+                                                                       bg-amber-100
+                                                                       hover:bg-amber-200
+                                                                       text-amber-800
+                                                                       dark:bg-amber-900/40
+                                                                       dark:text-amber-300
+                                                                       rounded-lg
+                                                                       text-[9px] sm:text-xs
+                                                                       font-bold
+                                                                       transition
+                                                                       shadow-xs">
+
+                                                            Editar
+
+                                                        </button>
+
+
+                                                        <a href="{{ route('clients.show', ['id' => $client->id, 'from' => 'directorio']) }}"
+                                                            class="boton-tabla
+                               px-2 sm:px-3
+                               py-1
+                               bg-indigo-100
+                               hover:bg-indigo-200
+                               text-indigo-800
+                               dark:bg-indigo-900/40
+                               dark:text-indigo-300
+                               rounded-lg
+                               text-[9px] sm:text-xs
+                               font-bold
+                               transition
+                               shadow-xs">
+
+                                                            <span class="hidden sm:inline">
+                                                                Cuenta ➔
+                                                            </span>
+
+                                                            <span class="sm:hidden">
+                                                                Cuenta
+                                                            </span>
+
+                                                        </a>
+
+                                                    </div>
+
+                                                </td>
+
+                                            </tr>
 
                         @empty
 
                             <tr>
 
-                                <td colspan="6"
-                                    class="text-center
-                                           py-10 sm:py-12
-                                           text-gray-500
-                                           dark:text-gray-400
-                                           text-xs sm:text-sm">
+                                <td colspan="6" class="text-center
+                                               py-10 sm:py-12
+                                               text-gray-500
+                                               dark:text-gray-400
+                                               text-xs sm:text-sm">
 
                                     No hay clientes registrados.
 
@@ -556,8 +531,7 @@
          MODAL NUEVO CLIENTE
     ============================================================== -->
 
-    <div id="modalNuevoCliente"
-        class="hidden fixed inset-0 z-50
+    <div id="modalNuevoCliente" class="hidden fixed inset-0 z-50
                bg-black/50 backdrop-blur-sm
                flex items-center justify-center
                p-3 sm:p-4">
@@ -596,11 +570,7 @@
 
                         </label>
 
-                        <input type="text"
-                            name="name"
-                            required
-                            placeholder="Ej. Juan Pérez"
-                            class="w-full
+                        <input type="text" name="name" required placeholder="Ej. Juan Pérez" class="w-full
                                    text-sm
                                    px-3.5 py-2.5
                                    bg-gray-50 dark:bg-gray-900
@@ -624,10 +594,7 @@
 
                         </label>
 
-                        <input type="text"
-                            name="alias"
-                            placeholder="Ej. El Chuy"
-                            class="w-full
+                        <input type="text" name="alias" placeholder="Ej. El Chuy" class="w-full
                                    text-sm
                                    px-3.5 py-2.5
                                    bg-gray-50 dark:bg-gray-900
@@ -651,10 +618,7 @@
 
                         </label>
 
-                        <input type="text"
-                            name="phone"
-                            placeholder="Ej. 8714663905"
-                            class="w-full
+                        <input type="text" name="phone" placeholder="Ej. 8714663905" class="w-full
                                    text-sm
                                    px-3.5 py-2.5
                                    bg-gray-50 dark:bg-gray-900
@@ -678,10 +642,7 @@
 
                         </label>
 
-                        <input type="text"
-                            name="address"
-                            placeholder="Ej. Boquillas #123"
-                            class="w-full
+                        <input type="text" name="address" placeholder="Ej. Boquillas #123" class="w-full
                                    text-sm
                                    px-3.5 py-2.5
                                    bg-gray-50 dark:bg-gray-900
@@ -705,8 +666,7 @@
 
                         </label>
 
-                        <select name="status"
-                            class="w-full
+                        <select name="status" class="w-full
                                    text-sm
                                    px-3.5 py-2.5
                                    bg-gray-50 dark:bg-gray-900
@@ -735,8 +695,7 @@
                             gap-2
                             mt-6">
 
-                    <button type="button"
-                        onclick="document.getElementById('modalNuevoCliente').classList.add('hidden')"
+                    <button type="button" onclick="document.getElementById('modalNuevoCliente').classList.add('hidden')"
                         class="px-4 py-2.5
                                bg-gray-100 dark:bg-gray-700
                                hover:bg-gray-200
@@ -751,8 +710,7 @@
                     </button>
 
 
-                    <button type="submit"
-                        class="px-5 py-2.5
+                    <button type="submit" class="px-5 py-2.5
                                bg-indigo-600 hover:bg-indigo-700
                                text-white
                                rounded-xl
@@ -778,8 +736,7 @@
          MODAL EDITAR CLIENTE
     ============================================================== -->
 
-    <div id="modalEditarCliente"
-        class="hidden fixed inset-0 z-50
+    <div id="modalEditarCliente" class="hidden fixed inset-0 z-50
                bg-black/50 backdrop-blur-sm
                flex items-center justify-center
                p-3 sm:p-4">
@@ -801,8 +758,7 @@
             </h3>
 
 
-            <form id="formEditarCliente"
-                method="POST">
+            <form id="formEditarCliente" method="POST">
 
                 @csrf
                 @method('PUT')
@@ -820,11 +776,7 @@
 
                         </label>
 
-                        <input type="text"
-                            name="name"
-                            id="edit_name"
-                            required
-                            class="w-full
+                        <input type="text" name="name" id="edit_name" required class="w-full
                                    text-sm
                                    px-3.5 py-2.5
                                    bg-gray-50 dark:bg-gray-900
@@ -848,10 +800,7 @@
 
                         </label>
 
-                        <input type="text"
-                            name="alias"
-                            id="edit_alias"
-                            class="w-full
+                        <input type="text" name="alias" id="edit_alias" class="w-full
                                    text-sm
                                    px-3.5 py-2.5
                                    bg-gray-50 dark:bg-gray-900
@@ -875,10 +824,7 @@
 
                         </label>
 
-                        <input type="text"
-                            name="phone"
-                            id="edit_phone"
-                            class="w-full
+                        <input type="text" name="phone" id="edit_phone" class="w-full
                                    text-sm
                                    px-3.5 py-2.5
                                    bg-gray-50 dark:bg-gray-900
@@ -902,10 +848,7 @@
 
                         </label>
 
-                        <input type="text"
-                            name="address"
-                            id="edit_address"
-                            class="w-full
+                        <input type="text" name="address" id="edit_address" class="w-full
                                    text-sm
                                    px-3.5 py-2.5
                                    bg-gray-50 dark:bg-gray-900
@@ -929,9 +872,7 @@
 
                         </label>
 
-                        <select name="status"
-                            id="edit_status"
-                            class="w-full
+                        <select name="status" id="edit_status" class="w-full
                                    text-sm
                                    px-3.5 py-2.5
                                    bg-gray-50 dark:bg-gray-900
@@ -961,8 +902,7 @@
                             mt-6">
 
                     <button type="button"
-                        onclick="document.getElementById('modalEditarCliente').classList.add('hidden')"
-                        class="px-4 py-2.5
+                        onclick="document.getElementById('modalEditarCliente').classList.add('hidden')" class="px-4 py-2.5
                                bg-gray-100 dark:bg-gray-700
                                hover:bg-gray-200
                                text-gray-700 dark:text-gray-300
@@ -976,8 +916,7 @@
                     </button>
 
 
-                    <button type="submit"
-                        class="px-5 py-2.5
+                    <button type="submit" class="px-5 py-2.5
                                bg-indigo-600 hover:bg-indigo-700
                                text-white
                                rounded-xl
@@ -1004,7 +943,6 @@
     ============================================================== -->
 
     <style>
-
         /* ==========================================================
            BARRA PRINCIPAL
         ========================================================== */
@@ -1089,14 +1027,12 @@
             gap: 0.55rem;
         }
 
-        #contenidoAccionesClientes.modo-mediano
-        #bloqueBusquedaClientes {
+        #contenidoAccionesClientes.modo-mediano #bloqueBusquedaClientes {
             flex: 1 1 0%;
             min-width: 70px;
         }
 
-        #contenidoAccionesClientes.modo-mediano
-        #bloqueBusquedaClientes input {
+        #contenidoAccionesClientes.modo-mediano #bloqueBusquedaClientes input {
             font-size: 11px;
 
             padding-top: 0.4rem;
@@ -1108,19 +1044,16 @@
             border-radius: 0.6rem;
         }
 
-        #contenidoAccionesClientes.modo-mediano
-        #bloqueBusquedaClientes span {
+        #contenidoAccionesClientes.modo-mediano #bloqueBusquedaClientes span {
             padding-left: 0.6rem;
             font-size: 10px;
         }
 
-        #contenidoAccionesClientes.modo-mediano
-        #botonesClientes {
+        #contenidoAccionesClientes.modo-mediano #botonesClientes {
             gap: 0.35rem;
         }
 
-        #contenidoAccionesClientes.modo-mediano
-        .boton-cliente {
+        #contenidoAccionesClientes.modo-mediano .boton-cliente {
             gap: 0.25rem;
 
             padding-left: 0.55rem;
@@ -1134,8 +1067,7 @@
             border-radius: 0.55rem;
         }
 
-        #contenidoAccionesClientes.modo-mediano
-        .icono-cliente {
+        #contenidoAccionesClientes.modo-mediano .icono-cliente {
             width: 0.78rem !important;
             height: 0.78rem !important;
         }
@@ -1149,14 +1081,12 @@
             gap: 0.35rem;
         }
 
-        #contenidoAccionesClientes.modo-pequeno
-        #bloqueBusquedaClientes {
+        #contenidoAccionesClientes.modo-pequeno #bloqueBusquedaClientes {
             flex: 1 1 0%;
             min-width: 40px;
         }
 
-        #contenidoAccionesClientes.modo-pequeno
-        #bloqueBusquedaClientes input {
+        #contenidoAccionesClientes.modo-pequeno #bloqueBusquedaClientes input {
             font-size: 10px;
 
             padding-top: 0.3rem;
@@ -1168,19 +1098,16 @@
             border-radius: 0.5rem;
         }
 
-        #contenidoAccionesClientes.modo-pequeno
-        #bloqueBusquedaClientes span {
+        #contenidoAccionesClientes.modo-pequeno #bloqueBusquedaClientes span {
             padding-left: 0.5rem;
             font-size: 9px;
         }
 
-        #contenidoAccionesClientes.modo-pequeno
-        #botonesClientes {
+        #contenidoAccionesClientes.modo-pequeno #botonesClientes {
             gap: 0.25rem;
         }
 
-        #contenidoAccionesClientes.modo-pequeno
-        .boton-cliente {
+        #contenidoAccionesClientes.modo-pequeno .boton-cliente {
             gap: 0.18rem;
 
             padding-left: 0.45rem;
@@ -1194,8 +1121,7 @@
             border-radius: 0.45rem;
         }
 
-        #contenidoAccionesClientes.modo-pequeno
-        .icono-cliente {
+        #contenidoAccionesClientes.modo-pequeno .icono-cliente {
             width: 0.68rem !important;
             height: 0.68rem !important;
         }
@@ -1209,14 +1135,12 @@
             gap: 0.25rem;
         }
 
-        #contenidoAccionesClientes.modo-muy-pequeno
-        #bloqueBusquedaClientes {
+        #contenidoAccionesClientes.modo-muy-pequeno #bloqueBusquedaClientes {
             flex: 1 1 0%;
             min-width: 30px;
         }
 
-        #contenidoAccionesClientes.modo-muy-pequeno
-        #bloqueBusquedaClientes input {
+        #contenidoAccionesClientes.modo-muy-pequeno #bloqueBusquedaClientes input {
             font-size: 9px;
 
             padding-top: 0.25rem;
@@ -1228,19 +1152,16 @@
             border-radius: 0.4rem;
         }
 
-        #contenidoAccionesClientes.modo-muy-pequeno
-        #bloqueBusquedaClientes span {
+        #contenidoAccionesClientes.modo-muy-pequeno #bloqueBusquedaClientes span {
             padding-left: 0.4rem;
             font-size: 8px;
         }
 
-        #contenidoAccionesClientes.modo-muy-pequeno
-        #botonesClientes {
+        #contenidoAccionesClientes.modo-muy-pequeno #botonesClientes {
             gap: 0.18rem;
         }
 
-        #contenidoAccionesClientes.modo-muy-pequeno
-        .boton-cliente {
+        #contenidoAccionesClientes.modo-muy-pequeno .boton-cliente {
             gap: 0.12rem;
 
             padding-left: 0.36rem;
@@ -1254,8 +1175,7 @@
             border-radius: 0.38rem;
         }
 
-        #contenidoAccionesClientes.modo-muy-pequeno
-        .icono-cliente {
+        #contenidoAccionesClientes.modo-muy-pequeno .icono-cliente {
             width: 0.6rem !important;
             height: 0.6rem !important;
         }
@@ -1306,8 +1226,7 @@
             overflow-y: hidden;
         }
 
-        #barraAccionesClientes.scroll-acciones
-        #contenidoAccionesClientes {
+        #barraAccionesClientes.scroll-acciones #contenidoAccionesClientes {
             min-width: 300px;
         }
 
@@ -1452,7 +1371,6 @@
             }
 
         }
-
     </style>
 
 

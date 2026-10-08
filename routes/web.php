@@ -62,6 +62,9 @@ Route::middleware(['auth', \App\Http\Middleware\CheckOperationalAccess::class])-
 
     // Listar y gestionar clientes
     Route::get('/clients', [ClientController::class, 'index'])->name('clients.index');
+    Route::get('/cuentas-abiertas', [ClientController::class, 'openAccounts'])->name('clients.open-accounts');
+    Route::get('/cuentas-abiertas/excel', [ClientController::class, 'exportOpenAccountsExcel'])->name('clients.open-accounts.export.excel');
+    Route::get('/cuentas-abiertas/pdf', [ClientController::class, 'exportOpenAccountsPdf'])->name('clients.open-accounts.export.pdf');
     Route::post('/clients/store', [ClientController::class, 'store'])->name('clients.store');
     Route::put('/clients/{id}', [ClientController::class, 'update'])->name('clients.update');
 

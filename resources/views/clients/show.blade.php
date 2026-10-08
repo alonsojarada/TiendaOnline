@@ -1,11 +1,19 @@
 <x-app-layout>
     <x-slot name="header">
+        @php
+            $rutaVolver = match (request('from')) {
+                'cuentas-abiertas' => route('clients.open-accounts'),
+                'directorio' => route('clients.index'),
+                'dashboard' => route('dashboard'),
+                default => route('clients.open-accounts')
+            };
+        @endphp
         <div class="flex justify-between items-center pl-12 sm:pl-0 gap-2">
             <h2 class="font-semibold text-sm sm:text-xl text-gray-800 dark:text-gray-200 leading-tight truncate">
                 Edo. Cta.: {{ $client->name }} <span
                     class="text-[10px] sm:text-sm text-indigo-500 font-normal inline">({{ $client->address ? '"' . $client->address . '"' : '' }})</span>
             </h2>
-            <a href="{{ route('dashboard') }}"
+            <a href="{{ $rutaVolver }}"
                 class="shrink-0 inline-flex items-center gap-1 px-2.5 py-1 text-[11px] sm:text-xs font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/50 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 border border-indigo-200 dark:border-indigo-800 rounded-xl shadow-xs transition-all duration-200 group">
                 <span class="transform group-hover:-translate-x-0.5 transition-transform duration-200">&larr;</span>
                 <span>Volver</span>
@@ -24,56 +32,74 @@
             @endif
 
             <!-- ================= SECCIÓN SUPERIOR ================= -->
-            <div class="bg-white dark:bg-gray-800 p-1.5 sm:p-3.5 rounded-xl shadow-xs border border-gray-100 dark:border-gray-700 mb-2 sm:mb-3 space-y-1.5 sm:space-y-2">
-                
+            <div
+                class="bg-white dark:bg-gray-800 p-1.5 sm:p-3.5 rounded-xl shadow-xs border border-gray-100 dark:border-gray-700 mb-2 sm:mb-3 space-y-1.5 sm:space-y-2">
+
                 <!-- DATOS DE CONTACTO -->
-                <div class="hidden md:flex flex-wrap justify-between items-center text-xs text-gray-500 pb-1.5 border-b border-gray-100 dark:border-gray-700/60">
-                    <div>📞 <strong class="text-gray-800 dark:text-gray-200">{{ $client->phone ?? 'N/A' }}</strong></div>
-                    <div class="truncate max-w-[220px]">📍 <strong class="text-gray-800 dark:text-gray-200">{{ $client->address ?? 'N/A' }}</strong></div>
+                <div
+                    class="hidden md:flex flex-wrap justify-between items-center text-xs text-gray-500 pb-1.5 border-b border-gray-100 dark:border-gray-700/60">
+                    <div>📞 <strong class="text-gray-800 dark:text-gray-200">{{ $client->phone ?? 'N/A' }}</strong>
+                    </div>
+                    <div class="truncate max-w-[220px]">📍 <strong
+                            class="text-gray-800 dark:text-gray-200">{{ $client->address ?? 'N/A' }}</strong></div>
                 </div>
 
-                <!-- CONTENEDOR PRINCIPAL SUPERIOR: flex en medianas para poner tarjetas y botones alineados sin estirarlos -->
+                <!-- CONTENEDOR PRINCIPAL SUPERIOR -->
                 <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-2">
-                    
-                    <!-- BLOQUE DE TARJETAS (Ocupa el espacio flexible principal) -->
+
+                    <!-- BLOQUE DE TARJETAS -->
                     <div class="grid grid-cols-3 gap-1 sm:gap-2 flex-1 min-w-0">
-                        
+
                         <!-- Tarjeta Mercancía -->
-                        <div class="bg-gray-50 dark:bg-gray-900/40 p-1 sm:p-3 rounded-xl border border-gray-100 dark:border-gray-700/60 flex flex-col justify-between">
-                            <span class="text-[9px] sm:text-xs font-black text-indigo-600 dark:text-indigo-400 uppercase tracking-wider block mb-0.5 truncate">Mercancía</span>
+                        <div
+                            class="bg-gray-50 dark:bg-gray-900/40 p-1 sm:p-3 rounded-xl border border-gray-100 dark:border-gray-700/60 flex flex-col justify-between">
+                            <span
+                                class="text-[9px] sm:text-xs font-black text-indigo-600 dark:text-indigo-400 uppercase tracking-wider block mb-0.5 truncate">Mercancía</span>
                             <div>
-                                <div class="text-[11px] sm:text-xl font-black text-gray-900 dark:text-white truncate">${{ number_format($totalMercanciaRestante, 0) }}</div>
-                                <div class="text-[9px] sm:text-xs text-gray-500 truncate font-medium hidden sm:block">Ab: ${{ number_format($totalAbonosMercancia, 0) }}</div>
+                                <div class="text-[11px] sm:text-xl font-black text-gray-900 dark:text-white truncate">
+                                    ${{ number_format($totalMercanciaRestante, 0) }}</div>
+                                <div class="text-[9px] sm:text-xs text-gray-500 truncate font-medium hidden sm:block">
+                                    Ab: ${{ number_format($totalAbonosMercancia, 0) }}</div>
                             </div>
                         </div>
 
                         <!-- Tarjeta Préstamos -->
-                        <div class="bg-gray-50 dark:bg-gray-900/40 p-1 sm:p-3 rounded-xl border border-gray-100 dark:border-gray-700/60 flex flex-col justify-between">
-                            <span class="text-[9px] sm:text-xs font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-wider block mb-0.5 truncate">Préstamos</span>
+                        <div
+                            class="bg-gray-50 dark:bg-gray-900/40 p-1 sm:p-3 rounded-xl border border-gray-100 dark:border-gray-700/60 flex flex-col justify-between">
+                            <span
+                                class="text-[9px] sm:text-xs font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-wider block mb-0.5 truncate">Préstamos</span>
                             <div>
-                                <div class="text-[11px] sm:text-xl font-black text-gray-900 dark:text-white truncate">${{ number_format($totalPrestamosRestante, 0) }}</div>
-                                <div class="text-[9px] sm:text-xs text-gray-500 truncate font-medium hidden sm:block">Ab: ${{ number_format($totalAbonosPrestamos, 0) }}</div>
+                                <div class="text-[11px] sm:text-xl font-black text-gray-900 dark:text-white truncate">
+                                    ${{ number_format($totalPrestamosRestante, 0) }}</div>
+                                <div class="text-[9px] sm:text-xs text-gray-500 truncate font-medium hidden sm:block">
+                                    Ab: ${{ number_format($totalAbonosPrestamos, 0) }}</div>
                             </div>
                         </div>
 
                         <!-- Adeudo Global -->
-                        <div class="bg-rose-50/60 dark:bg-rose-950/25 p-1 sm:p-3 rounded-xl border border-rose-100 dark:border-rose-900/30 flex flex-col justify-between">
-                            <span class="text-[9px] sm:text-xs font-black text-rose-600 dark:text-rose-400 uppercase tracking-wider block mb-0.5 truncate">Global</span>
+                        <div
+                            class="bg-rose-50/60 dark:bg-rose-950/25 p-1 sm:p-3 rounded-xl border border-rose-100 dark:border-rose-900/30 flex flex-col justify-between">
+                            <span
+                                class="text-[9px] sm:text-xs font-black text-rose-600 dark:text-rose-400 uppercase tracking-wider block mb-0.5 truncate">Global</span>
                             <div>
-                                <div class="text-[11px] sm:text-xl font-black text-rose-700 dark:text-rose-300 truncate">${{ number_format($totalAdeudoGlobal, 0) }}</div>
-                                <div class="text-[9px] sm:text-xs text-rose-500 font-bold truncate hidden sm:block">Pendiente</div>
+                                <div
+                                    class="text-[11px] sm:text-xl font-black text-rose-700 dark:text-rose-300 truncate">
+                                    ${{ number_format($totalAdeudoGlobal, 0) }}</div>
+                                <div class="text-[9px] sm:text-xs text-rose-500 font-bold truncate hidden sm:block">
+                                    Pendiente</div>
                             </div>
                         </div>
 
                     </div>
 
-                    <!-- BOTONES DE ACCIÓN: En móvil en fila, en medianas en columna con ancho controlado (`md:w-44`) para que no queden gigantes -->
+                    <!-- BOTONES DE ACCIÓN -->
                     <div class="flex flex-row md:flex-col gap-1 md:gap-1.5 justify-center shrink-0 md:w-44 min-w-0">
                         <button type="button" onclick="document.getElementById('modalFiado').classList.remove('hidden')"
                             class="flex-1 md:flex-none min-w-0 px-2 sm:px-3 py-1.5 sm:py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-[11px] sm:text-xs font-extrabold shadow-xs transition text-center inline-flex items-center justify-center gap-1">
                             🛍️ <span>+ Mercancia</span>
                         </button>
-                        <button type="button" onclick="document.getElementById('modalPrestamo').classList.remove('hidden')"
+                        <button type="button"
+                            onclick="document.getElementById('modalPrestamo').classList.remove('hidden')"
                             class="flex-1 md:flex-none min-w-0 px-2 sm:px-3 py-1.5 sm:py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-[11px] sm:text-xs font-extrabold shadow-xs transition text-center inline-flex items-center justify-center gap-1">
                             💵 <span>+ Préstamo</span>
                         </button>
@@ -89,7 +115,8 @@
                 <!-- ================= COLUMNA 1: MERCANCÍA FIADA ================= -->
                 <div class="bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg p-3 sm:p-5">
                     <div class="flex justify-between items-center mb-3 pb-2 border-b dark:border-gray-700">
-                        <h3 class="font-bold text-sm sm:text-lg text-gray-900 dark:text-gray-100">Ropa y Mercancía Fiada</h3>
+                        <h3 class="font-bold text-sm sm:text-lg text-gray-900 dark:text-gray-100">Ropa y Mercancía Fiada
+                        </h3>
                         <button type="button" onclick="document.getElementById('modalFiado').classList.remove('hidden')"
                             class="px-2.5 py-1 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md text-[11px] sm:text-xs font-semibold uppercase tracking-wider transition">
                             + Mercancia
@@ -124,7 +151,8 @@
 
                             <div class="flex justify-between items-start gap-2 mb-2">
                                 <div class="min-w-0 flex-1">
-                                    <h4 class="font-bold text-gray-900 dark:text-white text-xs sm:text-sm truncate">#{{ $credit->id }} - {{ $credit->concept }}</h4>
+                                    <h4 class="font-bold text-gray-900 dark:text-white text-xs sm:text-sm truncate">
+                                        #{{ $credit->id }} - {{ $credit->concept }}</h4>
                                     <p
                                         class="text-[11px] sm:text-xs text-gray-700 dark:text-gray-300 font-medium flex items-center gap-1 flex-wrap">
                                         <span>{{ $textoFecha }}</span>
@@ -138,7 +166,7 @@
                                     </p>
                                 </div>
 
-                                <a href="{{ route('store-details', ['id' => $credit->id, 'from' => 'cliente']) }}"
+                                <a href="{{ route('store-details', ['id' => $credit->id, 'from' => request('from', 'cliente')]) }}"
                                     class="px-2 py-1 bg-gray-100 hover:bg-emerald-50 dark:bg-gray-700 dark:hover:bg-emerald-950 text-gray-600 dark:text-gray-300 hover:text-emerald-600 rounded-lg text-[11px] sm:text-xs font-semibold flex items-center gap-0.5 transition shrink-0"
                                     title="Ir a página completa">
                                     Detalle ➔
@@ -149,13 +177,15 @@
                                 class="flex justify-between items-center mt-2 pt-2 border-t border-gray-200/60 dark:border-gray-700/60">
                                 <div class="flex items-center gap-3 sm:gap-6">
                                     <div>
-                                        <span class="text-[9px] sm:text-[10px] uppercase text-green-600 font-bold block">Abonado</span>
+                                        <span
+                                            class="text-[9px] sm:text-[10px] uppercase text-green-600 font-bold block">Abonado</span>
                                         <span class="text-xs sm:text-sm font-bold text-green-600 dark:text-green-400">
                                             ${{ number_format($totalAbonado, 2) }}
                                         </span>
                                     </div>
                                     <div>
-                                        <span class="text-[9px] sm:text-[10px] uppercase text-amber-500 font-bold block">Debe</span>
+                                        <span
+                                            class="text-[9px] sm:text-[10px] uppercase text-amber-500 font-bold block">Debe</span>
                                         <span class="text-xs sm:text-sm font-bold text-amber-600 dark:text-amber-400">
                                             ${{ number_format($saldoPendiente, 2) }}
                                         </span>
@@ -170,7 +200,8 @@
                             </div>
                         </div>
                     @empty
-                        <p class="text-gray-500 dark:text-gray-400 text-xs sm:text-sm text-center py-4">No tiene mercancía fiada pendiente.</p>
+                        <p class="text-gray-500 dark:text-gray-400 text-xs sm:text-sm text-center py-4">No tiene mercancía
+                            fiada pendiente.</p>
                     @endforelse
                 </div>
 
@@ -178,7 +209,8 @@
                 <!-- ================= COLUMNA 2: PRÉSTAMOS EN EFECTIVO ================= -->
                 <div class="bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg p-3 sm:p-5">
                     <div class="flex justify-between items-center mb-3 pb-2 border-b dark:border-gray-700">
-                        <h3 class="font-bold text-sm sm:text-base text-gray-900 dark:text-gray-100 flex items-center gap-1.5">
+                        <h3
+                            class="font-bold text-sm sm:text-base text-gray-900 dark:text-gray-100 flex items-center gap-1.5">
                             📈 Préstamos <span
                                 class="text-[11px] sm:text-xs bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-300 px-1.5 py-0.5 rounded-full">({{ $cashLoans->count() }})</span>
                         </h3>
@@ -255,7 +287,8 @@
                                         <span class="text-base sm:text-lg font-black text-gray-900 dark:text-white">
                                             ${{ number_format($montoTotalConInteres, 2) }}
                                         </span>
-                                        <span class="text-[11px] text-gray-400 font-medium ml-0.5 truncate">({{ $loan->concept }})</span>
+                                        <span
+                                            class="text-[11px] text-gray-400 font-medium ml-0.5 truncate">({{ $loan->concept }})</span>
                                     </div>
                                 </div>
 
@@ -267,7 +300,7 @@
                                         👁️ <span class="hidden sm:inline">Info.</span>
                                     </button>
 
-                                    <a href="{{ route('debts.details', ['id' => $loan->id, 'from' => 'cliente']) }}"
+                                    <a href="{{ route('debts.details', ['id' => $loan->id, 'from' => request('from', 'cliente')]) }}"
                                         class="px-1.5 py-1 bg-gray-100 hover:bg-emerald-50 dark:bg-gray-700 dark:hover:bg-emerald-950 text-gray-600 dark:text-gray-300 hover:text-emerald-600 rounded-lg text-[11px] sm:text-xs font-semibold flex items-center gap-0.5 transition"
                                         title="Ir a página completa">
                                         Detalle ➔
@@ -284,11 +317,13 @@
 
                             <div class="flex justify-between items-center text-[11px] sm:text-xs px-0.5 mb-1.5">
                                 <span class="text-gray-500 dark:text-gray-400">
-                                    Pagado: <span class="font-medium text-green-600">${{ number_format($totalPagado, 2) }}</span>
+                                    Pagado: <span
+                                        class="font-medium text-green-600">${{ number_format($totalPagado, 2) }}</span>
                                 </span>
                                 <div>
                                     @php $restante = $montoTotalConInteres - $totalPagado; @endphp
-                                    <span class="font-bold text-amber-600 dark:text-amber-400 text-sm sm:text-base tracking-tight">
+                                    <span
+                                        class="font-bold text-amber-600 dark:text-amber-400 text-sm sm:text-base tracking-tight">
                                         Restante: ${{ number_format($restante, 2) }}
                                     </span>
                                 </div>
@@ -297,24 +332,32 @@
                             <div
                                 class="grid grid-cols-4 gap-0.5 pt-1.5 border-t border-gray-100 dark:border-gray-700 text-center items-center text-[11px] sm:text-xs">
                                 <div>
-                                    <span class="block text-gray-400 text-[9px] uppercase font-bold tracking-tight">Cuota</span>
-                                    <span class="font-bold text-gray-800 dark:text-gray-200">${{ number_format($valorCuota, 2) }}</span>
+                                    <span
+                                        class="block text-gray-400 text-[9px] uppercase font-bold tracking-tight">Cuota</span>
+                                    <span
+                                        class="font-bold text-gray-800 dark:text-gray-200">${{ number_format($valorCuota, 2) }}</span>
                                 </div>
                                 <div class="border-l border-gray-100 dark:border-gray-700">
-                                    <span class="block text-gray-400 text-[9px] uppercase font-bold tracking-tight">Avance</span>
-                                    <span class="font-bold text-gray-800 dark:text-gray-200">{{ $cuotasPagadas }}/{{ $totalCuotas > 0 ? $totalCuotas : 'N/A' }}</span>
+                                    <span
+                                        class="block text-gray-400 text-[9px] uppercase font-bold tracking-tight">Avance</span>
+                                    <span
+                                        class="font-bold text-gray-800 dark:text-gray-200">{{ $cuotasPagadas }}/{{ $totalCuotas > 0 ? $totalCuotas : 'N/A' }}</span>
                                 </div>
                                 <div class="border-l border-gray-100 dark:border-gray-700">
-                                    <span class="block text-gray-400 text-[9px] uppercase font-bold tracking-tight">Frec.</span>
-                                    <span class="font-semibold text-gray-700 dark:text-gray-200 truncate block">{{ $frecuenciaTexto }}</span>
+                                    <span
+                                        class="block text-gray-400 text-[9px] uppercase font-bold tracking-tight">Frec.</span>
+                                    <span
+                                        class="font-semibold text-gray-700 dark:text-gray-200 truncate block">{{ $frecuenciaTexto }}</span>
                                 </div>
                                 <div class="border-l border-gray-100 dark:border-gray-700 flex justify-center">
                                     @if($cuotasVencidas > 0)
-                                        <span class="px-1.5 py-0.5 bg-red-600 text-white dark:bg-red-700 rounded font-black text-[10px] shadow-xs flex items-center gap-0.5">
+                                        <span
+                                            class="px-1.5 py-0.5 bg-red-600 text-white dark:bg-red-700 rounded font-black text-[10px] shadow-xs flex items-center gap-0.5">
                                             🚨 {{ $cuotasVencidas }}V
                                         </span>
                                     @else
-                                        <span class="px-1.5 py-0.5 bg-emerald-50 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-400 rounded font-bold text-[10px]">
+                                        <span
+                                            class="px-1.5 py-0.5 bg-emerald-50 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-400 rounded font-bold text-[10px]">
                                             Al corriente
                                         </span>
                                     @endif
@@ -325,10 +368,14 @@
                         <!-- MODAL DE VISTA RÁPIDA -->
                         <div id="modal-detalle-{{ $loan->id }}" role="dialog" aria-modal="true"
                             class="hidden fixed inset-0 z-50 overflow-y-auto bg-gray-900/60 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4">
-                            <div class="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-2xl max-w-md w-full max-h-[94vh] overflow-hidden border border-gray-100 dark:border-gray-700 animate-in fade-in zoom-in duration-200">
-                                <div class="flex justify-between items-center px-3 py-2.5 sm:px-6 sm:py-4 bg-gray-50 dark:bg-gray-900/50 border-b dark:border-gray-700">
-                                    <h3 class="font-bold text-gray-900 dark:text-gray-100 text-sm sm:text-base flex items-center gap-1.5 sm:gap-2 min-w-0">
-                                        📋 Detalle del Crédito <span class="text-emerald-600 font-mono">#{{ $loan->id }}</span>
+                            <div
+                                class="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-2xl max-w-md w-full max-h-[94vh] overflow-hidden border border-gray-100 dark:border-gray-700 animate-in fade-in zoom-in duration-200">
+                                <div
+                                    class="flex justify-between items-center px-3 py-2.5 sm:px-6 sm:py-4 bg-gray-50 dark:bg-gray-900/50 border-b dark:border-gray-700">
+                                    <h3
+                                        class="font-bold text-gray-900 dark:text-gray-100 text-sm sm:text-base flex items-center gap-1.5 sm:gap-2 min-w-0">
+                                        📋 Detalle del Crédito <span
+                                            class="text-emerald-600 font-mono">#{{ $loan->id }}</span>
                                     </h3>
                                     <button type="button"
                                         onclick="document.getElementById('modal-detalle-{{ $loan->id }}').classList.add('hidden')"
@@ -337,66 +384,96 @@
                                     </button>
                                 </div>
 
-                                <div class="p-3 sm:p-6 space-y-1.5 sm:space-y-3 text-[11px] sm:text-sm max-h-[78vh] overflow-y-auto">
-                                    <div class="flex justify-between items-center gap-3 py-1 sm:py-1.5 border-b dark:border-gray-700/50">
+                                <div
+                                    class="p-3 sm:p-6 space-y-1.5 sm:space-y-3 text-[11px] sm:text-sm max-h-[78vh] overflow-y-auto">
+                                    <div
+                                        class="flex justify-between items-center gap-3 py-1 sm:py-1.5 border-b dark:border-gray-700/50">
                                         <span class="text-gray-500">ID del crédito</span>
-                                        <span class="font-semibold text-gray-800 dark:text-gray-200 font-mono">#{{ $loan->id }}</span>
+                                        <span
+                                            class="font-semibold text-gray-800 dark:text-gray-200 font-mono">#{{ $loan->id }}</span>
                                     </div>
-                                    <div class="flex justify-between items-center gap-3 py-1 sm:py-1.5 border-b dark:border-gray-700/50">
+                                    <div
+                                        class="flex justify-between items-center gap-3 py-1 sm:py-1.5 border-b dark:border-gray-700/50">
                                         <span class="text-gray-500">Fecha del crédito</span>
-                                        <span class="font-semibold text-gray-800 dark:text-gray-200">{{ $fechaCredito }}</span>
+                                        <span
+                                            class="font-semibold text-gray-800 dark:text-gray-200">{{ $fechaCredito }}</span>
                                     </div>
-                                    <div class="flex justify-between items-center gap-3 py-1 sm:py-1.5 border-b dark:border-gray-700/50">
+                                    <div
+                                        class="flex justify-between items-center gap-3 py-1 sm:py-1.5 border-b dark:border-gray-700/50">
                                         <span class="text-gray-500">Fecha próxima cuota</span>
-                                        <span class="font-semibold text-emerald-600 dark:text-emerald-400">{{ $fechaProxima }}</span>
+                                        <span
+                                            class="font-semibold text-emerald-600 dark:text-emerald-400">{{ $fechaProxima }}</span>
                                     </div>
-                                    <div class="flex justify-between items-center gap-3 py-1 sm:py-1.5 border-b dark:border-gray-700/50">
+                                    <div
+                                        class="flex justify-between items-center gap-3 py-1 sm:py-1.5 border-b dark:border-gray-700/50">
                                         <span class="text-gray-500">Vencimiento del crédito</span>
-                                        <span class="font-semibold text-gray-800 dark:text-gray-200">{{ $fechaVencimiento }}</span>
+                                        <span
+                                            class="font-semibold text-gray-800 dark:text-gray-200">{{ $fechaVencimiento }}</span>
                                     </div>
-                                    <div class="flex justify-between items-center gap-3 py-1 sm:py-1.5 border-b dark:border-gray-700/50">
+                                    <div
+                                        class="flex justify-between items-center gap-3 py-1 sm:py-1.5 border-b dark:border-gray-700/50">
                                         <span class="text-gray-500">Cuotas vencidas</span>
-                                        <span class="font-bold {{ $cuotasVencidas > 0 ? 'text-red-600' : 'text-gray-800 dark:text-gray-200' }}">{{ $cuotasVencidas }}</span>
+                                        <span
+                                            class="font-bold {{ $cuotasVencidas > 0 ? 'text-red-600' : 'text-gray-800 dark:text-gray-200' }}">{{ $cuotasVencidas }}</span>
                                     </div>
-                                    <div class="flex justify-between items-center gap-3 py-1 sm:py-1.5 border-b dark:border-gray-700/50">
+                                    <div
+                                        class="flex justify-between items-center gap-3 py-1 sm:py-1.5 border-b dark:border-gray-700/50">
                                         <span class="text-gray-500">Interés</span>
-                                        <span class="font-semibold text-gray-800 dark:text-gray-200">{{ number_format($interesPorcentaje, 1) }}%</span>
+                                        <span
+                                            class="font-semibold text-gray-800 dark:text-gray-200">{{ number_format($interesPorcentaje, 1) }}%</span>
                                     </div>
-                                    <div class="flex justify-between items-center gap-3 py-1 sm:py-1.5 border-b dark:border-gray-700/50">
+                                    <div
+                                        class="flex justify-between items-center gap-3 py-1 sm:py-1.5 border-b dark:border-gray-700/50">
                                         <span class="text-gray-500">Valor total intereses</span>
-                                        <span class="font-semibold text-gray-800 dark:text-gray-200">${{ number_format($valorTotalIntereses, 2) }}</span>
+                                        <span
+                                            class="font-semibold text-gray-800 dark:text-gray-200">${{ number_format($valorTotalIntereses, 2) }}</span>
                                     </div>
-                                    <div class="flex justify-between items-center gap-3 py-1 sm:py-1.5 border-b dark:border-gray-700/50">
+                                    <div
+                                        class="flex justify-between items-center gap-3 py-1 sm:py-1.5 border-b dark:border-gray-700/50">
                                         <span class="text-gray-500">Cuotas pagadas</span>
-                                        <span class="font-semibold text-gray-800 dark:text-gray-200">{{ $cuotasPagadas }} / {{$totalCuotas }}</span>
+                                        <span class="font-semibold text-gray-800 dark:text-gray-200">{{ $cuotasPagadas }} /
+                                            {{$totalCuotas }}</span>
                                     </div>
-                                    <div class="flex justify-between items-center gap-3 py-1 sm:py-1.5 border-b dark:border-gray-700/50">
+                                    <div
+                                        class="flex justify-between items-center gap-3 py-1 sm:py-1.5 border-b dark:border-gray-700/50">
                                         <span class="text-gray-500">Frecuencia de Pago</span>
-                                        <span class="font-semibold text-gray-800 dark:text-gray-200">{{ $frecuenciaTexto }}</span>
+                                        <span
+                                            class="font-semibold text-gray-800 dark:text-gray-200">{{ $frecuenciaTexto }}</span>
                                     </div>
-                                    <div class="flex justify-between items-center gap-3 py-1 sm:py-1.5 border-b dark:border-gray-700/50">
+                                    <div
+                                        class="flex justify-between items-center gap-3 py-1 sm:py-1.5 border-b dark:border-gray-700/50">
                                         <span class="text-gray-500">Valor cuota</span>
-                                        <span class="font-semibold text-gray-800 dark:text-gray-200">${{ number_format($valorCuota, 2) }}</span>
+                                        <span
+                                            class="font-semibold text-gray-800 dark:text-gray-200">${{ number_format($valorCuota, 2) }}</span>
                                     </div>
-                                    <div class="flex justify-between items-center gap-3 py-1 sm:py-1.5 border-b dark:border-gray-700/50">
+                                    <div
+                                        class="flex justify-between items-center gap-3 py-1 sm:py-1.5 border-b dark:border-gray-700/50">
                                         <span class="text-gray-500">Total prestado</span>
-                                        <span class="font-semibold text-gray-800 dark:text-gray-200">${{ number_format($capitalPrestado, 2) }}</span>
+                                        <span
+                                            class="font-semibold text-gray-800 dark:text-gray-200">${{ number_format($capitalPrestado, 2) }}</span>
                                     </div>
-                                    <div class="flex justify-between items-center gap-3 py-1 sm:py-1.5 border-b dark:border-gray-700/50">
+                                    <div
+                                        class="flex justify-between items-center gap-3 py-1 sm:py-1.5 border-b dark:border-gray-700/50">
                                         <span class="text-gray-500">Prestado + intereses</span>
-                                        <span class="font-semibold text-gray-800 dark:text-gray-200">${{ number_format($montoTotalConInteres, 2) }}</span>
+                                        <span
+                                            class="font-semibold text-gray-800 dark:text-gray-200">${{ number_format($montoTotalConInteres, 2) }}</span>
                                     </div>
-                                    <div class="flex justify-between items-center gap-3 py-1 sm:py-1.5 border-b dark:border-gray-700/50">
+                                    <div
+                                        class="flex justify-between items-center gap-3 py-1 sm:py-1.5 border-b dark:border-gray-700/50">
                                         <span class="text-gray-500">Total abonado</span>
-                                        <span class="font-semibold text-emerald-600">${{ number_format($totalPagado, 2) }}</span>
+                                        <span
+                                            class="font-semibold text-emerald-600">${{ number_format($totalPagado, 2) }}</span>
                                     </div>
-                                    <div class="flex justify-between items-center gap-3 py-1.5 sm:py-2 font-bold text-xs sm:text-base bg-gray-50 dark:bg-gray-900/30 px-2 sm:px-3 rounded-lg">
+                                    <div
+                                        class="flex justify-between items-center gap-3 py-1.5 sm:py-2 font-bold text-xs sm:text-base bg-gray-50 dark:bg-gray-900/30 px-2 sm:px-3 rounded-lg">
                                         <span class="text-gray-700 dark:text-gray-300">Saldo Total Restante</span>
-                                        <span class="text-amber-600">${{ number_format($montoTotalConInteres -$totalPagado, 2) }}</span>
+                                        <span
+                                            class="text-amber-600">${{ number_format($montoTotalConInteres - $totalPagado, 2) }}</span>
                                     </div>
                                 </div>
 
-                                <div class="px-3 py-2 sm:px-6 sm:py-3 bg-gray-50 dark:bg-gray-900/50 border-t dark:border-gray-700 flex justify-end">
+                                <div
+                                    class="px-3 py-2 sm:px-6 sm:py-3 bg-gray-50 dark:bg-gray-900/50 border-t dark:border-gray-700 flex justify-end">
                                     <button type="button"
                                         onclick="document.getElementById('modal-detalle-{{ $loan->id }}').classList.add('hidden')"
                                         class="px-3 py-1.5 sm:px-4 sm:py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 rounded-lg sm:rounded-xl text-[11px] sm:text-xs font-semibold transition">
@@ -406,7 +483,8 @@
                             </div>
                         </div>
                     @empty
-                        <p class="text-gray-500 dark:text-gray-400 text-xs sm:text-sm text-center py-4">No tiene créditos activos.</p>
+                        <p class="text-gray-500 dark:text-gray-400 text-xs sm:text-sm text-center py-4">No tiene créditos
+                            activos.</p>
                     @endforelse
                 </div>
 
@@ -424,24 +502,29 @@
                     class="text-gray-400 hover:text-gray-600">✕</button>
             </div>
 
+            <!-- AGREGADO: Campo oculto para conservar la variable 'from' -->
             <form action="{{ route('debts.store') }}" method="POST" class="mt-4">
                 @csrf
                 <input type="hidden" name="client_id" value="{{ $client->id }}">
                 <input type="hidden" name="type" value="store_credit">
+                <input type="hidden" name="from" value="{{ request('from') }}">
 
                 <div class="mb-3">
-                    <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">Concepto / Descripción</label>
+                    <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">Concepto /
+                        Descripción</label>
                     <input type="text" name="concept" placeholder="Ej. Pantalón de mezclilla talla 32" required
                         class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-xs sm:text-sm">
                 </div>
 
                 <div class="mb-3">
-                    <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">Costo Total ($)</label>
+                    <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">Costo Total
+                        ($)</label>
                     <input type="number" step="0.01" name="total_amount" placeholder="0.00" required
                         class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-xs sm:text-sm">
                 </div>
                 <div class="mb-3">
-                    <label class="block text-xs font-bold text-gray-600 dark:text-gray-400 uppercase mb-1">Fecha de Movimiento</label>
+                    <label class="block text-xs font-bold text-gray-600 dark:text-gray-400 uppercase mb-1">Fecha de
+                        Movimiento</label>
                     <input type="date" name="created_at" value="{{ date('Y-m-d') }}"
                         class="w-full px-3 py-2 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-hidden text-gray-800 dark:text-gray-200">
                 </div>
@@ -450,7 +533,8 @@
                     <button type="button" onclick="document.getElementById('modalFiado').classList.add('hidden')"
                         class="px-3 sm:px-4 py-2 bg-gray-300 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-md text-xs sm:text-sm font-semibold">Cancelar</button>
                     <button type="submit"
-                        class="px-3 sm:px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md text-xs sm:text-sm font-semibold">Guardar Fiado</button>
+                        class="px-3 sm:px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md text-xs sm:text-sm font-semibold">Guardar
+                        Fiado</button>
                 </div>
             </form>
         </div>
@@ -459,40 +543,48 @@
     <!-- MODAL: NUEVO PRÉSTAMO EN EFECTIVO -->
     <div id="modalPrestamo" role="dialog" aria-modal="true"
         class="hidden fixed inset-0 z-50 overflow-y-auto bg-gray-900 bg-opacity-50 flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-gray-800 rounded-lg max-w-md w-full p-5 sm:p-6 shadow-xl max-h-[90vh] overflow-y-auto">
+        <div
+            class="bg-white dark:bg-gray-800 rounded-lg max-w-md w-full p-5 sm:p-6 shadow-xl max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center pb-3 border-b dark:border-gray-700">
-                <h3 class="text-base sm:text-lg font-bold text-gray-900 dark:text-gray-100">Otorgar Préstamo en Efectivo</h3>
+                <h3 class="text-base sm:text-lg font-bold text-gray-900 dark:text-gray-100">Otorgar Préstamo en Efectivo
+                </h3>
                 <button type="button" onclick="document.getElementById('modalPrestamo').classList.add('hidden')"
                     class="text-gray-400 hover:text-gray-600">✕</button>
             </div>
 
+            <!-- AGREGADO: Campo oculto para conservar la variable 'from' -->
             <form action="{{ route('debts.store') }}" method="POST" class="mt-4" onsubmit="disableSubmit(this)">
                 @csrf
                 <input type="hidden" name="client_id" value="{{ $client->id }}">
                 <input type="hidden" name="type" value="cash_loan">
                 <input type="hidden" name="created_at" value="{{ date('Y-m-d H:i:s') }}">
+                <input type="hidden" name="from" value="{{ request('from') }}">
 
                 <div class="mb-3">
-                    <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">Concepto / Motivo</label>
+                    <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">Concepto /
+                        Motivo</label>
                     <input type="text" name="concept" placeholder="Ej. Préstamo personal" required
                         class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-xs sm:text-sm">
                 </div>
 
                 <div class="grid grid-cols-2 gap-3 mb-3">
                     <div>
-                        <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">Capital ($)</label>
+                        <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">Capital
+                            ($)</label>
                         <input type="number" step="0.01" name="total_amount" required
                             class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-xs sm:text-sm">
                     </div>
                     <div>
-                        <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">Interés (%)</label>
+                        <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">Interés
+                            (%)</label>
                         <input type="number" step="0.01" name="interest_rate" placeholder="Ej. 10" required
                             class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-xs sm:text-sm">
                     </div>
                 </div>
 
                 <div class="mb-3">
-                    <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">Modalidad de Cobro</label>
+                    <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">Modalidad de
+                        Cobro</label>
                     <select name="loan_modal" id="loan_modal" onchange="toggleInstallments()"
                         class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-xs sm:text-sm">
                         <option value="interest_only">Solo Interés (Abonos libres)</option>
@@ -502,7 +594,8 @@
 
                 <div class="grid grid-cols-2 gap-3 mb-3">
                     <div>
-                        <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">Frecuencia</label>
+                        <label
+                            class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">Frecuencia</label>
                         <select name="payment_frequency"
                             class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-xs sm:text-sm">
                             <option value="weekly">Semanal</option>
@@ -511,14 +604,16 @@
                         </select>
                     </div>
                     <div id="installments_div" style="display: none;">
-                        <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">Núm. Cuotas</label>
+                        <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">Núm.
+                            Cuotas</label>
                         <input type="number" name="installments_count"
                             class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-xs sm:text-sm">
                     </div>
                 </div>
 
                 <div class="mb-3">
-                    <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">Fecha de inicio</label>
+                    <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">Fecha de
+                        inicio</label>
                     <input type="date" name="loan_date" value="{{ date('Y-m-d') }}" required
                         class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-xs sm:text-sm">
                 </div>
@@ -527,7 +622,8 @@
                     <button type="button" onclick="document.getElementById('modalPrestamo').classList.add('hidden')"
                         class="px-3 sm:px-4 py-2 bg-gray-300 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-md text-xs sm:text-sm font-semibold">Cancelar</button>
                     <button type="submit"
-                        class="px-3 sm:px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-md text-xs sm:text-sm font-semibold">Guardar Préstamo</button>
+                        class="px-3 sm:px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-md text-xs sm:text-sm font-semibold">Guardar
+                        Préstamo</button>
                 </div>
             </form>
         </div>
@@ -536,7 +632,8 @@
     <!-- MODAL FLOTANTE DE ABONO -->
     <div id="paymentModal"
         class="hidden fixed inset-0 z-50 overflow-y-auto bg-gray-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl max-w-md w-full p-5 sm:p-6 shadow-2xl relative">
+        <div
+            class="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl max-w-md w-full p-5 sm:p-6 shadow-2xl relative">
             <div class="flex justify-between items-center pb-3 border-b border-gray-100 dark:border-gray-800">
                 <h3 class="text-base sm:text-lg font-bold text-gray-900 dark:text-gray-100">Registrar Nuevo Abono</h3>
                 <button type="button" onclick="document.getElementById('paymentModal').classList.add('hidden')"
@@ -547,20 +644,28 @@
 
             <form id="formAbonoModal" method="POST" class="mt-3 space-y-3">
                 @csrf
+                <!-- AGREGADO: Campo oculto para conservar la variable 'from' en abonos -->
+                <input type="hidden" name="from" value="{{ request('from') }}">
+
                 <div>
-                    <label class="block text-xs font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400 mb-1">Monto del Abono ($)</label>
+                    <label
+                        class="block text-xs font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400 mb-1">Monto
+                        del Abono ($)</label>
                     <input type="number" step="0.01" id="inputMaxAmount" name="amount" required
                         class="w-full px-3.5 py-2 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-xs sm:text-sm text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition">
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400 mb-1">Fecha</label>
+                    <label
+                        class="block text-xs font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400 mb-1">Fecha</label>
                     <input type="date" name="payment_date" value="{{ date('Y-m-d') }}" required
                         class="w-full px-3.5 py-2 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-xs sm:text-sm text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition">
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400 mb-1">Notas / Observación (Opcional)</label>
+                    <label
+                        class="block text-xs font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400 mb-1">Notas
+                        / Observación (Opcional)</label>
                     <textarea name="notes" rows="2"
                         class="w-full px-3.5 py-2 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-xs sm:text-sm text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition"
                         placeholder="Ej. Abonó en efectivo..."></textarea>
@@ -579,75 +684,6 @@
             </form>
         </div>
     </div>
-
-
-
-    <style>
-        /*
-         * Responsive del detalle del cliente
-         * - md (768px+) conserva el diseño actual.
-         * - <768px compacta progresivamente el contenido.
-         * - teléfono y dirección se ocultan en móvil.
-         */
-        .cliente-page {
-            min-width: 0;
-        }
-
-        .cliente-page * {
-            min-width: 0;
-        }
-
-        @media (max-width: 767px) {
-            .cliente-page {
-                overflow-x: hidden;
-            }
-
-            .cliente-page .grid {
-                min-width: 0;
-            }
-
-            .cliente-page h2,
-            .cliente-page h3,
-            .cliente-page h4,
-            .cliente-page p,
-            .cliente-page span,
-            .cliente-page button,
-            .cliente-page a {
-                max-width: 100%;
-            }
-
-            /* Evita que conceptos largos provoquen desbordamiento */
-            .cliente-page .truncate {
-                min-width: 0;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .cliente-page {
-                /* Compacta el espacio exterior en celulares pequeños */
-                font-size: 0.94rem;
-            }
-
-            .cliente-page .rounded-xl {
-                border-radius: 0.65rem;
-            }
-        }
-
-        @media (max-width: 380px) {
-            .cliente-page {
-                font-size: 0.90rem;
-            }
-
-            .cliente-page .grid-cols-3 {
-                gap: 0.25rem;
-            }
-
-            .cliente-page .grid-cols-3 > div {
-                padding-left: 0.35rem;
-                padding-right: 0.35rem;
-            }
-        }
-    </style>
 
     <!-- Scripts de Control -->
     <script>
@@ -681,4 +717,6 @@
             document.getElementById('paymentModal').classList.remove('hidden');
         }
     </script>
+
+
 </x-app-layout>

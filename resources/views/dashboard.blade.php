@@ -481,7 +481,7 @@
                             @endphp
 
 
-                            <tr onclick="window.location.href='{{ route('clients.show', $deuda->client_id) }}'"
+                            <tr onclick="window.location.href='{{ route('clients.show', ['id' => $deuda->client_id, 'from' => 'dashboard']) }}'"
                                 class="transition-colors
                                        fila-item
                                        cursor-pointer

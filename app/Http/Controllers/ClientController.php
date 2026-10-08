@@ -175,4 +175,175 @@ class ClientController extends Controller
 
         return $pdf->download('directorio_clientes.pdf');
     }
+
+    public function openAccounts()
+    {
+        $clients = Client::with(['debts.payments'])
+            ->get()
+            ->filter(function ($client) {
+                $montoMercancia = $client->debts->where('type', 'store_credit')->sum(function ($debt) {
+                    return $debt->total_amount - $debt->payments->sum('amount');
+                });
+
+                $montoPrestamo = $client->debts->where('type', 'cash_loan')->sum(function ($debt) {
+                    return $debt->total_amount - $debt->payments->sum('amount');
+                });
+
+                $client->montoMercanciaRestante = $montoMercancia;
+                $client->montoPrestamoRestante = $montoPrestamo;
+                $client->adeudoGlobal = $montoMercancia + $montoPrestamo;
+
+                return $client->adeudoGlobal > 0;
+            });
+
+        return view('clients.open-accounts', compact('clients'));
+    }
+
+    // Opcional: Métodos si deseas habilitar la exportación directa desde esta vista
+    public function exportOpenAccountsExcel()
+    {
+        // Reutilizamos la misma lógica exacta que alimenta tu vista web
+        $clients = Client::with(['debts.payments'])
+            ->get()
+            ->filter(function ($client) {
+                $montoMercancia = $client->debts->where('type', 'store_credit')->sum(function ($debt) {
+                    return $debt->total_amount - $debt->payments->sum('amount');
+                });
+
+                $montoPrestamo = $client->debts->where('type', 'cash_loan')->sum(function ($debt) {
+                    return $debt->total_amount - $debt->payments->sum('amount');
+                });
+
+                $client->montoMercanciaRestante = $montoMercancia;
+                $client->montoPrestamoRestante = $montoPrestamo;
+                $client->adeudoGlobal = $montoMercancia + $montoPrestamo;
+
+                return $client->adeudoGlobal > 0;
+            });
+
+        $filename = "reporte-cuentas-abiertas-" . date('Y-m-d') . ".xls";
+        $fechaDescarga = now()->format('d/m/Y H:i');
+
+        $html = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">';
+        $html .= '<head><meta charset="UTF-8"></head>';
+        $html .= '<body>';
+
+        $html .= '<table style="border-collapse: collapse; font-family: Arial, sans-serif; font-size: 11pt;">';
+        $html .= '<tr><td colspan="4" style="font-weight: bold; font-size: 14pt; color: #1f2937; padding-bottom: 10px;">REPORTE DE CUENTAS ABIERTAS</td></tr>';
+        $html .= '<tr><td colspan="2" style="font-weight: bold; color: #4b5563;">Total con cuentas activas:</td><td colspan="2">' . $clients->count() . '</td></tr>';
+        $html .= '<tr><td colspan="4">&nbsp;</td></tr>';
+
+        $html .= '<tr>';
+        $html .= '<th style="border: 1px solid #d1d5db; padding: 6px; font-weight: bold; text-align: left; background-color: #f3f4f6;">Cliente</th>';
+        $html .= '<th style="border: 1px solid #d1d5db; padding: 6px; font-weight: bold; text-align: right; background-color: #f3f4f6;">Mercancía</th>';
+        $html .= '<th style="border: 1px solid #d1d5db; padding: 6px; font-weight: bold; text-align: right; background-color: #f3f4f6;">Préstamos</th>';
+        $html .= '<th style="border: 1px solid #d1d5db; padding: 6px; font-weight: bold; text-align: right; background-color: #f3f4f6;">Adeudo Global</th>';
+        $html .= '</tr>';
+
+        if ($clients->isEmpty()) {
+            $html .= '<tr><td colspan="4" style="border: 1px solid #d1d5db; padding: 6px; text-align: center;">No hay clientes con cuentas abiertas.</td></tr>';
+        } else {
+            foreach ($clients as $client) {
+                $html .= '<tr>';
+                $html .= '<td style="border: 1px solid #d1d5db; padding: 6px; text-align: left;">' . htmlspecialchars($client->name) . ($client->alias ? ' ("' . htmlspecialchars($client->alias) . '")' : '') . '</td>';
+                $html .= '<td style="border: 1px solid #d1d5db; padding: 6px; text-align: right;">$' . number_format($client->montoMercanciaRestante, 2) . '</td>';
+                $html .= '<td style="border: 1px solid #d1d5db; padding: 6px; text-align: right;">$' . number_format($client->montoPrestamoRestante, 2) . '</td>';
+                $html .= '<td style="border: 1px solid #d1d5db; padding: 6px; text-align: right; font-weight: bold; color: #b91c1c;">$' . number_format($client->adeudoGlobal, 2) . '</td>';
+                $html .= '</tr>';
+            }
+
+            // Fila de Totales para Excel
+            $html .= '<tr>';
+            $html .= '<td style="border: 1px solid #d1d5db; padding: 6px; text-align: left; font-weight: bold; background-color: #f9fafb;">TOTAL GENERAL</td>';
+            $html .= '<td style="border: 1px solid #d1d5db; padding: 6px; text-align: right; font-weight: bold; background-color: #f9fafb;">$' . number_format($clients->sum('montoMercanciaRestante'), 2) . '</td>';
+            $html .= '<td style="border: 1px solid #d1d5db; padding: 6px; text-align: right; font-weight: bold; background-color: #f9fafb;">$' . number_format($clients->sum('montoPrestamoRestante'), 2) . '</td>';
+            $html .= '<td style="border: 1px solid #d1d5db; padding: 6px; text-align: right; font-weight: bold;font-weight: bold; background-color: #f9fafb; color: #b91c1c;">$' . number_format($clients->sum('adeudoGlobal'), 2) . '</td>';
+            $html .= '</tr>';
+        }
+
+        $html .= '<tr><td colspan="4">&nbsp;</td></tr>';
+        $html .= '<tr><td colspan="4" style="font-style: italic; color: #6b7280; font-size: 10pt;">Fecha de Descarga: ' . $fechaDescarga . '</td></tr>';
+        $html .= '</table>';
+        $html .= '</body></html>';
+
+        return response($html, 200, [
+            'Content-Type' => 'application/vnd.ms-excel',
+            'Content-Disposition' => "attachment; filename=\"{$filename}\"",
+        ]);
+    }
+
+    public function exportOpenAccountsPdf()
+    {
+        $clients = Client::with(['debts.payments'])
+            ->get()
+            ->filter(function ($client) {
+                $montoMercancia = $client->debts->where('type', 'store_credit')->sum(function ($debt) {
+                    return $debt->total_amount - $debt->payments->sum('amount');
+                });
+
+                $montoPrestamo = $client->debts->where('type', 'cash_loan')->sum(function ($debt) {
+                    return $debt->total_amount - $debt->payments->sum('amount');
+                });
+
+                $client->montoMercanciaRestante = $montoMercancia;
+                $client->montoPrestamoRestante = $montoPrestamo;
+                $client->adeudoGlobal = $montoMercancia + $montoPrestamo;
+
+                return $client->adeudoGlobal > 0;
+            });
+
+        $nombreArchivo = "reporte-cuentas-abiertas-" . date('Y-m-d') . ".pdf";
+        $fechaDescarga = now()->format('d/m/Y H:i');
+
+        $html = '<html><head><meta charset="UTF-8"><style>';
+        $html .= '@page { margin: 20mm 15mm 20mm 15mm; }';
+        $html .= 'body { font-family: Arial, sans-serif; font-size: 9pt; color: #333; }';
+        $html .= 'h2 { color: #1f2937; margin-bottom: 10px; font-size: 14pt; }';
+        $html .= '.summary-table { width: 100%; border-collapse: collapse; margin-bottom: 15px; background-color: #f9fafb; border: 1px solid #e5e7eb; padding: 10px; }';
+        $html .= '.summary-table td { padding: 5px 8px; vertical-align: top; }';
+        $html .= 'table.data-table { width: 100%; border-collapse: collapse; margin-top: 10px; }';
+        $html .= 'table.data-table th, table.data-table td { border: 1px solid #d1d5db; padding: 6px; text-align: left; }';
+        $html .= 'table.data-table th { background-color: #f3f4f6; font-weight: bold; }';
+        $html .= '.text-right { text-align: right; }';
+        $html .= '.text-rose { color: #b91c1c; font-weight: bold; }';
+        $html .= '.footer { position: fixed; bottom: -10mm; left: 0; right: 0; text-align: right; font-size: 8pt; color: #6b7280; border-top: 1px solid #e5e7eb; padding-top: 5px; }';
+        $html .= '</style></head><body>';
+
+        $html .= '<div class="footer">Fecha de Descarga: ' . $fechaDescarga . '</div>';
+        $html .= '<h2>REPORTE DE CUENTAS ABIERTAS</h2>';
+
+        $html .= '<table class="summary-table">';
+        $html .= '<tr><td><strong>Total con cuentas activas:</strong> ' . $clients->count() . '</td></tr>';
+        $html .= '</table>';
+
+        $html .= '<table class="data-table">';
+        $html .= '<tr><th>Cliente</th><th class="text-right">Mercancía</th><th class="text-right">Préstamos</th><th class="text-right">Adeudo Global</th></tr>';
+
+        if ($clients->isEmpty()) {
+            $html .= '<tr><td colspan="4" style="text-align: center;">No hay clientes con cuentas abiertas.</td></tr>';
+        } else {
+            foreach ($clients as $client) {
+                $html .= '<tr>';
+                $html .= '<td>' . htmlspecialchars($client->name) . ($client->alias ? ' <span style="color: #6366f1;">("' . htmlspecialchars($client->alias) . '")</span>' : '') . '</td>';
+                $html .= '<td class="text-right">$' . number_format($client->montoMercanciaRestante, 2) . '</td>';
+                $html .= '<td class="text-right">$' . number_format($client->montoPrestamoRestante, 2) . '</td>';
+                $html .= '<td class="text-right text-rose">$' . number_format($client->adeudoGlobal, 2) . '</td>';
+                $html .= '</tr>';
+            }
+
+            // Fila de Totales para PDF
+            $html .= '<tr style="font-weight: bold; background-color: #f3f4f6;">';
+            $html .= '<td style="padding: 6px; border: 1px solid #d1d5db;">TOTAL GENERAL</td>';
+            $html .= '<td class="text-right" style="padding: 6px; border: 1px solid #d1d5db;">$' . number_format($clients->sum('montoMercanciaRestante'), 2) . '</td>';
+            $html .= '<td class="text-right" style="padding: 6px; border: 1px solid #d1d5db;">$' . number_format($clients->sum('montoPrestamoRestante'), 2) . '</td>';
+            $html .= '<td class="text-right text-rose" style="padding: 6px; border: 1px solid #d1d5db;">$' . number_format($clients->sum('adeudoGlobal'), 2) . '</td>';
+            $html .= '</tr>';
+        }
+
+        $html .= '</table></body></html>';
+
+        $pdf = Pdf::loadHTML($html)->setPaper('letter', 'portrait');
+
+        return $pdf->download($nombreArchivo);
+    }
 }
