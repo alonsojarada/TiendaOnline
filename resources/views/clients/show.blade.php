@@ -13,7 +13,7 @@
         </div>
     </x-slot>
 
-    <div class="py-1.5 sm:py-2">
+    <div class="py-1 sm:py-2 cliente-page">
         <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
 
             @if (session('success'))
@@ -24,10 +24,10 @@
             @endif
 
             <!-- ================= SECCIÓN SUPERIOR ================= -->
-            <div class="bg-white dark:bg-gray-800 p-2 sm:p-3.5 rounded-xl shadow-xs border border-gray-100 dark:border-gray-700 mb-3 space-y-2">
+            <div class="bg-white dark:bg-gray-800 p-1.5 sm:p-3.5 rounded-xl shadow-xs border border-gray-100 dark:border-gray-700 mb-2 sm:mb-3 space-y-1.5 sm:space-y-2">
                 
                 <!-- DATOS DE CONTACTO -->
-                <div class="flex flex-wrap justify-between items-center text-[11px] sm:text-xs text-gray-500 pb-1.5 border-b border-gray-100 dark:border-gray-700/60">
+                <div class="hidden md:flex flex-wrap justify-between items-center text-xs text-gray-500 pb-1.5 border-b border-gray-100 dark:border-gray-700/60">
                     <div>📞 <strong class="text-gray-800 dark:text-gray-200">{{ $client->phone ?? 'N/A' }}</strong></div>
                     <div class="truncate max-w-[220px]">📍 <strong class="text-gray-800 dark:text-gray-200">{{ $client->address ?? 'N/A' }}</strong></div>
                 </div>
@@ -36,45 +36,45 @@
                 <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-2">
                     
                     <!-- BLOQUE DE TARJETAS (Ocupa el espacio flexible principal) -->
-                    <div class="grid grid-cols-3 gap-1.5 sm:gap-2 flex-1">
+                    <div class="grid grid-cols-3 gap-1 sm:gap-2 flex-1 min-w-0">
                         
                         <!-- Tarjeta Mercancía -->
-                        <div class="bg-gray-50 dark:bg-gray-900/40 p-1.5 sm:p-3 rounded-xl border border-gray-100 dark:border-gray-700/60 flex flex-col justify-between">
+                        <div class="bg-gray-50 dark:bg-gray-900/40 p-1 sm:p-3 rounded-xl border border-gray-100 dark:border-gray-700/60 flex flex-col justify-between">
                             <span class="text-[9px] sm:text-xs font-black text-indigo-600 dark:text-indigo-400 uppercase tracking-wider block mb-0.5 truncate">Mercancía</span>
                             <div>
-                                <div class="text-[11px] sm:text-xl font-black text-gray-900 dark:text-white truncate">${{ number_format($totalMercanciaRestante, 2) }}</div>
-                                <div class="text-[9px] sm:text-xs text-gray-500 truncate font-medium">Ab: ${{ number_format($totalAbonosMercancia, 2) }}</div>
+                                <div class="text-[11px] sm:text-xl font-black text-gray-900 dark:text-white truncate">${{ number_format($totalMercanciaRestante, 0) }}</div>
+                                <div class="text-[9px] sm:text-xs text-gray-500 truncate font-medium hidden sm:block">Ab: ${{ number_format($totalAbonosMercancia, 0) }}</div>
                             </div>
                         </div>
 
                         <!-- Tarjeta Préstamos -->
-                        <div class="bg-gray-50 dark:bg-gray-900/40 p-1.5 sm:p-3 rounded-xl border border-gray-100 dark:border-gray-700/60 flex flex-col justify-between">
+                        <div class="bg-gray-50 dark:bg-gray-900/40 p-1 sm:p-3 rounded-xl border border-gray-100 dark:border-gray-700/60 flex flex-col justify-between">
                             <span class="text-[9px] sm:text-xs font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-wider block mb-0.5 truncate">Préstamos</span>
                             <div>
-                                <div class="text-[11px] sm:text-xl font-black text-gray-900 dark:text-white truncate">${{ number_format($totalPrestamosRestante, 2) }}</div>
-                                <div class="text-[9px] sm:text-xs text-gray-500 truncate font-medium">Ab: ${{ number_format($totalAbonosPrestamos, 2) }}</div>
+                                <div class="text-[11px] sm:text-xl font-black text-gray-900 dark:text-white truncate">${{ number_format($totalPrestamosRestante, 0) }}</div>
+                                <div class="text-[9px] sm:text-xs text-gray-500 truncate font-medium hidden sm:block">Ab: ${{ number_format($totalAbonosPrestamos, 0) }}</div>
                             </div>
                         </div>
 
                         <!-- Adeudo Global -->
-                        <div class="bg-rose-50/60 dark:bg-rose-950/25 p-1.5 sm:p-3 rounded-xl border border-rose-100 dark:border-rose-900/30 flex flex-col justify-between">
+                        <div class="bg-rose-50/60 dark:bg-rose-950/25 p-1 sm:p-3 rounded-xl border border-rose-100 dark:border-rose-900/30 flex flex-col justify-between">
                             <span class="text-[9px] sm:text-xs font-black text-rose-600 dark:text-rose-400 uppercase tracking-wider block mb-0.5 truncate">Global</span>
                             <div>
-                                <div class="text-[11px] sm:text-xl font-black text-rose-700 dark:text-rose-300 truncate">${{ number_format($totalAdeudoGlobal, 2) }}</div>
-                                <div class="text-[9px] sm:text-xs text-rose-500 font-bold truncate">Pendiente</div>
+                                <div class="text-[11px] sm:text-xl font-black text-rose-700 dark:text-rose-300 truncate">${{ number_format($totalAdeudoGlobal, 0) }}</div>
+                                <div class="text-[9px] sm:text-xs text-rose-500 font-bold truncate hidden sm:block">Pendiente</div>
                             </div>
                         </div>
 
                     </div>
 
                     <!-- BOTONES DE ACCIÓN: En móvil en fila, en medianas en columna con ancho controlado (`md:w-44`) para que no queden gigantes -->
-                    <div class="flex flex-row md:flex-col gap-1.5 justify-center shrink-0 md:w-44">
+                    <div class="flex flex-row md:flex-col gap-1 md:gap-1.5 justify-center shrink-0 md:w-44 min-w-0">
                         <button type="button" onclick="document.getElementById('modalFiado').classList.remove('hidden')"
-                            class="flex-1 md:flex-none px-3 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-[11px] sm:text-xs font-extrabold shadow-xs transition text-center inline-flex items-center justify-center gap-1">
-                            🛍️ <span>+ Fiar</span>
+                            class="flex-1 md:flex-none min-w-0 px-2 sm:px-3 py-1.5 sm:py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-[11px] sm:text-xs font-extrabold shadow-xs transition text-center inline-flex items-center justify-center gap-1">
+                            🛍️ <span>+ Mercancia</span>
                         </button>
                         <button type="button" onclick="document.getElementById('modalPrestamo').classList.remove('hidden')"
-                            class="flex-1 md:flex-none px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-[11px] sm:text-xs font-extrabold shadow-xs transition text-center inline-flex items-center justify-center gap-1">
+                            class="flex-1 md:flex-none min-w-0 px-2 sm:px-3 py-1.5 sm:py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-[11px] sm:text-xs font-extrabold shadow-xs transition text-center inline-flex items-center justify-center gap-1">
                             💵 <span>+ Préstamo</span>
                         </button>
                     </div>
@@ -92,7 +92,7 @@
                         <h3 class="font-bold text-sm sm:text-lg text-gray-900 dark:text-gray-100">Ropa y Mercancía Fiada</h3>
                         <button type="button" onclick="document.getElementById('modalFiado').classList.remove('hidden')"
                             class="px-2.5 py-1 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md text-[11px] sm:text-xs font-semibold uppercase tracking-wider transition">
-                            + FIAR
+                            + Mercancia
                         </button>
                     </div>
 
@@ -185,7 +185,7 @@
                         <button type="button"
                             onclick="document.getElementById('modalPrestamo').classList.remove('hidden')"
                             class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-md text-[11px] sm:text-xs font-semibold uppercase tracking-wider transition">
-                            + NUEVO
+                            + Prestamo
                         </button>
                     </div>
 
@@ -324,82 +324,82 @@
 
                         <!-- MODAL DE VISTA RÁPIDA -->
                         <div id="modal-detalle-{{ $loan->id }}" role="dialog" aria-modal="true"
-                            class="hidden fixed inset-0 z-50 overflow-y-auto bg-gray-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-                            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full overflow-hidden border border-gray-100 dark:border-gray-700 animate-in fade-in zoom-in duration-200">
-                                <div class="flex justify-between items-center px-6 py-4 bg-gray-50 dark:bg-gray-900/50 border-b dark:border-gray-700">
-                                    <h3 class="font-bold text-gray-900 dark:text-gray-100 text-base flex items-center gap-2">
+                            class="hidden fixed inset-0 z-50 overflow-y-auto bg-gray-900/60 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4">
+                            <div class="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-2xl max-w-md w-full max-h-[94vh] overflow-hidden border border-gray-100 dark:border-gray-700 animate-in fade-in zoom-in duration-200">
+                                <div class="flex justify-between items-center px-3 py-2.5 sm:px-6 sm:py-4 bg-gray-50 dark:bg-gray-900/50 border-b dark:border-gray-700">
+                                    <h3 class="font-bold text-gray-900 dark:text-gray-100 text-sm sm:text-base flex items-center gap-1.5 sm:gap-2 min-w-0">
                                         📋 Detalle del Crédito <span class="text-emerald-600 font-mono">#{{ $loan->id }}</span>
                                     </h3>
                                     <button type="button"
                                         onclick="document.getElementById('modal-detalle-{{ $loan->id }}').classList.add('hidden')"
-                                        class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 text-lg font-bold">
+                                        class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 text-base sm:text-lg font-bold shrink-0 ml-2">
                                         ✕
                                     </button>
                                 </div>
 
-                                <div class="p-6 space-y-3 text-sm max-h-[70vh] overflow-y-auto">
-                                    <div class="flex justify-between py-1 border-b dark:border-gray-700/50">
+                                <div class="p-3 sm:p-6 space-y-1.5 sm:space-y-3 text-[11px] sm:text-sm max-h-[78vh] overflow-y-auto">
+                                    <div class="flex justify-between items-center gap-3 py-1 sm:py-1.5 border-b dark:border-gray-700/50">
                                         <span class="text-gray-500">ID del crédito</span>
                                         <span class="font-semibold text-gray-800 dark:text-gray-200 font-mono">#{{ $loan->id }}</span>
                                     </div>
-                                    <div class="flex justify-between py-1 border-b dark:border-gray-700/50">
+                                    <div class="flex justify-between items-center gap-3 py-1 sm:py-1.5 border-b dark:border-gray-700/50">
                                         <span class="text-gray-500">Fecha del crédito</span>
                                         <span class="font-semibold text-gray-800 dark:text-gray-200">{{ $fechaCredito }}</span>
                                     </div>
-                                    <div class="flex justify-between py-1 border-b dark:border-gray-700/50">
+                                    <div class="flex justify-between items-center gap-3 py-1 sm:py-1.5 border-b dark:border-gray-700/50">
                                         <span class="text-gray-500">Fecha próxima cuota</span>
                                         <span class="font-semibold text-emerald-600 dark:text-emerald-400">{{ $fechaProxima }}</span>
                                     </div>
-                                    <div class="flex justify-between py-1 border-b dark:border-gray-700/50">
+                                    <div class="flex justify-between items-center gap-3 py-1 sm:py-1.5 border-b dark:border-gray-700/50">
                                         <span class="text-gray-500">Vencimiento del crédito</span>
                                         <span class="font-semibold text-gray-800 dark:text-gray-200">{{ $fechaVencimiento }}</span>
                                     </div>
-                                    <div class="flex justify-between py-1 border-b dark:border-gray-700/50">
+                                    <div class="flex justify-between items-center gap-3 py-1 sm:py-1.5 border-b dark:border-gray-700/50">
                                         <span class="text-gray-500">Cuotas vencidas</span>
                                         <span class="font-bold {{ $cuotasVencidas > 0 ? 'text-red-600' : 'text-gray-800 dark:text-gray-200' }}">{{ $cuotasVencidas }}</span>
                                     </div>
-                                    <div class="flex justify-between py-1 border-b dark:border-gray-700/50">
+                                    <div class="flex justify-between items-center gap-3 py-1 sm:py-1.5 border-b dark:border-gray-700/50">
                                         <span class="text-gray-500">Interés</span>
                                         <span class="font-semibold text-gray-800 dark:text-gray-200">{{ number_format($interesPorcentaje, 1) }}%</span>
                                     </div>
-                                    <div class="flex justify-between py-1 border-b dark:border-gray-700/50">
+                                    <div class="flex justify-between items-center gap-3 py-1 sm:py-1.5 border-b dark:border-gray-700/50">
                                         <span class="text-gray-500">Valor total intereses</span>
                                         <span class="font-semibold text-gray-800 dark:text-gray-200">${{ number_format($valorTotalIntereses, 2) }}</span>
                                     </div>
-                                    <div class="flex justify-between py-1 border-b dark:border-gray-700/50">
+                                    <div class="flex justify-between items-center gap-3 py-1 sm:py-1.5 border-b dark:border-gray-700/50">
                                         <span class="text-gray-500">Cuotas pagadas</span>
-                                        <span class="font-semibold text-gray-800 dark:text-gray-200">{{ $cuotasPagadas }} / {{ $totalCuotas }}</span>
+                                        <span class="font-semibold text-gray-800 dark:text-gray-200">{{ $cuotasPagadas }} / {{$totalCuotas }}</span>
                                     </div>
-                                    <div class="flex justify-between py-1 border-b dark:border-gray-700/50">
+                                    <div class="flex justify-between items-center gap-3 py-1 sm:py-1.5 border-b dark:border-gray-700/50">
                                         <span class="text-gray-500">Frecuencia de Pago</span>
                                         <span class="font-semibold text-gray-800 dark:text-gray-200">{{ $frecuenciaTexto }}</span>
                                     </div>
-                                    <div class="flex justify-between py-1 border-b dark:border-gray-700/50">
+                                    <div class="flex justify-between items-center gap-3 py-1 sm:py-1.5 border-b dark:border-gray-700/50">
                                         <span class="text-gray-500">Valor cuota</span>
                                         <span class="font-semibold text-gray-800 dark:text-gray-200">${{ number_format($valorCuota, 2) }}</span>
                                     </div>
-                                    <div class="flex justify-between py-1 border-b dark:border-gray-700/50">
+                                    <div class="flex justify-between items-center gap-3 py-1 sm:py-1.5 border-b dark:border-gray-700/50">
                                         <span class="text-gray-500">Total prestado</span>
                                         <span class="font-semibold text-gray-800 dark:text-gray-200">${{ number_format($capitalPrestado, 2) }}</span>
                                     </div>
-                                    <div class="flex justify-between py-1 border-b dark:border-gray-700/50">
+                                    <div class="flex justify-between items-center gap-3 py-1 sm:py-1.5 border-b dark:border-gray-700/50">
                                         <span class="text-gray-500">Prestado + intereses</span>
                                         <span class="font-semibold text-gray-800 dark:text-gray-200">${{ number_format($montoTotalConInteres, 2) }}</span>
                                     </div>
-                                    <div class="flex justify-between py-1 border-b dark:border-gray-700/50">
+                                    <div class="flex justify-between items-center gap-3 py-1 sm:py-1.5 border-b dark:border-gray-700/50">
                                         <span class="text-gray-500">Total abonado</span>
                                         <span class="font-semibold text-emerald-600">${{ number_format($totalPagado, 2) }}</span>
                                     </div>
-                                    <div class="flex justify-between py-1 pt-2 font-bold text-base bg-gray-50 dark:bg-gray-900/30 px-3 rounded-lg">
+                                    <div class="flex justify-between items-center gap-3 py-1.5 sm:py-2 font-bold text-xs sm:text-base bg-gray-50 dark:bg-gray-900/30 px-2 sm:px-3 rounded-lg">
                                         <span class="text-gray-700 dark:text-gray-300">Saldo Total Restante</span>
-                                        <span class="text-amber-600">${{ number_format($montoTotalConInteres - $totalPagado, 2) }}</span>
+                                        <span class="text-amber-600">${{ number_format($montoTotalConInteres -$totalPagado, 2) }}</span>
                                     </div>
                                 </div>
 
-                                <div class="px-6 py-3 bg-gray-50 dark:bg-gray-900/50 border-t dark:border-gray-700 flex justify-end">
+                                <div class="px-3 py-2 sm:px-6 sm:py-3 bg-gray-50 dark:bg-gray-900/50 border-t dark:border-gray-700 flex justify-end">
                                     <button type="button"
                                         onclick="document.getElementById('modal-detalle-{{ $loan->id }}').classList.add('hidden')"
-                                        class="px-4 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 rounded-xl text-xs font-semibold transition">
+                                        class="px-3 py-1.5 sm:px-4 sm:py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 rounded-lg sm:rounded-xl text-[11px] sm:text-xs font-semibold transition">
                                         Cerrar
                                     </button>
                                 </div>
@@ -579,6 +579,75 @@
             </form>
         </div>
     </div>
+
+
+
+    <style>
+        /*
+         * Responsive del detalle del cliente
+         * - md (768px+) conserva el diseño actual.
+         * - <768px compacta progresivamente el contenido.
+         * - teléfono y dirección se ocultan en móvil.
+         */
+        .cliente-page {
+            min-width: 0;
+        }
+
+        .cliente-page * {
+            min-width: 0;
+        }
+
+        @media (max-width: 767px) {
+            .cliente-page {
+                overflow-x: hidden;
+            }
+
+            .cliente-page .grid {
+                min-width: 0;
+            }
+
+            .cliente-page h2,
+            .cliente-page h3,
+            .cliente-page h4,
+            .cliente-page p,
+            .cliente-page span,
+            .cliente-page button,
+            .cliente-page a {
+                max-width: 100%;
+            }
+
+            /* Evita que conceptos largos provoquen desbordamiento */
+            .cliente-page .truncate {
+                min-width: 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .cliente-page {
+                /* Compacta el espacio exterior en celulares pequeños */
+                font-size: 0.94rem;
+            }
+
+            .cliente-page .rounded-xl {
+                border-radius: 0.65rem;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .cliente-page {
+                font-size: 0.90rem;
+            }
+
+            .cliente-page .grid-cols-3 {
+                gap: 0.25rem;
+            }
+
+            .cliente-page .grid-cols-3 > div {
+                padding-left: 0.35rem;
+                padding-right: 0.35rem;
+            }
+        }
+    </style>
 
     <!-- Scripts de Control -->
     <script>

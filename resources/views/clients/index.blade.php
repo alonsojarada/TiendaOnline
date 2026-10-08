@@ -207,7 +207,7 @@
                                 </span>
 
                                 <span class="texto-nuevo-corto">
-                                    + Cliente
+                                    Cliente
                                 </span>
 
                             </span>

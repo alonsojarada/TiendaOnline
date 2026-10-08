@@ -56,7 +56,7 @@
                              mt-0.5
                              truncate
                              leading-tight">
-                    ${{ number_format($totalGlobalPendiente, 2) }}
+                    ${{ number_format($totalGlobalPendiente, 0) }}
                 </span>
 
             </div>
@@ -95,7 +95,7 @@
                              mt-0.5
                              truncate
                              leading-tight">
-                    ${{ number_format($totalPrestamos, 2) }}
+                    ${{ number_format($totalPrestamos, 0) }}
                 </span>
 
             </div>
@@ -134,7 +134,7 @@
                              mt-0.5
                              truncate
                              leading-tight">
-                    ${{ number_format($totalMercancia, 2) }}
+                    ${{ number_format($totalMercancia, 0) }}
                 </span>
 
             </div>
