@@ -12,16 +12,16 @@ class Debt extends Model
 
     protected $fillable = [
         'company_id',
-        'client_id', 
+        'client_id',
         'user_id',
-        'type', 
-        'concept', 
-        'total_amount', 
-        'loan_modal', 
-        'interest_rate', 
-        'payment_frequency', 
-        'installments_count', 
-        'status', 
+        'type',
+        'concept',
+        'total_amount',
+        'loan_modal',
+        'interest_rate',
+        'payment_frequency',
+        'installments_count',
+        'status',
         'created_at',
         'loan_date'
     ];
@@ -47,10 +47,9 @@ class Debt extends Model
         return $this->hasMany(LoanInstallment::class);
     }
 
-    // Accessor para calcular el capital actual (restando los abonos a capital)
-    public function getCurrentCapitalAttribute()
+    // Relación con los artículos del crédito de mercancía (store_credit)
+    public function items()
     {
-        $capitalPaid = $this->payments()->sum('capital_covered');
-        return max(0, $this->total_amount - $capitalPaid);
+        return $this->hasMany(CreditItem::class, 'debt_id');
     }
 }

@@ -90,6 +90,8 @@ Route::middleware(['auth', \App\Http\Middleware\CheckOperationalAccess::class])-
 
     Route::post('/debts/{id}/liquidar', [DebtController::class, 'liquidar'])->name('debts.liquidar');
     Route::post('/debts/{debt}/capital-payment', [DebtController::class, 'storeCapitalPayment'])->name('debts.store.capital');
+    Route::get('/debts/{id}/edit', [DebtController::class, 'edit'])->name('debts.edit');
+    Route::put('/debts/{id}', [DebtController::class, 'update'])->name('debts.update');
 
     Route::get('/detalles-fiado/{id}', [DebtController::class, 'show'])->name('loan-details');
     Route::get('/mercancia-fiada/detalle/{id}', [DebtController::class, 'showStoreDetails'])->name('store-details');

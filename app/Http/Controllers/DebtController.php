@@ -7,6 +7,7 @@ use App\Models\Debt;
 use App\Models\Client;
 use App\Models\Payment;
 use App\Models\LoanInstallment;
+use App\Models\CreditItem;
 use Carbon\Carbon;
 use Barryvdh\DomPDF\Facade\Pdf;
 
@@ -60,6 +61,12 @@ class DebtController extends Controller
             'installments_count' => 'required_if:loan_modal,fixed_installments|nullable|integer|min:1',
             'loan_date' => 'required_if:type,cash_loan|nullable|date',
             'created_at' => 'required|date',
+            // Validación opcional para los artículos enviados desde el modal
+            'items' => 'nullable|array',
+            'items.*.description' => 'required|string|max:255',
+            'items.*.quantity' => 'required|integer|min:1',
+            'items.*.unit_price' => 'required|numeric|min:0',
+            'items.*.subtotal' => 'required|numeric|min:0',
         ]);
 
         $capitalInicial = $request->total_amount;
@@ -69,10 +76,10 @@ class DebtController extends Controller
             ? $capitalInicial
             : $capitalInicial * (1 + ($interesPorcentaje / 100));
 
-        // 1. Se guarda el user_id en la tabla principal debts
+        // 1. Se guarda el registro en la tabla principal debts
         $debt = Debt::create([
             'company_id' => auth()->user()->company_id,
-            'user_id' => auth()->user()->id, // <-- ID del usuario autenticado
+            'user_id' => auth()->user()->id,
             'client_id' => $request->client_id,
             'type' => $request->type,
             'concept' => $request->concept,
@@ -85,6 +92,19 @@ class DebtController extends Controller
             'loan_date' => $request->type === 'cash_loan' ? $request->loan_date : null,
             'created_at' => $request->type === 'cash_loan' ? $request->loan_date : $request->created_at,
         ]);
+
+        // NUEVO: Si es un crédito de mercancía y se agregaron artículos a la lista, se guardan en cascada
+        if ($request->type === 'store_credit' && $request->has('items')) {
+            foreach ($request->items as $itemData) {
+                \App\Models\CreditItem::create([
+                    'debt_id' => $debt->id,
+                    'description' => $itemData['description'],
+                    'quantity' => $itemData['quantity'],
+                    'unit_price' => $itemData['unit_price'],
+                    'subtotal' => $itemData['subtotal'],
+                ]);
+            }
+        }
 
         $avanzarFecha = function ($fecha, $frecuencia) {
             if ($frecuencia === 'weekly') {
@@ -105,7 +125,7 @@ class DebtController extends Controller
 
             LoanInstallment::create([
                 'debt_id' => $debt->id,
-                'user_id' => auth()->user()->id, // Descomenta si tu tabla loan_installments tiene user_id
+                'user_id' => auth()->user()->id,
                 'installment_number' => 1,
                 'amount_due' => $montoInteresPeriodo,
                 'due_date' => $fechaVencimiento->toDateString(),
@@ -124,7 +144,7 @@ class DebtController extends Controller
 
                 LoanInstallment::create([
                     'debt_id' => $debt->id,
-                    'user_id' => auth()->user()->id, // Descomenta si tu tabla loan_installments tiene user_id
+                    'user_id' => auth()->user()->id,
                     'installment_number' => $i,
                     'amount_due' => $montoPorCuota,
                     'due_date' => $fechaVencimiento->toDateString(),
@@ -134,13 +154,16 @@ class DebtController extends Controller
         }
 
         $mensaje = match ($request->type) {
-            'store_credit' => 'Mercancía fiada registrada correctamente.',
+            'store_credit' => 'Mercancía fiada y artículos registrados correctamente.',
             default => $request->loan_modal === 'interest_only'
                 ? 'Préstamo de solo interés registrado y primera cuota de interés generada.'
                 : 'Préstamo registrado y cuotas calculadas correctamente.'
         };
 
-        return redirect()->route('clients.show', $request->client_id)
+        // Conserva el parámetro 'from' en la redirección si lo tienes definido en la petición
+        $from = $request->input('from');
+
+        return redirect()->route('clients.show', ['id' => $request->client_id, 'from' => $from])
             ->with('success', $mensaje);
     }
 
@@ -318,16 +341,30 @@ class DebtController extends Controller
         return redirect()->back()->with('success', 'Abono a capital registrado correctamente.');
     }
 
-    // Eliminar un préstamo o mercancía fiada por completo
+    // Eliminar completamente una cuenta (mercancía o préstamo), sus abonos y sus artículos
     public function destroy($id)
     {
         $debt = Debt::findOrFail($id);
         $clientId = $debt->client_id;
+
+        // 1. Eliminar todos los abonos registrados a esta cuenta
+        $debt->payments()->delete();
+
+        // 2. Eliminar todos los artículos vinculados (si es crédito de mercancía)
+        $debt->items()->delete();
+
+        // 3. Eliminar las cuotas o plazos vinculados (si es préstamo en efectivo)
+        if (method_exists($debt, 'installments')) {
+            $debt->installments()->delete();
+        }
+
+        // 4. Finalmente eliminar la cuenta principal de la base de datos
         $debt->delete();
 
         return redirect()->route('clients.show', $clientId)
-            ->with('success', 'El registro ha sido eliminado correctamente.');
+            ->with('success', 'La cuenta, sus artículos y abonos han sido eliminados correctamente.');
     }
+
 
     // Eliminar un abono de forma totalmente segura
     public function destroyPayment($id)
@@ -499,5 +536,55 @@ class DebtController extends Controller
         $pdf = Pdf::loadView('exports.loan-edo-cta-pdf', compact('loan'));
 
         return $pdf->download("estado-de-cuenta-prestamo-{$loan->id}.pdf");
+    }
+
+    // Mostrar el formulario de edición de la cuenta y sus artículos
+    public function edit($id)
+    {
+        $credit = Debt::with(['client', 'items'])->findOrFail($id);
+
+        // Opcional: Si quieres conservar el parámetro 'from' para el botón volver
+        $from = request('from', 'cliente');
+
+        return view('debts.edit', compact('credit', 'from'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'concept' => 'required|string|max:255',
+            'total_amount' => 'required|numeric|min:0',
+            'items' => 'nullable|array',
+            'items.*.description' => 'required|string|max:255',
+            'items.*.quantity' => 'required|integer|min:1',
+            'items.*.unit_price' => 'required|numeric|min:0',
+            'items.*.subtotal' => 'required|numeric|min:0',
+        ]);
+
+        $debt = Debt::findOrFail($id);
+
+        // 1. Actualizar datos principales
+        $debt->update([
+            'concept' => $request->concept,
+            'total_amount' => $request->total_amount,
+        ]);
+
+        // 2. Sincronizar artículos
+        $debt->items()->delete();
+
+        if ($request->has('items')) {
+            foreach ($request->items as $itemData) {
+                CreditItem::create([
+                    'debt_id' => $debt->id,
+                    'description' => $itemData['description'],
+                    'quantity' => $itemData['quantity'],
+                    'unit_price' => $itemData['unit_price'],
+                    'subtotal' => $itemData['subtotal'],
+                ]);
+            }
+        }
+
+        return redirect()->route('store-details', ['id' => $debt->id, 'from' => $request->input('from')])
+            ->with('success', 'Cuenta y artículos actualizados correctamente.');
     }
 }

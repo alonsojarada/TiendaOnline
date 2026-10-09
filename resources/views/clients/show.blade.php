@@ -492,18 +492,18 @@
         </div>
     </div>
 
-    <!-- MODAL: FIAR MERCANCÍA -->
+    <!-- MODAL: FIAR MERCANCÍA CON LISTA OPCIONAL DE ARTÍCULOS -->
     <div id="modalFiado" role="dialog" aria-modal="true"
         class="hidden fixed inset-0 z-50 overflow-y-auto bg-gray-900 bg-opacity-50 flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-gray-800 rounded-lg max-w-md w-full p-5 sm:p-6 shadow-xl">
+        <div
+            class="bg-white dark:bg-gray-800 rounded-2xl max-w-lg w-full p-5 sm:p-6 shadow-2xl max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center pb-3 border-b dark:border-gray-700">
                 <h3 class="text-base sm:text-lg font-bold text-gray-900 dark:text-gray-100">Fiar Ropa o Mercancía</h3>
-                <button type="button" onclick="document.getElementById('modalFiado').classList.add('hidden')"
-                    class="text-gray-400 hover:text-gray-600">✕</button>
+                <button type="button" onclick="cerrarModalFiado()" class="text-gray-400 hover:text-gray-600">✕</button>
             </div>
 
-            <!-- AGREGADO: Campo oculto para conservar la variable 'from' -->
-            <form action="{{ route('debts.store') }}" method="POST" class="mt-4">
+            <form action="{{ route('debts.store') }}" method="POST" class="mt-4 space-y-3"
+                onsubmit="prepararEnvioCredito(this)">
                 @csrf
                 <input type="hidden" name="client_id" value="{{ $client->id }}">
                 <input type="hidden" name="type" value="store_credit">
@@ -511,26 +511,80 @@
 
                 <div class="mb-3">
                     <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">Concepto /
-                        Descripción</label>
+                        Descripción General</label>
                     <input type="text" name="concept" placeholder="Ej. Pantalón de mezclilla talla 32" required
                         class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-xs sm:text-sm">
                 </div>
 
-                <div class="mb-3">
-                    <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">Costo Total
-                        ($)</label>
-                    <input type="number" step="0.01" name="total_amount" placeholder="0.00" required
-                        class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-xs sm:text-sm">
+                <!-- SECCIÓN OPCIONAL: AGREGAR ARTÍCULOS A LA LISTA -->
+                <div
+                    class="bg-gray-50 dark:bg-gray-900/40 p-3 rounded-xl border border-gray-200 dark:border-gray-700 space-y-2">
+                    <label
+                        class="block text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">Artículos
+                        (Opcional)</label>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-12 gap-2">
+                        <div class="sm:col-span-5">
+                            <input type="text" id="temp_item_desc" placeholder="Descripción artículo"
+                                class="w-full rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 text-xs px-2.5 py-1.5">
+                        </div>
+                        <div class="sm:col-span-2">
+                            <input type="number" id="temp_item_qty" min="1" value="1" placeholder="Cant"
+                                class="w-full rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 text-xs px-2.5 py-1.5 text-center">
+                        </div>
+                        <div class="sm:col-span-3">
+                            <input type="number" step="0.01" id="temp_item_price" placeholder="Precio ($)"
+                                class="w-full rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 text-xs px-2.5 py-1.5 text-right">
+                        </div>
+                        <div class="sm:col-span-2 flex items-center">
+                            <button type="button" onclick="agregarArticuloTemporal()"
+                                class="w-full py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-bold transition shadow-xs">
+                                + Add
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Tabla visual de artículos agregados -->
+                    <div
+                        class="max-h-32 overflow-y-auto border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 mt-2">
+                        <table class="w-full text-left text-xs">
+                            <thead class="bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-300 sticky top-0">
+                                <tr>
+                                    <th class="p-1.5">Artículo</th>
+                                    <th class="p-1.5 text-center">Cant</th>
+                                    <th class="p-1.5 text-right">P. Unit</th>
+                                    <th class="p-1.5 text-right">Subtotal</th>
+                                    <th class="p-1.5 text-center">✕</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabla_articulos_temp" class="divide-y divide-gray-100 dark:divide-gray-700">
+                                <tr id="fila_vacia_msg">
+                                    <td colspan="5" class="text-center py-2 text-gray-400 italic text-[11px]">Sin
+                                        artículos (puedes ingresar el total manual abajo).</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
+
+                <!-- Costo Total (Editable manual o auto-calculado si usas la lista) -->
+                <div
+                    class="flex justify-between items-center bg-indigo-50/50 dark:bg-indigo-950/30 p-2.5 rounded-xl border border-indigo-100 dark:border-indigo-900/40">
+                    <span class="text-xs font-bold text-gray-700 dark:text-gray-300 uppercase">Costo Total ($):</span>
+                    <input type="number" step="0.01" name="total_amount" id="input_total_amount" required
+                        placeholder="0.00"
+                        class="w-36 text-right rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-white font-black text-sm px-2.5 py-1 focus:ring-indigo-500">
+                </div>
+
                 <div class="mb-3">
-                    <label class="block text-xs font-bold text-gray-600 dark:text-gray-400 uppercase mb-1">Fecha de
+                    <label class="block text-xs sm:text-bold text-gray-600 dark:text-gray-400 uppercase mb-1">Fecha de
                         Movimiento</label>
                     <input type="date" name="created_at" value="{{ date('Y-m-d') }}"
                         class="w-full px-3 py-2 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-hidden text-gray-800 dark:text-gray-200">
                 </div>
 
                 <div class="flex justify-end space-x-2 sm:space-x-3 mt-5">
-                    <button type="button" onclick="document.getElementById('modalFiado').classList.add('hidden')"
+                    <button type="button" onclick="cerrarModalFiado()"
                         class="px-3 sm:px-4 py-2 bg-gray-300 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-md text-xs sm:text-sm font-semibold">Cancelar</button>
                     <button type="submit"
                         class="px-3 sm:px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md text-xs sm:text-sm font-semibold">Guardar
@@ -687,6 +741,89 @@
 
     <!-- Scripts de Control -->
     <script>
+        let listaArticulosTemp = [];
+
+        function agregarArticuloTemporal() {
+            const descInput = document.getElementById('temp_item_desc');
+            const qtyInput = document.getElementById('temp_item_qty');
+            const priceInput = document.getElementById('temp_item_price');
+
+            const description = descInput.value.trim();
+            const quantity = parseInt(qtyInput.value) || 0;
+            const unit_price = parseFloat(priceInput.value) || 0;
+
+            if (!description || quantity <= 0 || unit_price < 0) {
+                alert('Ingresa una descripción, cantidad y precio válidos.');
+                return;
+            }
+
+            listaArticulosTemp.push({
+                description,
+                quantity,
+                unit_price,
+                subtotal: quantity * unit_price
+            });
+
+            descInput.value = '';
+            qtyInput.value = '1';
+            priceInput.value = '';
+            descInput.focus();
+
+            renderizarTablaTemp();
+        }
+
+        function eliminarArticuloTemporal(index) {
+            listaArticulosTemp.splice(index, 1);
+            renderizarTablaTemp();
+        }
+
+        function renderizarTablaTemp() {
+            const tbody = document.getElementById('tabla_articulos_temp');
+            const inputTotal = document.getElementById('input_total_amount');
+            tbody.innerHTML = '';
+
+            if (listaArticulosTemp.length === 0) {
+                tbody.innerHTML = `<tr id="fila_vacia_msg"><td colspan="5" class="text-center py-2 text-gray-400 italic text-[11px]">Sin artículos (puedes ingresar el total manual abajo).</td></tr>`;
+                inputTotal.value = ''; // <-- Esto limpia el total al vaciar la tabla para que se pueda ingresar manual
+                return;
+            }
+
+            let sumaTotal = 0;
+            listaArticulosTemp.forEach((item, index) => {
+                sumaTotal += item.subtotal;
+                tbody.innerHTML += `
+                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition">
+                        <td class="p-1.5 truncate max-w-[130px]">${item.description}</td>
+                        <td class="p-1.5 text-center font-bold">${item.quantity}</td>
+                        <td class="p-1.5 text-right">$${item.unit_price.toFixed(2)}</td>
+                        <td class="p-1.5 text-right font-bold">$${item.subtotal.toFixed(2)}</td>
+                        <td class="p-1.5 text-center">
+                            <button type="button" onclick="eliminarArticuloTemporal(${index})" class="text-red-500 font-bold px-1 rounded">✕</button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            inputTotal.value = sumaTotal.toFixed(2);
+        }
+
+        function prepararEnvioCredito(form) {
+            document.querySelectorAll('.input-item-oculto').forEach(el => el.remove());
+
+            listaArticulosTemp.forEach((item, index) => {
+                form.insertAdjacentHTML('beforeend', `<input type="hidden" class="input-item-oculto" name="items[${index}][description]" value="${item.description}">`);
+                form.insertAdjacentHTML('beforeend', `<input type="hidden" class="input-item-oculto" name="items[${index}][quantity]" value="${item.quantity}">`);
+                form.insertAdjacentHTML('beforeend', `<input type="hidden" class="input-item-oculto" name="items[${index}][unit_price]" value="${item.unit_price}">`);
+                form.insertAdjacentHTML('beforeend', `<input type="hidden" class="input-item-oculto" name="items[${index}][subtotal]" value="${item.subtotal}">`);
+            });
+        }
+
+        function cerrarModalFiado() {
+            document.getElementById('modalFiado').classList.add('hidden');
+            listaArticulosTemp = [];
+            renderizarTablaTemp();
+        }
+
         function toggleInstallments() {
             var modal = document.getElementById('loan_modal').value;
             var div = document.getElementById('installments_div');
@@ -717,6 +854,5 @@
             document.getElementById('paymentModal').classList.remove('hidden');
         }
     </script>
-
 
 </x-app-layout>
