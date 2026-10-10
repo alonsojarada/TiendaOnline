@@ -516,29 +516,37 @@
                         class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-xs sm:text-sm">
                 </div>
 
-                <!-- SECCIÓN OPCIONAL: AGREGAR ARTÍCULOS A LA LISTA -->
+                <!-- SECCIÓN DE ARTÍCULOS: UNA SOLA FILA ESTRICTA, COMPRIMIBLE AL MÁXIMO -->
                 <div
-                    class="bg-gray-50 dark:bg-gray-900/40 p-3 rounded-xl border border-gray-200 dark:border-gray-700 space-y-2">
+                    class="bg-gray-50 dark:bg-gray-900/40 p-2.5 rounded-xl border border-gray-200 dark:border-gray-700 space-y-2">
                     <label
-                        class="block text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">Artículos
+                        class="block text-[10px] font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">Artículos
                         (Opcional)</label>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-12 gap-2">
-                        <div class="sm:col-span-5">
-                            <input type="text" id="temp_item_desc" placeholder="Descripción artículo"
-                                class="w-full rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 text-xs px-2.5 py-1.5">
+                    <!-- Contenedor que comprime los campos antes de romper la fila -->
+                    <div class="flex flex-wrap max-[340px]:flex-wrap flex-nowrap items-center gap-1.5">
+                        <!-- Descripción altamente comprimible (min-w reducido para que se achique mucho) -->
+                        <div class="flex-1 min-w-[90px]">
+                            <input type="text" id="temp_item_desc" placeholder="Descripción"
+                                class="w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 text-[11px] px-2 py-1">
                         </div>
-                        <div class="sm:col-span-2">
+
+                        <!-- Cantidad muy compacta -->
+                        <div class="w-12 shrink-0">
                             <input type="number" id="temp_item_qty" min="1" value="1" placeholder="Cant"
-                                class="w-full rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 text-xs px-2.5 py-1.5 text-center">
+                                class="w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 text-[11px] px-1 py-1 text-center">
                         </div>
-                        <div class="sm:col-span-3">
-                            <input type="number" step="0.01" id="temp_item_price" placeholder="Precio ($)"
-                                class="w-full rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 text-xs px-2.5 py-1.5 text-right">
+
+                        <!-- Precio compacto -->
+                        <div class="w-16 shrink-0">
+                            <input type="number" step="0.01" id="temp_item_price" placeholder="Precio"
+                                class="w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 text-[11px] px-1 py-1 text-right">
                         </div>
-                        <div class="sm:col-span-2 flex items-center">
+
+                        <!-- Botón -->
+                        <div class="shrink-0">
                             <button type="button" onclick="agregarArticuloTemporal()"
-                                class="w-full py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-bold transition shadow-xs">
+                                class="px-2 py-1 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md text-[11px] font-bold transition shadow-xs whitespace-nowrap">
                                 + Add
                             </button>
                         </div>
@@ -546,20 +554,20 @@
 
                     <!-- Tabla visual de artículos agregados -->
                     <div
-                        class="max-h-32 overflow-y-auto border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 mt-2">
-                        <table class="w-full text-left text-xs">
+                        class="max-h-28 overflow-y-auto border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 mt-1.5">
+                        <table class="w-full text-left text-[11px]">
                             <thead class="bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-300 sticky top-0">
                                 <tr>
-                                    <th class="p-1.5">Artículo</th>
-                                    <th class="p-1.5 text-center">Cant</th>
-                                    <th class="p-1.5 text-right">P. Unit</th>
-                                    <th class="p-1.5 text-right">Subtotal</th>
-                                    <th class="p-1.5 text-center">✕</th>
+                                    <th class="p-1">Artículo</th>
+                                    <th class="p-1 text-center">Cant</th>
+                                    <th class="p-1 text-right">P. Unit</th>
+                                    <th class="p-1 text-right">Subtotal</th>
+                                    <th class="p-1 text-center">✕</th>
                                 </tr>
                             </thead>
                             <tbody id="tabla_articulos_temp" class="divide-y divide-gray-100 dark:divide-gray-700">
                                 <tr id="fila_vacia_msg">
-                                    <td colspan="5" class="text-center py-2 text-gray-400 italic text-[11px]">Sin
+                                    <td colspan="5" class="text-center py-1.5 text-gray-400 italic text-[10px]">Sin
                                         artículos (puedes ingresar el total manual abajo).</td>
                                 </tr>
                             </tbody>
