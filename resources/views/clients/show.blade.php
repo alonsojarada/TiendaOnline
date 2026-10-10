@@ -151,10 +151,30 @@
 
                             <div class="flex justify-between items-start gap-2 mb-2">
                                 <div class="min-w-0 flex-1">
-                                    <h4 class="font-bold text-gray-900 dark:text-white text-xs sm:text-sm truncate">
-                                        #{{ $credit->id }} - {{ $credit->concept }}</h4>
+                                    <div class="flex items-center gap-2 flex-wrap">
+                                        <h4 class="font-bold text-gray-900 dark:text-white text-xs sm:text-sm truncate">
+                                            #{{ $credit->id }} - {{$credit->concept }}
+                                        </h4>
+
+                                        <!-- 👁️ BOTÓN DE VISTA RÁPIDA DE ARTÍCULOS (Solo si existen artículos) -->
+                                        @if($credit->relationLoaded('items') ? $credit->items->count() > 0 : $credit->items()->count() > 0)
+                                            <button type="button"
+                                                onclick="abrirModalArticulos({{ $credit->id }}, '{{ addslashes($credit->concept) }}', {{$credit->items }})"
+                                                class="text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/40 hover:bg-indigo-100 px-2 py-0.5 rounded-md text-[10px] font-bold flex items-center gap-1 transition shadow-2xs"
+                                                title="Ver artículos de la cuenta">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none"
+                                                    viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                                </svg>
+                                                Artículos
+                                            </button>
+                                        @endif
+                                    </div>
                                     <p
-                                        class="text-[11px] sm:text-xs text-gray-700 dark:text-gray-300 font-medium flex items-center gap-1 flex-wrap">
+                                        class="text-[11px] sm:text-xs text-gray-700 dark:text-gray-300 font-medium flex items-center gap-1 flex-wrap mt-0.5">
                                         <span>{{ $textoFecha }}</span>
                                         <span>•</span>
                                         <span>${{ number_format($credit->total_amount, 2) }}</span>
@@ -193,7 +213,7 @@
                                 </div>
 
                                 <button type="button"
-                                    onclick="abrirModalAbono('{{ route('payments.store', $credit->id) }}', '{{ $saldoPendiente }}')"
+                                    onclick="abrirModalAbono('{{ route('payments.store', $credit->id) }}', '{{$saldoPendiente }}')"
                                     class="px-3 py-1 bg-green-600 hover:bg-green-700 text-white text-[11px] sm:text-xs font-semibold rounded-md uppercase tracking-wider transition shadow-sm">
                                     Abonar
                                 </button>
@@ -747,6 +767,64 @@
         </div>
     </div>
 
+
+    <!-- ================= MODAL FLOTANTE DE VISTA RÁPIDA DE ARTÍCULOS ================= -->
+    <div id="modalArticulosCuenta"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs hidden">
+        <div
+            class="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl w-full max-w-lg mx-4 overflow-hidden border border-gray-100 dark:border-gray-700 animate-in fade-in zoom-in duration-200">
+
+            <!-- Cabecera -->
+            <div class="px-6 py-4 flex justify-between items-center border-b border-gray-100 dark:border-gray-700">
+                <h3 class="text-sm font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                    📋 Artículos de la Cuenta <span id="modal_art_id" class="text-indigo-600"></span>
+                </h3>
+                <button type="button" onclick="cerrarModalArticulos()"
+                    class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 text-xl font-bold">&times;</button>
+            </div>
+
+            <!-- Cuerpo con la tabla idéntica a la de captura -->
+            <div class="p-6 space-y-4">
+                <p id="modal_art_concepto" class="text-xs text-gray-500 dark:text-gray-400 font-medium"></p>
+                <div
+                    class="max-h-56 overflow-y-auto border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800">
+                    <table class="w-full text-left text-xs">
+                        <thead class="bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-300 sticky top-0">
+                            <tr>
+                                <th class="p-2">Artículo</th>
+                                <th class="p-2 text-center">Cant</th>
+                                <th class="p-2 text-right">P. Unit</th>
+                                <th class="p-2 text-right">Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody id="modal_art_tbody"
+                            class="divide-y divide-gray-100 dark:divide-gray-700 text-gray-700 dark:text-gray-300">
+                            <!-- Dinámico con JS -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Total Resaltado Estilo Tarjeta -->
+                <div
+                    class="bg-amber-50/60 dark:bg-amber-950/20 border border-amber-200/60 dark:border-amber-900/30 rounded-2xl p-3.5 flex justify-between items-center">
+                    <span class="text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">Total de
+                        la Cuenta</span>
+                    <span id="modal_art_total"
+                        class="text-base font-bold text-amber-600 dark:text-amber-400">$0.00</span>
+                </div>
+            </div>
+
+            <!-- Pie con botón de cerrar -->
+            <div
+                class="px-6 py-3 bg-gray-50 dark:bg-gray-900/40 flex justify-end border-t border-gray-100 dark:border-gray-700">
+                <button type="button" onclick="cerrarModalArticulos()"
+                    class="px-4 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 rounded-xl text-xs font-bold transition">
+                    Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Scripts de Control -->
     <script>
         let listaArticulosTemp = [];
@@ -863,4 +941,36 @@
         }
     </script>
 
+    <script>
+        function abrirModalArticulos(id, concepto, items) {
+            document.getElementById('modal_art_id').innerText = `#${id}`;
+            document.getElementById('modal_art_concepto').innerText = `Concepto: ${concepto}`;
+
+            const tbody = document.getElementById('modal_art_tbody');
+            tbody.innerHTML = '';
+
+            let totalGeneral = 0;
+
+            items.forEach(item => {
+                const subtotal = parseFloat(item.subtotal || (item.quantity * item.unit_price));
+                totalGeneral += subtotal;
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+            <td class="p-2 font-medium text-gray-900 dark:text-white">${item.description}</td>
+            <td class="p-2 text-center">${item.quantity}</td>
+            <td class="p-2 text-right text-gray-500">$${parseFloat(item.unit_price).toFixed(2)}</td>
+            <td class="p-2 text-right font-bold text-indigo-600 dark:text-indigo-400">$${subtotal.toFixed(2)}</td>
+        `;
+                tbody.appendChild(tr);
+            });
+
+            document.getElementById('modal_art_total').innerText = `$${totalGeneral.toFixed(2)}`;
+            document.getElementById('modalArticulosCuenta').classList.remove('hidden');
+        }
+
+        function cerrarModalArticulos() {
+            document.getElementById('modalArticulosCuenta').classList.add('hidden');
+        }
+    </script>
 </x-app-layout>
