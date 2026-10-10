@@ -519,7 +519,8 @@ class DebtController extends Controller
 
     public function exportPdf($id)
     {
-        $credit = Debt::with(['client', 'payments'])->findOrFail($id);
+        // Agregamos 'items' en la relación junto con client y payments
+        $credit = Debt::with(['client', 'payments', 'items'])->findOrFail($id);
 
         // Puedes crear una vista específica limpia solo para el PDF o usar la misma con una variable de control
         $pdf = Pdf::loadView('exports.edo-cta-pdf', compact('credit'));

@@ -115,9 +115,36 @@
         </tr>
     </table>
 
-    <h3 style="margin-top: 30px; margin-bottom: 10px; font-size: 14px; color: #111827;">Detalle de Movimientos</h3>
+    <!-- DESGLOSE DE ARTÍCULOS (Solo si existen) -->
+    @if($credit->items && $credit->items->count() > 0)
+        <div style="margin-bottom: 20px;">
+            <h3 style="margin-bottom: 8px; font-size: 13px; color: #111827; text-transform: uppercase;">Desglose de Artículos</h3>
+            <table class="accounting">
+                <thead>
+                    <tr>
+                        <th>Artículo</th>
+                        <th class="text-center" style="width: 60px;">Cant</th>
+                        <th class="text-right" style="width: 100px;">P. Unitario</th>
+                        <th class="text-right" style="width: 100px;">Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($credit->items as $item)
+                        <tr>
+                            <td>{{ $item->description }}</td>
+                            <td class="text-center">{{ $item->quantity }}</td>
+                            <td class="text-right">${{ number_format($item->unit_price, 2) }}</td>
+                            <td class="text-right font-bold">${{ number_format($item->subtotal, 2) }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    @endif
 
-    <!-- Tabla Contable (Sin fondos en las filas) -->
+    <h3 style="margin-top: 20px; margin-bottom: 10px; font-size: 14px; color: #111827;">Detalle de Movimientos</h3>
+
+    <!-- Tabla Contable -->
     <table class="accounting">
         <thead>
             <tr>
