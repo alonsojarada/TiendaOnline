@@ -573,6 +573,18 @@
         }
 
         function prepararEnvioEdicion(form) {
+            const inputTotal = document.getElementById('input_total_amount_edit_modal');
+            const nuevoTotal = parseFloat(inputTotal.value) || 0;
+            const totalAbonadoActual = {{ $credit->payments->sum('amount') }};
+
+            // VALIDACIÓN: El nuevo total no puede ser menor a los abonos registrados
+            if (nuevoTotal < totalAbonadoActual) {
+                alert(`⚠️ El nuevo total ($${nuevoTotal.toFixed(2)}) no puede ser menor a los abonos ya realizados ($${totalAbonadoActual.toFixed(2)}). Debe ser mayor o igual.`);
+                event.preventDefault(); // Detiene el envío del formulario
+                return false;
+            }
+
+            // Limpiar inputs ocultos anteriores y regenerar los artículos actuales
             document.querySelectorAll('.input-item-oculto-edit').forEach(el => el.remove());
 
             listaArticulosEdicionModal.forEach((item, index) => {

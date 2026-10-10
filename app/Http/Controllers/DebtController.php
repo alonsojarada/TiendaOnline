@@ -561,12 +561,24 @@ class DebtController extends Controller
             'items.*.subtotal' => 'required|numeric|min:0',
         ]);
 
-        $debt = Debt::findOrFail($id);
+        // Cargamos la deuda junto con sus abonos para validar
+        $debt = Debt::with('payments')->findOrFail($id);
+
+        // Calcular el total abonado hasta el momento
+        $totalAbonado = $debt->payments->sum('amount');
+        $nuevoTotal = floatval($request->total_amount);
+
+        // VALIDACIÓN: El nuevo total debe ser mayor o igual a los abonos registrados
+        if ($nuevoTotal < $totalAbonado) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['total_amount' => 'El nuevo total ($' . number_format($nuevoTotal, 2) . ') no puede ser menor a los abonos registrados ($' . number_format($totalAbonado, 2) . '). Debe ser mayor o igual.']);
+        }
 
         // 1. Actualizar datos principales
         $debt->update([
             'concept' => $request->concept,
-            'total_amount' => $request->total_amount,
+            'total_amount' => $nuevoTotal,
         ]);
 
         // 2. Sincronizar artículos
