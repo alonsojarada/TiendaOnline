@@ -96,7 +96,7 @@ class DebtController extends Controller
         // NUEVO: Si es un crédito de mercancía y se agregaron artículos a la lista, se guardan en cascada
         if ($request->type === 'store_credit' && $request->has('items')) {
             foreach ($request->items as $itemData) {
-                \App\Models\CreditItem::create([
+                CreditItem::create([
                     'debt_id' => $debt->id,
                     'description' => $itemData['description'],
                     'quantity' => $itemData['quantity'],
