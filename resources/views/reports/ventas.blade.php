@@ -1,14 +1,13 @@
-
 <x-app-layout>
 
     <!-- ========================================================= -->
-    <!-- TÍTULO DE LA PÁGINA -->
+    <!-- TÍTULO DE LA PÁGINA (Adaptado para móviles) -->
     <!-- ========================================================= -->
 
     <x-slot name="header">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
 
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight text-left">
+            <h2 class="font-semibold text-sm sm:text-xl text-gray-800 dark:text-gray-200 leading-tight text-left truncate">
                 <span>📊</span> Reporte General de Ventas
             </h2>
 
@@ -91,7 +90,7 @@
                             <div class="text-xs sm:text-sm md:text-[11px] lg:text-xs xl:text-sm
                                         font-black mt-0.5 whitespace-nowrap">
 
-                                ${{ number_format($totalMercancia, 2) }}
+                                ${{ number_format($totalMercancia, 0) }}
 
                             </div>
 
@@ -142,7 +141,7 @@
                             <div class="text-xs sm:text-sm md:text-[11px] lg:text-xs xl:text-sm
                                         font-black mt-0.5 whitespace-nowrap">
 
-                                ${{ number_format($totalPrestamos, 2) }}
+                                ${{ number_format($totalPrestamos, 0) }}
 
                             </div>
 
@@ -196,7 +195,7 @@
                             <div class="text-xs sm:text-sm md:text-[11px] lg:text-xs xl:text-sm
                                         font-black mt-0.5 whitespace-nowrap">
 
-                                ${{ number_format($granTotal, 2) }}
+                                ${{ number_format($granTotal, 0) }}
 
                             </div>
 
@@ -507,7 +506,7 @@
                             </th>
 
                             <th class="py-3.5 px-4 columna-concepto">
-                                Concepto / Descripción
+                                Concepto 
                             </th>
 
                             <th class="py-3.5 px-4 columna-estado text-center whitespace-nowrap">
@@ -528,240 +527,84 @@
 
 
                     <!-- ================================================= -->
-                    <!-- CUERPO -->
+                    <!-- CUERPO DE LA TABLA -->
                     <!-- ================================================= -->
 
                     <tbody class="divide-y divide-gray-100 dark:divide-gray-700/70">
 
-                        @php
-
-                            $movimientos = $ventasMercancia
-                                ->concat($prestamosEfectivo)
-                                ->sortByDesc('created_at');
-
-                        @endphp
-
-
-                        @forelse($movimientos as $item)
-
+                        @forelse($ventasMercancia->concat($prestamosEfectivo)->sortByDesc('created_at') as $item)
                             @php
-
                                 $clientAddress = optional($item->client)->address;
-
                                 $userName = optional($item->user)->name ?? 'N/A';
-
                                 $valMonto = $item->total_amount ?? 0;
-
                             @endphp
 
+                            <tr class="fila-cuenta hover:bg-gray-50/50 dark:hover:bg-gray-700/20 transition">
 
-                            <tr class="fila-cuenta
-                                       hover:bg-gray-50/50
-                                       dark:hover:bg-gray-700/20
-                                       transition">
-
-
-                                <!-- ============================= -->
-                                <!-- FECHA -->
-                                <!-- ============================= -->
-
-                                <td class="py-3.5 px-4
-                                           columna-fecha
-                                           text-gray-600 dark:text-gray-300
-                                           whitespace-nowrap">
-
-                                    {{ $item->created_at->format('d/m/Y H:i') }}
-
+                                <!-- FECHA (Sin hora) -->
+                                <td class="py-3.5 px-4 columna-fecha text-gray-600 dark:text-gray-300 whitespace-nowrap">
+                                    {{ $item->created_at ? $item->created_at->format('d/m/Y') : 'N/A' }}
                                 </td>
 
-
-                                <!-- ============================= -->
-                                <!-- TIPO -->
-                                <!-- ============================= -->
-
-                                <td class="py-3.5 px-4
-                                           columna-tipo
-                                           whitespace-nowrap">
-
+                                <!-- TIPO (Solo texto sin relleno) -->
+                                <td class="py-3.5 px-4 columna-tipo whitespace-nowrap">
                                     @if($item->type === 'store_credit')
-
-                                        <span class="inline-flex items-center gap-1
-                                                     px-2.5 py-0.5
-                                                     rounded-full
-                                                     text-[10px]
-                                                     font-black
-                                                     bg-emerald-100
-                                                     text-emerald-800
-                                                     dark:bg-emerald-950/60
-                                                     dark:text-emerald-300">
-
+                                        <span class="inline-flex items-center gap-1 text-xs font-bold text-emerald-600 dark:text-emerald-400">
                                             📦 Mercancía
-
                                         </span>
-
                                     @else
-
-                                        <span class="inline-flex items-center gap-1
-                                                     px-2.5 py-0.5
-                                                     rounded-full
-                                                     text-[10px]
-                                                     font-black
-                                                     bg-blue-100
-                                                     text-blue-800
-                                                     dark:bg-blue-950/60
-                                                     dark:text-blue-300">
-
+                                        <span class="inline-flex items-center gap-1 text-xs font-bold text-blue-600 dark:text-blue-400">
                                             💵 Efectivo
-
                                         </span>
-
                                     @endif
-
                                 </td>
 
-
-                                <!-- ============================= -->
                                 <!-- CLIENTE -->
-                                <!-- ============================= -->
-
-                                <td class="py-3.5 px-4
-                                           columna-cliente
-                                           font-bold
-                                           text-gray-900 dark:text-white">
-
+                                <td class="py-3.5 px-4 columna-cliente font-bold text-gray-900 dark:text-white">
                                     {{ $item->client->name ?? 'General' }}
-
                                 </td>
 
-
-                                <!-- ============================= -->
                                 <!-- DIRECCIÓN -->
-                                <!-- ============================= -->
-
-                                <td class="py-3.5 px-4
-                                           columna-direccion
-                                           text-gray-600 dark:text-gray-400">
-
+                                <td class="py-3.5 px-4 columna-direccion text-gray-600 dark:text-gray-400">
                                     {{ $clientAddress ?: 'S/D' }}
-
                                 </td>
 
-
-                                <!-- ============================= -->
                                 <!-- CONCEPTO -->
-                                <!-- ============================= -->
-
-                                <td class="py-3.5 px-4
-                                           columna-concepto
-                                           text-gray-700 dark:text-gray-300">
-
-                                    {{ '#' . $item->id }} -
-
-                                    {{ $item->concept
-                                        ?? ($item->type === 'cash_loan'
-                                            ? 'Préstamo en efectivo'
-                                            : 'Venta de mercancía') }}
-
+                                <td class="py-3.5 px-4 columna-concepto text-gray-700 dark:text-gray-300">
+                                    {{ '#' . $item->id }} - {{ $item->concept ?? ($item->type === 'cash_loan' ? 'Préstamo en efectivo' : 'Venta de mercancía') }}
                                 </td>
 
-
-                                <!-- ============================= -->
                                 <!-- ESTADO -->
-                                <!-- ============================= -->
-
-                                <td class="py-3.5 px-4
-                                           columna-estado
-                                           text-center
-                                           whitespace-nowrap">
-
+                                <td class="py-3.5 px-4 columna-estado text-center whitespace-nowrap">
                                     @if(isset($item->status) && $item->status === 'paid')
-
-                                        <span class="px-2 py-0.5
-                                                     text-[10px]
-                                                     font-bold
-                                                     bg-green-100
-                                                     text-green-700
-                                                     dark:bg-green-950/60
-                                                     dark:text-green-300
-                                                     rounded-md">
-
+                                        <span class="px-2 py-0.5 text-[10px] font-bold bg-green-100 text-green-700 dark:bg-green-950/60 dark:text-green-300 rounded-md">
                                             Liquidado
-
                                         </span>
-
                                     @else
-
-                                        <span class="px-2 py-0.5
-                                                     text-[10px]
-                                                     font-bold
-                                                     bg-amber-100
-                                                     text-amber-700
-                                                     dark:bg-amber-950/60
-                                                     dark:text-amber-300
-                                                     rounded-md">
-
+                                        <span class="px-2 py-0.5 text-[10px] font-bold bg-amber-100 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300 rounded-md">
                                             Pendiente
-
                                         </span>
-
                                     @endif
-
                                 </td>
 
-
-                                <!-- ============================= -->
                                 <!-- USUARIO -->
-                                <!-- ============================= -->
-
-                                <td class="py-3.5 px-4
-                                           columna-usuario
-                                           text-gray-600 dark:text-gray-300">
-
+                                <td class="py-3.5 px-4 columna-usuario text-gray-600 dark:text-gray-300">
                                     {{ $userName }}
-
                                 </td>
 
-
-                                <!-- ============================= -->
                                 <!-- MONTO -->
-                                <!-- ============================= -->
-
-                                <td class="py-3.5 px-4
-                                           columna-monto
-                                           text-right
-                                           font-black
-                                           text-gray-900 dark:text-white
-                                           monto-total"
-                                    data-valor="{{ $valMonto }}">
-
-                                    ${{ number_format($valMonto, 2) }}
-
+                                <td class="py-3.5 px-4 columna-monto text-right font-black text-gray-900 dark:text-white monto-total" data-valor="{{ $valMonto }}">
+                                    ${{ number_format($valMonto, 0) }}
                                 </td>
 
                             </tr>
-
-
                         @empty
-
                             <tr>
-
-                                <td colspan="8"
-                                    class="text-center
-                                           py-12
-                                           text-gray-400">
-
-                                    <div class="text-3xl mb-2">
-                                        📂
-                                    </div>
-
-                                    <p class="font-medium">
-                                        No se encontraron movimientos registrados con estos filtros.
-                                    </p>
-
+                                <td colspan="8" class="text-center py-12 text-gray-400">
+                                    <div class="text-3xl mb-2">📂</div>
+                                    <p class="font-medium">No se encontraron movimientos registrados con estos filtros.</p>
                                 </td>
-
                             </tr>
-
                         @endforelse
 
                     </tbody>

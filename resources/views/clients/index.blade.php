@@ -252,7 +252,8 @@
                                        px-2 sm:px-5
                                        border-r
                                        border-gray-200 dark:border-gray-700
-                                       bg-gray-100 dark:bg-gray-900">
+                                       bg-gray-100 dark:bg-gray-900
+                                       hidden sm:table-cell">
                                 Teléfono
                             </th>
 
@@ -287,226 +288,210 @@
 
                         @forelse($clients as $client)
 
-                                            <tr class="hover:bg-gray-50/75
-                                                           dark:hover:bg-gray-700/50
-                                                           transition
-                                                           fila-cliente">
+                                                        <tr class="hover:bg-gray-50/75
+                                                                                           dark:hover:bg-gray-700/50
+                                                                                           transition
+                                                                                           fila-cliente">
 
-                                                <!-- =====================================
-                                                         CLIENTE
-                                                    ====================================== -->
+                                                            <!-- =====================================
+                                                                                         CLIENTE
+                                                                                    ====================================== -->
 
-                                                <td class="py-1.5 sm:py-1.5
-                                                               px-2 sm:px-5
-                                                               border-r
-                                                               border-gray-100
-                                                               dark:border-gray-700/50">
+                                                            <td class="py-1.5 sm:py-1.5
+                                                                                               px-2 sm:px-5
+                                                                                               border-r
+                                                                                               border-gray-100
+                                                                                               dark:border-gray-700/50">
 
-                                                    <div class="flex items-center">
+                                                                <div class="flex items-center">
 
-                                                        <div class="font-bold
-                                                                        text-gray-900
-                                                                        dark:text-white
-                                                                        text-[11px] sm:text-sm
-                                                                        leading-tight
-                                                                        truncate
-                                                                        min-w-0">
+                                                                    <div class="font-bold
+                                                                                                        text-gray-900
+                                                                                                        dark:text-white
+                                                                                                        text-[11px] sm:text-sm
+                                                                                                        leading-tight
+                                                                                                        truncate
+                                                                                                        min-w-0">
 
-                                                            {{ $client->name }}
+                                                                        {{ $client->name }}
 
-                                                        </div>
+                                                                    </div>
 
-                                                    </div>
+                                                                </div>
 
-                                                </td>
-
-
-                                                <!-- =====================================
-                                                         ALIAS
-                                                    ====================================== -->
-
-                                                <td class="py-1.5 px-5
-                                                               border-r
-                                                               border-gray-100
-                                                               dark:border-gray-700/50
-                                                               text-gray-600
-                                                               dark:text-gray-400
-                                                               font-medium
-                                                               text-sm
-                                                               hidden sm:table-cell">
-
-                                                    {{ $client->alias ? '"' . $client->alias . '"' : '—' }}
-
-                                                </td>
+                                                            </td>
 
 
-                                                <!-- =====================================
-                                                         DIRECCIÓN
-                                                    ====================================== -->
+                                                            <!-- =====================================
+                                                                                         ALIAS
+                                                                                    ====================================== -->
 
-                                                <td class="py-1.5 px-5
-                                                               border-r
-                                                               border-gray-100
-                                                               dark:border-gray-700/50
-                                                               text-gray-800
-                                                               dark:text-gray-200
-                                                               font-medium
-                                                               text-sm
-                                                               hidden md:table-cell">
+                                                            <td class="py-1.5 px-5
+                                                                                               border-r
+                                                                                               border-gray-100
+                                                                                               dark:border-gray-700/50
+                                                                                               text-gray-600
+                                                                                               dark:text-gray-400
+                                                                                               font-medium
+                                                                                               text-sm
+                                                                                               hidden sm:table-cell">
 
-                                                    {{ $client->address ?? 'Sin dirección' }}
+                                                                {{ $client->alias ? '"' . $client->alias . '"' : '—' }}
 
-                                                </td>
-
-
-                                                <!-- =====================================
-                                                         TELÉFONO
-                                                    ====================================== -->
-
-                                                <td class="py-1.5
-                                                               px-2 sm:px-5
-                                                               border-r
-                                                               border-gray-100
-                                                               dark:border-gray-700/50
-                                                               text-gray-700
-                                                               dark:text-gray-300
-                                                               font-mono
-                                                               font-semibold
-                                                               text-[10px] sm:text-sm
-                                                               whitespace-nowrap">
-
-                                                    {{ $client->phone ?? 'Sin teléfono' }}
-
-                                                </td>
+                                                            </td>
 
 
-                                                <!-- =====================================
-                                                         ESTATUS
-                                                    ====================================== -->
+                                                            <!-- =====================================
+                                                                                         DIRECCIÓN
+                                                                                    ====================================== -->
 
-                                                <td class="py-1.5
-                                                               px-2 sm:px-5
-                                                               border-r
-                                                               border-gray-100
-                                                               dark:border-gray-700/50
-                                                               whitespace-nowrap">
+                                                            <td class="py-1.5 px-5
+                                                                                               border-r
+                                                                                               border-gray-100
+                                                                                               dark:border-gray-700/50
+                                                                                               text-gray-800
+                                                                                               dark:text-gray-200
+                                                                                               font-medium
+                                                                                               text-sm
+                                                                                               hidden md:table-cell">
 
-                                                    @if($client->status === 'active')
+                                                                {{ $client->address ?? 'Sin dirección' }}
 
-                                                        <span class="px-2 sm:px-2.5
-                                                                             py-0.5 sm:py-1
-                                                                             inline-flex
-                                                                             text-[9px] sm:text-xs
-                                                                             leading-4
-                                                                             font-semibold
-                                                                             rounded-full
-                                                                             bg-green-100
-                                                                             text-green-800
-                                                                             dark:bg-green-900/40
-                                                                             dark:text-green-300">
-
-                                                            Activo
-
-                                                        </span>
-
-                                                    @else
-
-                                                        <span class="px-2 sm:px-2.5
-                                                                             py-0.5 sm:py-1
-                                                                             inline-flex
-                                                                             text-[9px] sm:text-xs
-                                                                             leading-4
-                                                                             font-semibold
-                                                                             rounded-full
-                                                                             bg-red-100
-                                                                             text-red-800
-                                                                             dark:bg-red-900/40
-                                                                             dark:text-red-300">
-
-                                                            Suspendido
-
-                                                        </span>
-
-                                                    @endif
-
-                                                </td>
+                                                            </td>
 
 
-                                                <!-- =====================================
-                                                         ACCIONES
-                                                    ====================================== -->
+                                                            <!-- =====================================
+                                                                                         TELÉFONO
+                                                                                    ====================================== -->
 
-                                                <td class="py-1.5
-                                                               px-2 sm:px-5
-                                                               text-right
-                                                               whitespace-nowrap">
+                                                            <td class="py-1.5
+                                                                                               px-2 sm:px-5
+                                                                                               border-r
+                                                                                               border-gray-100
+                                                                                               dark:border-gray-700/50
+                                                                                               text-gray-700
+                                                                                               dark:text-gray-300
+                                                                                               font-mono
+                                                                                               font-semibold
+                                                                                               text-[10px] sm:text-sm
+                                                                                               whitespace-nowrap
+                                                                                               hidden sm:table-cell">
 
-                                                    <div class="inline-flex
-                                                                    items-center
-                                                                    justify-end
-                                                                    gap-1 sm:gap-1.5">
+                                                                {{ $client->phone ?? 'Sin teléfono' }}
 
-                                                        <button type="button"
-                                                            onclick="abrirModalEditar('{{ $client->id }}', '{{ addslashes($client->name) }}', '{{ addslashes($client->alias) }}', '{{ $client->phone }}', '{{ addslashes($client->address ?? '') }}', '{{ $client->status ?? 'active' }}')"
-                                                            class="boton-tabla
-                                                                       px-2 sm:px-3
-                                                                       py-1
-                                                                       bg-amber-100
-                                                                       hover:bg-amber-200
-                                                                       text-amber-800
-                                                                       dark:bg-amber-900/40
-                                                                       dark:text-amber-300
-                                                                       rounded-lg
-                                                                       text-[9px] sm:text-xs
-                                                                       font-bold
-                                                                       transition
-                                                                       shadow-xs">
-
-                                                            Editar
-
-                                                        </button>
+                                                            </td>
 
 
-                                                        <a href="{{ route('clients.show', ['id' => $client->id, 'from' => 'directorio']) }}"
-                                                            class="boton-tabla
-                               px-2 sm:px-3
-                               py-1
-                               bg-indigo-100
-                               hover:bg-indigo-200
-                               text-indigo-800
-                               dark:bg-indigo-900/40
-                               dark:text-indigo-300
-                               rounded-lg
-                               text-[9px] sm:text-xs
-                               font-bold
-                               transition
-                               shadow-xs">
+                                                            <!-- =====================================
+                                                                                         ESTATUS
+                                                                                    ====================================== -->
 
-                                                            <span class="hidden sm:inline">
-                                                                Cuenta ➔
-                                                            </span>
+                                                            <td class="py-1.5
+                                                                                               px-2 sm:px-5
+                                                                                               border-r
+                                                                                               border-gray-100
+                                                                                               dark:border-gray-700/50
+                                                                                               whitespace-nowrap">
+                           @if($client->status === 'active')
 
-                                                            <span class="sm:hidden">
-                                                                Cuenta
-                                                            </span>
+    <span class="inline-flex
+                 text-[10px] sm:text-xs
+                 font-bold
+                 text-green-600
+                 dark:text-green-400">
+        Activo
+    </span>
 
-                                                        </a>
+@else
 
-                                                    </div>
+    <span class="inline-flex
+                 text-[10px] sm:text-xs
+                 font-bold
+                 text-red-600
+                 dark:text-red-400">
+        Suspendido
+    </span>
 
-                                                </td>
+@endif
 
-                                            </tr>
+                                                            </td>
+
+
+                                                            <!-- =====================================
+                                                                                         ACCIONES
+                                                                                    ====================================== -->
+
+                                                            <td class="py-1.5
+                                                                                               px-2 sm:px-5
+                                                                                               text-right
+                                                                                               whitespace-nowrap">
+
+                                                                <div class="inline-flex
+                                                                                                    items-center
+                                                                                                    justify-end
+                                                                                                    gap-1 sm:gap-1.5">
+
+                                                                    <button type="button"
+                                                                        onclick="abrirModalEditar('{{ $client->id }}', '{{ addslashes($client->name) }}', '{{ addslashes($client->alias) }}', '{{ $client->phone }}', '{{ addslashes($client->address ?? '') }}', '{{ $client->status ?? 'active' }}')"
+                                                                        class="boton-tabla
+                                                                                                       px-2 sm:px-3
+                                                                                                       py-1
+                                                                                                       bg-amber-100
+                                                                                                       hover:bg-amber-200
+                                                                                                       text-amber-800
+                                                                                                       dark:bg-amber-900/40
+                                                                                                       dark:text-amber-300
+                                                                                                       rounded-lg
+                                                                                                       text-[9px] sm:text-xs
+                                                                                                       font-bold
+                                                                                                       transition
+                                                                                                       shadow-xs">
+
+                                                                        Editar
+
+                                                                    </button>
+
+
+                                                                    <a href="{{ route('clients.show', ['id' => $client->id, 'from' => 'directorio']) }}"
+                                                                        class="boton-tabla
+                                                               px-2 sm:px-3
+                                                               py-1
+                                                               bg-indigo-100
+                                                               hover:bg-indigo-200
+                                                               text-indigo-800
+                                                               dark:bg-indigo-900/40
+                                                               dark:text-indigo-300
+                                                               rounded-lg
+                                                               text-[9px] sm:text-xs
+                                                               font-bold
+                                                               transition
+                                                               shadow-xs">
+
+                                                                        <span class="hidden sm:inline">
+                                                                            Cuenta ➔
+                                                                        </span>
+
+                                                                        <span class="sm:hidden">
+                                                                            Cuenta
+                                                                        </span>
+
+                                                                    </a>
+
+                                                                </div>
+
+                                                            </td>
+
+                                                        </tr>
 
                         @empty
 
                             <tr>
 
                                 <td colspan="6" class="text-center
-                                               py-10 sm:py-12
-                                               text-gray-500
-                                               dark:text-gray-400
-                                               text-xs sm:text-sm">
+                                                   py-10 sm:py-12
+                                                   text-gray-500
+                                                   dark:text-gray-400
+                                                   text-xs sm:text-sm">
 
                                     No hay clientes registrados.
 

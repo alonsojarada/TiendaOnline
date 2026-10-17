@@ -1,9 +1,14 @@
 <x-app-layout>
 
     <x-slot name="header">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight text-left">
-                <span>📊</span> Reporte General de Abonos
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-w-0">
+            <h2 class="flex items-center gap-1 min-w-0 font-semibold
+                       text-xs min-[360px]:text-sm sm:text-lg lg:text-xl
+                       text-gray-800 dark:text-gray-200 leading-tight text-left">
+                <span class="shrink-0">📊</span>
+                <span class="min-w-0 truncate" title="Reporte General de Abonos">
+                    Reporte General de Abonos
+                </span>
             </h2>
         </div>
     </x-slot>
@@ -92,7 +97,7 @@
                                        font-black mt-0.5
                                        truncate">
 
-                                ${{ number_format($totalMercancia, 2) }}
+                                ${{ number_format($totalMercancia, 0) }}
 
                             </div>
 
@@ -151,7 +156,7 @@
                                        font-black mt-0.5
                                        truncate">
 
-                                ${{ number_format($totalEfectivo, 2) }}
+                                ${{ number_format($totalEfectivo, 0) }}
 
                             </div>
 
@@ -210,7 +215,7 @@
                                        font-black mt-0.5
                                        truncate">
 
-                                ${{ number_format($totalGeneral, 2) }}
+                                ${{ number_format($totalGeneral, 0) }}
 
                             </div>
 
@@ -617,7 +622,7 @@
                                                    text-[10px] sm:text-xs">
 
                                                     {{ $payment->created_at
-                            ? $payment->created_at->format('d/m/Y H:i')
+                            ? $payment->created_at->format('d/m/Y')
                             : 'N/A' }}
 
                                                 </td>
@@ -629,15 +634,7 @@
                                                    px-4 py-3
                                                    whitespace-nowrap">
 
-                                                    <span class="px-2 py-1
-                                                       text-xs
-                                                       font-semibold
-                                                       rounded-full
-                                                       {{ $badgeClass }}">
-
-                                                        {{ $tipoTexto }}
-
-                                                    </span>
+                                                    {{ $tipoTexto }}
 
                                                 </td>
 
@@ -716,7 +713,7 @@
                                                    monto-total
                                                    text-[11px] sm:text-xs" data-valor="{{ $valMonto }}">
 
-                                                    ${{ number_format($valMonto, 2) }}
+                                                    ${{ number_format($valMonto, 0) }}
 
                                                 </td>
 

@@ -38,12 +38,13 @@
 
             <!-- 4. BARRA SUPERIOR FIJA -->
             <header class="fixed top-0 right-0 left-0 lg:left-64 z-30 bg-white dark:bg-gray-800 shadow-sm">
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+                <!-- Ajustamos px-2 en móvil para alinearse con el nuevo diseño -->
+                <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
 
-                    <div class="flex items-center space-x-3 w-full">
+                    <div class="flex items-center space-x-2 sm:space-x-3 w-full">
                         <!-- Botón de hamburguesa visible en pantallas chicas y medianas, se oculta en lg: -->
                         <button id="menu-btn"
-                            class="p-2 rounded-md text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none lg:hidden shrink-0">
+                            class="p-1.5 sm:p-2 rounded-md text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none lg:hidden shrink-0">
                             <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2"
                                 fill="none">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M3 12h18M3 6h18M3 18h18"></path>
@@ -61,7 +62,8 @@
             </header>
 
             <!-- 5. Page Content -->
-            <main class="flex-1 p-6 pt-20 lg:pt-24">
+            <!-- CAMBIO CLAVE: px-1 py-3 en móviles. p-6 en computadoras -->
+            <main class="flex-1 px-1 sm:px-6 lg:px-8 py-3 sm:py-6 pt-20 lg:pt-24">
                 {{ $slot }}
             </main>
         </div>
