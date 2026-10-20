@@ -24,13 +24,6 @@
     <div class="py-1 sm:py-2 cliente-page">
         <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
 
-            @if (session('success'))
-                <div
-                    class="mb-3 font-medium text-xs sm:text-sm text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-900/30 p-2.5 rounded-lg">
-                    {{ session('success') }}
-                </div>
-            @endif
-
             <!-- ================= SECCIÓN SUPERIOR ================= -->
             <div
                 class="bg-white dark:bg-gray-800 p-1.5 sm:p-3.5 rounded-xl shadow-xs border border-gray-100 dark:border-gray-700 mb-2 sm:mb-3 space-y-1.5 sm:space-y-2">
@@ -973,4 +966,25 @@
             document.getElementById('modalArticulosCuenta').classList.add('hidden');
         }
     </script>
+
+
+    @if(session('success'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                Swal.fire({
+                    toast: true,
+                    position: 'center', // O 'bottom-end' si lo prefieres abajo
+                    icon: 'success',
+                    title: "{{ session('success') }}",
+                    showConfirmButton: false,
+                    timer: 1500, // <--- Se desvanece y desaparece en 1 segundo
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                });
+            });
+        </script>
+    @endif
 </x-app-layout>

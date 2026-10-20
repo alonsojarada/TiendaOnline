@@ -512,8 +512,8 @@
     </div>
 
 
-    <!-- =============================================================
-         MODAL NUEVO CLIENTE
+   <!-- =============================================================
+         MODAL NUEVO CLIENTE (Ajustado para pantallas chicas y móviles)
     ============================================================== -->
 
     <div id="modalNuevoCliente" class="hidden fixed inset-0 z-50
@@ -521,204 +521,72 @@
                flex items-center justify-center
                p-3 sm:p-4">
 
+        <!-- Contenedor adaptado: más pequeño en móviles (max-w-xs) y con scroll interno si es necesario -->
         <div class="bg-white dark:bg-gray-800
                     rounded-2xl
-                    max-w-md
+                    max-w-xs sm:max-w-md
                     w-full
-                    p-4 sm:p-6
+                    p-3.5 sm:p-6
                     shadow-xl
-                    border border-gray-200 dark:border-gray-700">
+                    border border-gray-200 dark:border-gray-700
+                    max-h-[90vh] overflow-y-auto">
 
-            <h3 class="text-base font-bold
+            <h3 class="text-sm sm:text-base font-bold
                        text-gray-900 dark:text-white
-                       mb-4">
+                       mb-3 sm:mb-4">
 
                 Registrar Nuevo Cliente
 
             </h3>
 
-
             <form action="{{ route('clients.store') }}" method="POST">
-
                 @csrf
 
-                <div class="space-y-4">
-
+                <div class="space-y-3 sm:space-y-4">
                     <div>
-
-                        <label class="block text-xs
-                                      font-bold uppercase
-                                      text-gray-500 dark:text-gray-400
-                                      mb-1">
-
-                            Nombre
-
-                        </label>
-
-                        <input type="text" name="name" required placeholder="Ej. Juan Pérez" class="w-full
-                                   text-sm
-                                   px-3.5 py-2.5
-                                   bg-gray-50 dark:bg-gray-900
-                                   border border-gray-300 dark:border-gray-700
-                                   rounded-xl
-                                   text-gray-800 dark:text-gray-200
-                                   focus:outline-hidden
-                                   focus:ring-2 focus:ring-indigo-500">
-
+                        <label class="block text-[10px] sm:text-xs font-bold uppercase text-gray-500 dark:text-gray-400 mb-0.5 sm:mb-1">Nombre</label>
+                        <input type="text" name="name" required placeholder="Ej. Juan Pérez" class="w-full text-xs sm:text-sm px-3 py-2 sm:px-3.5 sm:py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-xl text-gray-800 dark:text-gray-200 focus:outline-hidden focus:ring-2 focus:ring-indigo-500">
                     </div>
 
-
                     <div>
-
-                        <label class="block text-xs
-                                      font-bold uppercase
-                                      text-gray-500 dark:text-gray-400
-                                      mb-1">
-
-                            Alias (Apodo)
-
-                        </label>
-
-                        <input type="text" name="alias" placeholder="Ej. El Chuy" class="w-full
-                                   text-sm
-                                   px-3.5 py-2.5
-                                   bg-gray-50 dark:bg-gray-900
-                                   border border-gray-300 dark:border-gray-700
-                                   rounded-xl
-                                   text-gray-800 dark:text-gray-200
-                                   focus:outline-hidden
-                                   focus:ring-2 focus:ring-indigo-500">
-
+                        <label class="block text-[10px] sm:text-xs font-bold uppercase text-gray-500 dark:text-gray-400 mb-0.5 sm:mb-1">Alias (Apodo)</label>
+                        <input type="text" name="alias" placeholder="Ej. El Chuy" class="w-full text-xs sm:text-sm px-3 py-2 sm:px-3.5 sm:py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-xl text-gray-800 dark:text-gray-200 focus:outline-hidden focus:ring-2 focus:ring-indigo-500">
                     </div>
 
-
                     <div>
-
-                        <label class="block text-xs
-                                      font-bold uppercase
-                                      text-gray-500 dark:text-gray-400
-                                      mb-1">
-
-                            Teléfono
-
-                        </label>
-
-                        <input type="text" name="phone" placeholder="Ej. 8714663905" class="w-full
-                                   text-sm
-                                   px-3.5 py-2.5
-                                   bg-gray-50 dark:bg-gray-900
-                                   border border-gray-300 dark:border-gray-700
-                                   rounded-xl
-                                   text-gray-800 dark:text-gray-200
-                                   focus:outline-hidden
-                                   focus:ring-2 focus:ring-indigo-500">
-
+                        <label class="block text-[10px] sm:text-xs font-bold uppercase text-gray-500 dark:text-gray-400 mb-0.5 sm:mb-1">Teléfono</label>
+                        <input type="text" name="phone" placeholder="Ej. 8714663905" class="w-full text-xs sm:text-sm px-3 py-2 sm:px-3.5 sm:py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-xl text-gray-800 dark:text-gray-200 focus:outline-hidden focus:ring-2 focus:ring-indigo-500">
                     </div>
 
-
                     <div>
-
-                        <label class="block text-xs
-                                      font-bold uppercase
-                                      text-gray-500 dark:text-gray-400
-                                      mb-1">
-
-                            Dirección
-
-                        </label>
-
-                        <input type="text" name="address" placeholder="Ej. Boquillas #123" class="w-full
-                                   text-sm
-                                   px-3.5 py-2.5
-                                   bg-gray-50 dark:bg-gray-900
-                                   border border-gray-300 dark:border-gray-700
-                                   rounded-xl
-                                   text-gray-800 dark:text-gray-200
-                                   focus:outline-hidden
-                                   focus:ring-2 focus:ring-indigo-500">
-
+                        <label class="block text-[10px] sm:text-xs font-bold uppercase text-gray-500 dark:text-gray-400 mb-0.5 sm:mb-1">Dirección</label>
+                        <input type="text" name="address" placeholder="Ej. Boquillas #123" class="w-full text-xs sm:text-sm px-3 py-2 sm:px-3.5 sm:py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-xl text-gray-800 dark:text-gray-200 focus:outline-hidden focus:ring-2 focus:ring-indigo-500">
                     </div>
 
-
                     <div>
-
-                        <label class="block text-xs
-                                      font-bold uppercase
-                                      text-gray-500 dark:text-gray-400
-                                      mb-1">
-
-                            Estatus
-
-                        </label>
-
-                        <select name="status" class="w-full
-                                   text-sm
-                                   px-3.5 py-2.5
-                                   bg-gray-50 dark:bg-gray-900
-                                   border border-gray-300 dark:border-gray-700
-                                   rounded-xl
-                                   text-gray-800 dark:text-gray-200
-                                   focus:outline-hidden
-                                   focus:ring-2 focus:ring-indigo-500">
-
-                            <option value="active">
-                                Activo
-                            </option>
-
-                            <option value="inactive">
-                                Suspendido
-                            </option>
-
+                        <label class="block text-[10px] sm:text-xs font-bold uppercase text-gray-500 dark:text-gray-400 mb-0.5 sm:mb-1">Estatus</label>
+                        <select name="status" class="w-full text-xs sm:text-sm px-3 py-2 sm:px-3.5 sm:py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-xl text-gray-800 dark:text-gray-200 focus:outline-hidden focus:ring-2 focus:ring-indigo-500">
+                            <option value="active">Activo</option>
+                            <option value="inactive">Suspendido</option>
                         </select>
-
                     </div>
-
                 </div>
 
-
-                <div class="flex justify-end
-                            gap-2
-                            mt-6">
-
+                <div class="flex justify-end gap-2 mt-4 sm:mt-6">
                     <button type="button" onclick="document.getElementById('modalNuevoCliente').classList.add('hidden')"
-                        class="px-4 py-2.5
-                               bg-gray-100 dark:bg-gray-700
-                               hover:bg-gray-200
-                               text-gray-700 dark:text-gray-300
-                               rounded-xl
-                               text-xs
-                               font-bold uppercase
-                               transition">
-
+                        class="px-3.5 py-2 sm:px-4 sm:py-2.5 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 text-gray-700 dark:text-gray-300 rounded-xl text-[11px] sm:text-xs font-bold uppercase transition">
                         Cancelar
-
                     </button>
-
-
-                    <button type="submit" class="px-5 py-2.5
-                               bg-indigo-600 hover:bg-indigo-700
-                               text-white
-                               rounded-xl
-                               text-xs
-                               font-bold uppercase
-                               transition
-                               shadow-xs">
-
+                    <button type="submit" class="px-4.5 py-2 sm:px-5 sm:py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-[11px] sm:text-xs font-bold uppercase transition shadow-xs">
                         Guardar
-
                     </button>
-
                 </div>
-
             </form>
-
         </div>
-
     </div>
 
-
     <!-- =============================================================
-         MODAL EDITAR CLIENTE
+         MODAL EDITAR CLIENTE (Ajustado para pantallas chicas y móviles)
     ============================================================== -->
 
     <div id="modalEditarCliente" class="hidden fixed inset-0 z-50
@@ -726,203 +594,72 @@
                flex items-center justify-center
                p-3 sm:p-4">
 
+        <!-- Contenedor adaptado: más pequeño en móviles (max-w-xs) y con scroll interno si es necesario -->
         <div class="bg-white dark:bg-gray-800
                     rounded-2xl
-                    max-w-md
+                    max-w-xs sm:max-w-md
                     w-full
-                    p-4 sm:p-6
+                    p-3.5 sm:p-6
                     shadow-xl
-                    border border-gray-200 dark:border-gray-700">
+                    border border-gray-200 dark:border-gray-700
+                    max-h-[90vh] overflow-y-auto">
 
-            <h3 class="text-base font-bold
+            <h3 class="text-sm sm:text-base font-bold
                        text-gray-900 dark:text-white
-                       mb-4">
+                       mb-3 sm:mb-4">
 
                 Editar Información del Cliente
 
             </h3>
 
-
             <form id="formEditarCliente" method="POST">
-
                 @csrf
                 @method('PUT')
 
-                <div class="space-y-4">
-
+                <div class="space-y-3 sm:space-y-4">
                     <div>
-
-                        <label class="block text-xs
-                                      font-bold uppercase
-                                      text-gray-500 dark:text-gray-400
-                                      mb-1">
-
-                            Nombre
-
-                        </label>
-
-                        <input type="text" name="name" id="edit_name" required class="w-full
-                                   text-sm
-                                   px-3.5 py-2.5
-                                   bg-gray-50 dark:bg-gray-900
-                                   border border-gray-300 dark:border-gray-700
-                                   rounded-xl
-                                   text-gray-800 dark:text-gray-200
-                                   focus:outline-hidden
-                                   focus:ring-2 focus:ring-indigo-500">
-
+                        <label class="block text-[10px] sm:text-xs font-bold uppercase text-gray-500 dark:text-gray-400 mb-0.5 sm:mb-1">Nombre</label>
+                        <input type="text" name="name" id="edit_name" required class="w-full text-xs sm:text-sm px-3 py-2 sm:px-3.5 sm:py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-xl text-gray-800 dark:text-gray-200 focus:outline-hidden focus:ring-2 focus:ring-indigo-500">
                     </div>
 
-
                     <div>
-
-                        <label class="block text-xs
-                                      font-bold uppercase
-                                      text-gray-500 dark:text-gray-400
-                                      mb-1">
-
-                            Alias (Apodo)
-
-                        </label>
-
-                        <input type="text" name="alias" id="edit_alias" class="w-full
-                                   text-sm
-                                   px-3.5 py-2.5
-                                   bg-gray-50 dark:bg-gray-900
-                                   border border-gray-300 dark:border-gray-700
-                                   rounded-xl
-                                   text-gray-800 dark:text-gray-200
-                                   focus:outline-hidden
-                                   focus:ring-2 focus:ring-indigo-500">
-
+                        <label class="block text-[10px] sm:text-xs font-bold uppercase text-gray-500 dark:text-gray-400 mb-0.5 sm:mb-1">Alias (Apodo)</label>
+                        <input type="text" name="alias" id="edit_alias" class="w-full text-xs sm:text-sm px-3 py-2 sm:px-3.5 sm:py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-xl text-gray-800 dark:text-gray-200 focus:outline-hidden focus:ring-2 focus:ring-indigo-500">
                     </div>
 
-
                     <div>
-
-                        <label class="block text-xs
-                                      font-bold uppercase
-                                      text-gray-500 dark:text-gray-400
-                                      mb-1">
-
-                            Teléfono
-
-                        </label>
-
-                        <input type="text" name="phone" id="edit_phone" class="w-full
-                                   text-sm
-                                   px-3.5 py-2.5
-                                   bg-gray-50 dark:bg-gray-900
-                                   border border-gray-300 dark:border-gray-700
-                                   rounded-xl
-                                   text-gray-800 dark:text-gray-200
-                                   focus:outline-hidden
-                                   focus:ring-2 focus:ring-indigo-500">
-
+                        <label class="block text-[10px] sm:text-xs font-bold uppercase text-gray-500 dark:text-gray-400 mb-0.5 sm:mb-1">Teléfono</label>
+                        <input type="text" name="phone" id="edit_phone" class="w-full text-xs sm:text-sm px-3 py-2 sm:px-3.5 sm:py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-xl text-gray-800 dark:text-gray-200 focus:outline-hidden focus:ring-2 focus:ring-indigo-500">
                     </div>
 
-
                     <div>
-
-                        <label class="block text-xs
-                                      font-bold uppercase
-                                      text-gray-500 dark:text-gray-400
-                                      mb-1">
-
-                            Dirección
-
-                        </label>
-
-                        <input type="text" name="address" id="edit_address" class="w-full
-                                   text-sm
-                                   px-3.5 py-2.5
-                                   bg-gray-50 dark:bg-gray-900
-                                   border border-gray-300 dark:border-gray-700
-                                   rounded-xl
-                                   text-gray-800 dark:text-gray-200
-                                   focus:outline-hidden
-                                   focus:ring-2 focus:ring-indigo-500">
-
+                        <label class="block text-xs font-bold uppercase text-gray-500 dark:text-gray-400 mb-0.5 sm:mb-1">Dirección</label>
+                        <input type="text" name="address" id="edit_address" class="w-full text-xs sm:text-sm px-3 py-2 sm:px-3.5 sm:py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-xl text-gray-800 dark:text-gray-200 focus:outline-hidden focus:ring-2 focus:ring-indigo-500">
                     </div>
 
-
                     <div>
-
-                        <label class="block text-xs
-                                      font-bold uppercase
-                                      text-gray-500 dark:text-gray-400
-                                      mb-1">
-
-                            Estatus
-
-                        </label>
-
-                        <select name="status" id="edit_status" class="w-full
-                                   text-sm
-                                   px-3.5 py-2.5
-                                   bg-gray-50 dark:bg-gray-900
-                                   border border-gray-300 dark:border-gray-700
-                                   rounded-xl
-                                   text-gray-800 dark:text-gray-200
-                                   focus:outline-hidden
-                                   focus:ring-2 focus:ring-indigo-500">
-
-                            <option value="active">
-                                Activo
-                            </option>
-
-                            <option value="inactive">
-                                Suspendido
-                            </option>
-
+                        <label class="block text-[10px] sm:text-xs font-bold uppercase text-gray-500 dark:text-gray-400 mb-0.5 sm:mb-1">Estatus</label>
+                        <select name="status" id="edit_status" class="w-full text-xs sm:text-sm px-3 py-2 sm:px-3.5 sm:py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-xl text-gray-800 dark:text-gray-200 focus:outline-hidden focus:ring-2 focus:ring-indigo-500">
+                            <option value="active">Activo</option>
+                            <option value="inactive">Suspendido</option>
                         </select>
-
                     </div>
-
                 </div>
 
-
-                <div class="flex justify-end
-                            gap-2
-                            mt-6">
-
-                    <button type="button"
-                        onclick="document.getElementById('modalEditarCliente').classList.add('hidden')" class="px-4 py-2.5
-                               bg-gray-100 dark:bg-gray-700
-                               hover:bg-gray-200
-                               text-gray-700 dark:text-gray-300
-                               rounded-xl
-                               text-xs
-                               font-bold uppercase
-                               transition">
-
+                <div class="flex justify-end gap-2 mt-4 sm:mt-6">
+                    <button type="button" onclick="document.getElementById('modalEditarCliente').classList.add('hidden')"
+                        class="px-3.5 py-2 sm:px-4 sm:py-2.5 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 text-gray-700 dark:text-gray-300 rounded-xl text-[11px] sm:text-xs font-bold uppercase transition">
                         Cancelar
-
                     </button>
-
-
-                    <button type="submit" class="px-5 py-2.5
-                               bg-indigo-600 hover:bg-indigo-700
-                               text-white
-                               rounded-xl
-                               text-xs
-                               font-bold uppercase
-                               transition
-                               shadow-xs">
-
+                    <button type="submit" class="px-4.5 py-2 sm:px-5 sm:py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-[11px] sm:text-xs font-bold uppercase transition shadow-xs">
                         Guardar Cambios
-
                     </button>
-
                 </div>
-
             </form>
-
         </div>
-
     </div>
 
-
+    
     <!-- =============================================================
          ESTILOS RESPONSIVOS
     ============================================================== -->

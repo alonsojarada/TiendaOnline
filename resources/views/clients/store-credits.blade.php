@@ -66,11 +66,11 @@
                         </a>
 
                         @unless($estaLiquidado)
-                            <form action="{{ route('debts.destroy', $credit->id) }}" method="POST"
-                                onsubmit="return confirm('¿Estás seguro de eliminar este crédito?');">
+                            <form id="form-eliminar-credito" action="{{ route('debts.destroy', $credit->id) }}"
+                                method="POST">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit"
+                                <button type="button" onclick="confirmarEliminacionCredito()"
                                     class="px-2 py-1 sm:px-3 sm:py-1.5 bg-red-50 hover:bg-red-100 text-red-600 dark:bg-red-950/50 dark:text-red-300 rounded-md sm:rounded-xl text-[10px] sm:text-xs font-bold transition flex items-center gap-1 shadow-xs">
                                     🗑️ <span>Eliminar</span>
                                 </button>
@@ -222,11 +222,12 @@
                                         </span>
 
                                         @unless($estaLiquidado)
-                                            <form action="{{ route('payments.destroy', $payment->id) }}" method="POST"
-                                                onsubmit="return confirm('¿Eliminar este abono?');" class="inline">
+                                            <form id="form-eliminar-abono-{{ $payment->id }}"
+                                                action="{{ route('payments.destroy', $payment->id) }}" method="POST"
+                                                class="inline">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit"
+                                                <button type="button" onclick="confirmarEliminacionAbono({{ $payment->id }})"
                                                     class="px-2 py-1 bg-red-100 hover:bg-red-200 text-red-700 dark:bg-red-950/60 dark:text-red-300 rounded text-[10px] font-bold transition">
                                                     ELIMINAR
                                                 </button>
@@ -600,6 +601,54 @@
                 form.insertAdjacentHTML('beforeend', `<input type="hidden" class="input-item-oculto-edit" name="items[${index}][quantity]" value="${item.quantity}">`);
                 form.insertAdjacentHTML('beforeend', `<input type="hidden" class="input-item-oculto-edit" name="items[${index}][unit_price]" value="${item.unit_price}">`);
                 form.insertAdjacentHTML('beforeend', `<input type="hidden" class="input-item-oculto-edit" name="items[${index}][subtotal]" value="${item.subtotal}">`);
+            });
+        }
+
+        function confirmarEliminacionCredito() {
+            Swal.fire({
+                title: '¿Estás seguro de eliminar este crédito?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar',
+                width: '90%',              // <--- Ancho adaptable en móviles
+                customClass: {
+                    popup: 'max-w-sm sm:max-w-md rounded-2xl p-4 sm:p-6 text-xs sm:text-sm', // <--- Clases Tailwind de proporción
+                    title: 'text-base sm:text-lg font-bold',
+                    htmlContainer: 'text-xs sm:text-sm',
+                    confirmButton: 'px-4 py-2 rounded-xl text-xs font-bold',
+                    cancelButton: 'px-4 py-2 rounded-xl text-xs font-bold'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('form-eliminar-credito').submit();
+                }
+            });
+        }
+
+        function confirmarEliminacionAbono(paymentId) {
+            Swal.fire({
+                title: '¿Elimiar este abono?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar',
+                width: '90%',              // <--- Ancho adaptable en móviles
+                customClass: {
+                    popup: 'max-w-sm sm:max-w-md rounded-2xl p-4 sm:p-6 text-xs sm:text-sm', // <--- Clases Tailwind de proporción
+                    title: 'text-base sm:text-lg font-bold',
+                    htmlContainer: 'text-xs sm:text-sm',
+                    confirmButton: 'px-4 py-2 rounded-xl text-xs font-bold',
+                    cancelButton: 'px-4 py-2 rounded-xl text-xs font-bold'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('form-eliminar-abono-' + paymentId).submit();
+                }
             });
         }
     </script>

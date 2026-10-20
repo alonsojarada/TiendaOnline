@@ -140,13 +140,15 @@
         @container tablaCobranza (max-width: 600px) {
 
             .tabla-responsive {
-                font-size: 0.70rem !important;
+                font-size: 0.65rem !important;
             }
 
             .tabla-responsive th,
             .tabla-responsive td {
-                padding-left: 0.25rem !important;
-                padding-right: 0.25rem !important;
+                padding-top: 0.20rem !important;
+                padding-bottom: 0.20rem !important;
+                padding-left: 0.15rem !important;
+                padding-right: 0.15rem !important;
             }
 
             .tabla-responsive .btn-texto {
@@ -154,12 +156,12 @@
             }
 
             .tabla-responsive .boton-accion {
-                padding: 0.30rem !important;
+                padding: 0.20rem 0.25rem !important;
             }
 
             .tabla-responsive svg {
-                width: 0.75rem !important;
-                height: 0.75rem !important;
+                width: 0.70rem !important;
+                height: 0.70rem !important;
             }
         }
 
@@ -168,7 +170,7 @@
 
     <x-slot name="header">
 
-        <h2 class="font-semibold text-lg sm:text-xl text-gray-800 leading-tight">
+        <h2 class="font-semibold text-xs sm:text-xl text-gray-800 leading-tight">
             {{ __('Cobranza de Tandas') }}
         </h2>
 
@@ -325,10 +327,10 @@
         <!-- CONTENEDOR PRINCIPAL -->
         <!-- ========================================================= -->
 
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 px-2 sm:px-3">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 px-1.5 sm:px-3">
 
 
-            <!-- ===================================================== -->
+           <!-- ===================================================== -->
             <!-- TARJETAS SUPERIORES -->
             <!-- ===================================================== -->
 
@@ -337,8 +339,8 @@
                     grid grid-cols-2
                     sm:flex sm:flex-wrap
                     items-center
-                    gap-2.5 sm:gap-3
-                    mb-3.5 sm:mb-4
+                    gap-1.5 sm:gap-3
+                    mb-2.5 sm:mb-4
                 "
             >
 
@@ -356,9 +358,9 @@
                         overflow-hidden
                         shadow-sm
                         sm:rounded-lg
-                        px-2.5 py-2
+                        px-2 py-1.5
                         sm:px-3 sm:py-2.5
-                        pr-8 sm:pr-9
+                        pr-6 sm:pr-9
                         flex flex-col justify-between
                         componente-responsive
                     "
@@ -367,10 +369,10 @@
                     <div
                         class="
                             absolute
-                            right-2
+                            right-1 sm:right-2
                             top-1/2
                             -translate-y-1/2
-                            p-1.5
+                            p-1 sm:p-1.5
                             bg-red-100
                             rounded-lg
                             text-red-600
@@ -380,7 +382,7 @@
                     >
 
                         <svg
-                            class="w-4 h-4 sm:w-5 sm:h-5"
+                            class="w-3 h-3 sm:w-5 sm:h-5"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -402,7 +404,7 @@
 
                         <div
                             class="
-                                text-[10px] sm:text-[11px]
+                                text-[8px] sm:text-[11px]
                                 font-bold
                                 uppercase
                                 tracking-wider
@@ -415,7 +417,7 @@
 
                         <div
                             class="
-                                text-sm sm:text-xl
+                                text-xs sm:text-xl
                                 font-black
                                 text-red-700
                                 leading-tight
@@ -428,7 +430,7 @@
 
                         <div
                             class="
-                                text-[10px] sm:text-xs
+                                text-[8px] sm:text-xs
                                 text-red-600
                                 font-bold
                             "
@@ -455,9 +457,9 @@
                         overflow-hidden
                         shadow-sm
                         sm:rounded-lg
-                        px-2.5 py-2
+                        px-2 py-1.5
                         sm:px-3 sm:py-2.5
-                        pr-8 sm:pr-9
+                        pr-6 sm:pr-9
                         flex flex-col justify-between
                         componente-responsive
                     "
@@ -466,10 +468,10 @@
                     <div
                         class="
                             absolute
-                            right-2
+                            right-1 sm:right-2
                             top-1/2
                             -translate-y-1/2
-                            p-1.5
+                            p-1 sm:p-1.5
                             bg-amber-100
                             rounded-lg
                             text-amber-600
@@ -479,7 +481,7 @@
                     >
 
                         <svg
-                            class="w-4 h-4 sm:w-5 sm:h-5"
+                            class="w-3 h-3 sm:w-5 sm:h-5"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -501,7 +503,7 @@
 
                         <div
                             class="
-                                text-[10px] sm:text-[11px]
+                                text-[8px] sm:text-[11px]
                                 font-bold
                                 uppercase
                                 tracking-wider
@@ -514,7 +516,7 @@
 
                         <div
                             class="
-                                text-sm sm:text-xl
+                                text-xs sm:text-xl
                                 font-black
                                 text-amber-700
                                 leading-tight
@@ -527,7 +529,7 @@
 
                         <div
                             class="
-                                text-[10px] sm:text-xs
+                                text-[8px] sm:text-xs
                                 text-amber-700
                                 font-bold
                             "
@@ -553,33 +555,30 @@
                     overflow-hidden
                     shadow-sm
                     sm:rounded-lg
-                    p-2.5 sm:p-4
+                    p-2 sm:p-4
                     componente-responsive
                 "
             >
 
 
-                <!-- ================================================= -->
-                <!-- BUSCADOR Y BOTONES -->
+               <!-- ================================================= -->
+                <!-- BUSCADOR Y BOTONES (MISMO RENGLÓN Y ANCHO AJUSTADO) -->
                 <!-- ================================================= -->
 
                 <div
                     class="
                         flex
-                        flex-col
-                        sm:flex-row
+                        flex-row
+                        items-center
                         justify-between
-                        items-stretch
-                        sm:items-center
-                        gap-2.5 sm:gap-3
-                        mb-3
+                        gap-1.5 sm:gap-3
+                        mb-2.5 sm:mb-3
+                        overflow-x-auto
                     "
                 >
 
-
-                    <!-- BUSCADOR -->
-
-                    <div class="w-full sm:w-80">
+                    <!-- BUSCADOR (Ancho controlado: más chico en medianas/grandes, flexible en chicas) -->
+                    <div class="flex-1 sm:flex-none sm:w-64">
 
                         <div class="relative">
 
@@ -588,7 +587,7 @@
                                     absolute
                                     inset-y-0
                                     left-0
-                                    pl-3
+                                    pl-2 sm:pl-3
                                     flex
                                     items-center
                                     pointer-events-none
@@ -597,7 +596,7 @@
                             >
 
                                 <svg
-                                    class="w-4 h-4"
+                                    class="w-3 h-3 sm:w-4 sm:h-4"
                                     fill="none"
                                     stroke="currentColor"
                                     viewBox="0 0 24 24"
@@ -618,13 +617,13 @@
                             <input
                                 type="text"
                                 x-model="filtroGeneral"
-                                placeholder="Buscar participante u origen..."
+                                placeholder="Buscar participante..."
                                 class="
                                     w-full
-                                    pl-9
-                                    pr-3
-                                    py-1.5
-                                    text-xs
+                                    pl-7 sm:pl-9
+                                    pr-2 sm:pr-3
+                                    py-1 sm:py-1.5
+                                    text-[10px] sm:text-xs
                                     border-gray-300
                                     rounded-lg
                                     shadow-sm
@@ -645,13 +644,11 @@
 
                     <div
                         class="
-                            grid
-                            grid-cols-2
-                            sm:flex
-                            sm:items-center
-                            gap-2
-                            w-full
-                            sm:w-auto
+                            flex
+                            flex-row
+                            items-center
+                            gap-1.5 sm:gap-2
+                            shrink-0
                         "
                     >
 
@@ -661,14 +658,14 @@
                                 inline-flex
                                 items-center
                                 justify-center
-                                gap-1.5
-                                px-3
-                                py-1.5
+                                gap-1
+                                px-2 sm:px-3
+                                py-1 sm:py-1.5
                                 bg-emerald-600
                                 hover:bg-emerald-700
                                 text-white
                                 rounded-lg
-                                text-xs
+                                text-[10px] sm:text-xs
                                 font-semibold
                                 shadow-sm
                                 transition
@@ -677,7 +674,7 @@
                         >
 
                             <svg
-                                class="w-3.5 h-3.5"
+                                class="w-3 h-3 sm:w-3.5 sm:h-3.5"
                                 fill="none"
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
@@ -703,14 +700,14 @@
                                 inline-flex
                                 items-center
                                 justify-center
-                                gap-1.5
-                                px-3
-                                py-1.5
+                                gap-1
+                                px-2 sm:px-3
+                                py-1 sm:py-1.5
                                 bg-rose-600
                                 hover:bg-rose-700
                                 text-white
                                 rounded-lg
-                                text-xs
+                                text-[10px] sm:text-xs
                                 font-semibold
                                 shadow-sm
                                 transition
@@ -719,7 +716,7 @@
                         >
 
                             <svg
-                                class="w-3.5 h-3.5"
+                                class="w-3 h-3 sm:w-3.5 sm:h-3.5"
                                 fill="none"
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
@@ -741,7 +738,6 @@
                     </div>
 
                 </div>
-
 
                 <!-- ================================================= -->
                 <!-- CONTENEDOR REAL DE LA TABLA -->
@@ -777,7 +773,7 @@
                         <thead
                             class="
                                 bg-gray-50
-                                text-[10px]
+                                text-[9px]
                                 sm:text-xs
                                 font-semibold
                                 text-gray-500
@@ -800,8 +796,8 @@
                                 <th
                                     @click="ordenarPor('nombre')"
                                     class="
-                                        px-2 sm:px-4
-                                        py-2
+                                        px-1.5 sm:px-4
+                                        py-1.5 sm:py-2
                                         text-left
                                         bg-gray-50
                                         cursor-pointer
@@ -810,7 +806,7 @@
                                     "
                                 >
 
-                                    <div class="flex items-center gap-1">
+                                    <div class="flex items-center gap-0.5 sm:gap-1">
 
                                         Participante
 
@@ -821,7 +817,7 @@
                                                     ? '▲'
                                                     : '▼'
                                             "
-                                            class="text-[9px] text-indigo-600"
+                                            class="text-[8px] sm:text-[9px] text-indigo-600"
                                         ></span>
 
                                     </div>
@@ -837,8 +833,8 @@
                                     @click="ordenarPor('origen')"
                                     class="
                                         col-origen
-                                        px-4
-                                        py-2
+                                        px-3 sm:px-4
+                                        py-1.5 sm:py-2
                                         text-left
                                         bg-gray-50
                                         cursor-pointer
@@ -847,7 +843,7 @@
                                     "
                                 >
 
-                                    <div class="flex items-center gap-1">
+                                    <div class="flex items-center gap-0.5 sm:gap-1">
 
                                         Origen
 
@@ -858,7 +854,7 @@
                                                     ? '▲'
                                                     : '▼'
                                             "
-                                            class="text-[9px] text-indigo-600"
+                                            class="text-[8px] sm:text-[9px] text-indigo-600"
                                         ></span>
 
                                     </div>
@@ -873,8 +869,8 @@
                                 <th
                                     @click="ordenarPor('tanda')"
                                     class="
-                                        px-2 sm:px-4
-                                        py-2
+                                        px-1.5 sm:px-4
+                                        py-1.5 sm:py-2
                                         text-left
                                         bg-gray-50
                                         cursor-pointer
@@ -883,7 +879,7 @@
                                     "
                                 >
 
-                                    <div class="flex items-center gap-1">
+                                    <div class="flex items-center gap-0.5 sm:gap-1">
 
                                         Tanda
 
@@ -894,7 +890,7 @@
                                                     ? '▲'
                                                     : '▼'
                                             "
-                                            class="text-[9px] text-indigo-600"
+                                            class="text-[8px] sm:text-[9px] text-indigo-600"
                                         ></span>
 
                                     </div>
@@ -909,8 +905,8 @@
                                 <th
                                     class="
                                         col-turno
-                                        px-3 sm:px-4
-                                        py-2
+                                        px-2 sm:px-4
+                                        py-1.5 sm:py-2
                                         text-center
                                         bg-gray-50
                                     "
@@ -926,8 +922,8 @@
                                 <th
                                     class="
                                         col-cuotas
-                                        px-3 sm:px-4
-                                        py-2
+                                        px-2 sm:px-4
+                                        py-1.5 sm:py-2
                                         text-center
                                         bg-gray-50
                                     "
@@ -944,8 +940,8 @@
                                     @click="ordenarPor('fecha')"
                                     class="
                                         col-fecha
-                                        px-4
-                                        py-2
+                                        px-3 sm:px-4
+                                        py-1.5 sm:py-2
                                         text-center
                                         bg-gray-50
                                         cursor-pointer
@@ -959,7 +955,7 @@
                                             flex
                                             items-center
                                             justify-center
-                                            gap-1
+                                            gap-0.5 sm:gap-1
                                         "
                                     >
 
@@ -972,7 +968,7 @@
                                                     ? '▲'
                                                     : '▼'
                                             "
-                                            class="text-[9px] text-indigo-600"
+                                            class="text-[8px] sm:text-[9px] text-indigo-600"
                                         ></span>
 
                                     </div>
@@ -987,8 +983,8 @@
                                 <th
                                     @click="ordenarPor('pendiente')"
                                     class="
-                                        px-2 sm:px-4
-                                        py-2
+                                        px-1.5 sm:px-4
+                                        py-1.5 sm:py-2
                                         text-right
                                         bg-gray-50
                                         cursor-pointer
@@ -1002,7 +998,7 @@
                                             flex
                                             items-center
                                             justify-end
-                                            gap-1
+                                            gap-0.5 sm:gap-1
                                         "
                                     >
 
@@ -1015,7 +1011,7 @@
                                                     ? '▲'
                                                     : '▼'
                                             "
-                                            class="text-[9px] text-indigo-600"
+                                            class="text-[8px] sm:text-[9px] text-indigo-600"
                                         ></span>
 
                                     </div>
@@ -1029,8 +1025,8 @@
 
                                 <th
                                     class="
-                                        px-2 sm:px-4
-                                        py-2
+                                        px-1.5 sm:px-4
+                                        py-1.5 sm:py-2
                                         text-center
                                         bg-gray-50
                                     "
@@ -1204,8 +1200,8 @@
 
                                     <td
                                         class="
-                                            px-2 sm:px-4
-                                            py-2
+                                            px-1.5 sm:px-4
+                                            py-1.5 sm:py-2
                                             whitespace-nowrap
                                         "
                                     >
@@ -1214,7 +1210,7 @@
                                             class="
                                                 font-bold
                                                 text-gray-900
-                                                text-[11px]
+                                                text-[10px]
                                                 sm:text-sm
                                                 leading-tight
                                             "
@@ -1232,8 +1228,8 @@
                                     <td
                                         class="
                                             col-origen
-                                            px-4
-                                            py-2
+                                            px-3 sm:px-4
+                                            py-1.5 sm:py-2
                                             whitespace-nowrap
                                         "
                                     >
@@ -1257,15 +1253,15 @@
 
                                     <td
                                         class="
-                                            px-2 sm:px-4
-                                            py-2
+                                            px-1.5 sm:px-4
+                                            py-1.5 sm:py-2
                                             whitespace-nowrap
                                         "
                                     >
 
                                         <div
                                             class="
-                                                text-[11px]
+                                                text-[10px]
                                                 sm:text-sm
                                                 text-indigo-600
                                                 font-semibold
@@ -1285,8 +1281,8 @@
                                     <td
                                         class="
                                             col-turno
-                                            px-3 sm:px-4
-                                            py-2
+                                            px-2 sm:px-4
+                                            py-1.5 sm:py-2
                                             whitespace-nowrap
                                             text-center
                                         "
@@ -1317,8 +1313,8 @@
                                     <td
                                         class="
                                             col-cuotas
-                                            px-3 sm:px-4
-                                            py-2
+                                            px-2 sm:px-4
+                                            py-1.5 sm:py-2
                                             whitespace-nowrap
                                             text-center
                                         "
@@ -1370,8 +1366,8 @@
                                     <td
                                         class="
                                             col-fecha
-                                            px-4
-                                            py-2
+                                            px-3 sm:px-4
+                                            py-1.5 sm:py-2
                                             whitespace-nowrap
                                             text-center
                                             {{
@@ -1396,8 +1392,8 @@
 
                                     <td
                                         class="
-                                            px-2 sm:px-4
-                                            py-2
+                                            px-1.5 sm:px-4
+                                            py-1.5 sm:py-2
                                             whitespace-nowrap
                                             text-right
                                             font-black
@@ -1406,7 +1402,7 @@
                                                     ? 'text-red-600'
                                                     : 'text-amber-700'
                                             }}
-                                            text-[11px]
+                                            text-[10px]
                                             sm:text-base
                                         "
                                     >
@@ -1422,8 +1418,8 @@
 
                                     <td
                                         class="
-                                            px-2 sm:px-4
-                                            py-2
+                                            px-1.5 sm:px-4
+                                            py-1.5 sm:py-2
                                             whitespace-nowrap
                                             text-center
                                         "
@@ -1434,7 +1430,7 @@
                                                 flex
                                                 items-center
                                                 justify-center
-                                                gap-1
+                                                gap-0.5 sm:gap-1
                                             "
                                         >
 
@@ -1458,9 +1454,9 @@
                                                     boton-accion
                                                     inline-flex
                                                     items-center
-                                                    gap-1
-                                                    px-1.5 sm:px-2.5
-                                                    py-1
+                                                    gap-0.5 sm:gap-1
+                                                    px-1 sm:px-2.5
+                                                    py-0.5 sm:py-1
                                                     bg-emerald-50
                                                     hover:bg-emerald-600
                                                     text-emerald-700
@@ -1468,7 +1464,7 @@
                                                     border
                                                     border-emerald-200
                                                     rounded-md
-                                                    text-[10px]
+                                                    text-[9px]
                                                     sm:text-xs
                                                     font-bold
                                                     transition-all
@@ -1477,7 +1473,7 @@
                                             >
 
                                                 <svg
-                                                    class="w-3 h-3"
+                                                    class="w-2.5 h-2.5 sm:w-3 sm:h-3"
                                                     fill="none"
                                                     stroke="currentColor"
                                                     viewBox="0 0 24 24"
@@ -1510,9 +1506,9 @@
                                                     boton-accion
                                                     inline-flex
                                                     items-center
-                                                    gap-1
-                                                    px-1.5 sm:px-2.5
-                                                    py-1
+                                                    gap-0.5 sm:gap-1
+                                                    px-1 sm:px-2.5
+                                                    py-0.5 sm:py-1
                                                     bg-gray-50
                                                     hover:bg-indigo-600
                                                     text-gray-700
@@ -1521,7 +1517,7 @@
                                                     border-gray-200
                                                     hover:border-indigo-600
                                                     rounded-md
-                                                    text-[10px]
+                                                    text-[9px]
                                                     sm:text-xs
                                                     font-bold
                                                     transition-all
@@ -1530,7 +1526,7 @@
                                             >
 
                                                 <svg
-                                                    class="w-3 h-3"
+                                                    class="w-2.5 h-2.5 sm:w-3 sm:h-3"
                                                     fill="none"
                                                     stroke="currentColor"
                                                     viewBox="0 0 24 24"
@@ -1625,8 +1621,8 @@
                     shadow-xl
                     max-w-md
                     w-full
-                    p-5 sm:p-6
-                    mx-4
+                    p-4 sm:p-6
+                    mx-3 sm:mx-4
                 "
                 @click.stop
             >
@@ -1642,14 +1638,14 @@
                         justify-between
                         items-center
                         border-b
-                        pb-2.5
-                        mb-3.5
+                        pb-2 sm:pb-2.5
+                        mb-2.5 sm:mb-3.5
                     "
                 >
 
                     <h3
                         class="
-                            text-base
+                            text-sm
                             sm:text-lg
                             font-bold
                             text-gray-900
@@ -1666,7 +1662,7 @@
                             text-gray-400
                             hover:text-gray-600
                             font-bold
-                            text-xl
+                            text-lg sm:text-xl
                         "
                     >
                         &times;
@@ -1698,11 +1694,11 @@
                     <!-- CLIENTE -->
                     <!-- ============================================= -->
 
-                    <div class="mb-3.5">
+                    <div class="mb-2.5 sm:mb-3.5">
 
                         <p
                             class="
-                                text-[11px]
+                                text-[10px]
                                 sm:text-xs
                                 text-gray-500
                                 uppercase
@@ -1714,7 +1710,7 @@
 
                         <p
                             class="
-                                text-sm
+                                text-xs
                                 sm:text-base
                                 font-bold
                                 text-gray-900
@@ -1724,7 +1720,7 @@
 
                         <p
                             class="
-                                text-xs
+                                text-[11px] sm:text-xs
                                 text-indigo-600
                                 font-semibold
                             "
@@ -1738,12 +1734,12 @@
                     <!-- CANTIDAD DE CUOTAS -->
                     <!-- ============================================= -->
 
-                    <div class="mb-3.5">
+                    <div class="mb-2.5 sm:mb-3.5">
 
                         <label
                             class="
                                 block
-                                text-[11px]
+                                text-[10px]
                                 sm:text-xs
                                 font-bold
                                 uppercase
@@ -1765,7 +1761,7 @@
                                 shadow-sm
                                 focus:border-indigo-500
                                 focus:ring-indigo-500
-                                text-sm
+                                text-xs
                                 sm:text-base
                                 font-semibold
                             "
@@ -1810,9 +1806,9 @@
                     <div
                         class="
                             bg-gray-50
-                            p-3.5
+                            p-2.5 sm:p-3.5
                             rounded-lg
-                            mb-3.5
+                            mb-2.5 sm:mb-3.5
                             border
                             border-gray-200
                         "
@@ -1827,7 +1823,7 @@
                             "
                         >
 
-                            <span class="text-xs text-gray-600">
+                            <span class="text-[11px] sm:text-xs text-gray-600">
                                 Valor por cuota:
                             </span>
 
@@ -1877,7 +1873,7 @@
 
                             <span
                                 class="
-                                    text-lg
+                                    text-base
                                     sm:text-xl
                                     font-black
                                     text-emerald-600
@@ -1907,8 +1903,8 @@
                         class="
                             flex
                             justify-end
-                            gap-2.5
-                            mt-5
+                            gap-2 sm:gap-2.5
+                            mt-4 sm:mt-5
                         "
                     >
 
@@ -1916,7 +1912,7 @@
                             type="button"
                             @click="modalOpen = false"
                             class="
-                                px-3.5
+                                px-3
                                 py-1.5
                                 sm:px-4
                                 sm:py-2
@@ -1937,7 +1933,7 @@
                         <button
                             type="submit"
                             class="
-                                px-3.5
+                                px-3
                                 py-1.5
                                 sm:px-4
                                 sm:py-2
@@ -1964,5 +1960,29 @@
         </div>
 
     </div>
+
+    <!-- ========================================================= -->
+    <!-- JAVASCRIPT SWEETALERT2 -->
+    <!-- ========================================================= -->
+
+    @if(session('success'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                Swal.fire({
+                    toast: true,
+                    position: 'center',
+                    icon: 'success',
+                    title: "{{ session('success') }}",
+                    showConfirmButton: false,
+                    timer: 1200,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                });
+            });
+        </script>
+    @endif
 
 </x-app-layout>

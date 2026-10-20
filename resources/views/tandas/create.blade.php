@@ -1,5 +1,71 @@
 <x-app-layout>
 
+    <!-- ========================================================= -->
+    <!-- HEADER / TÍTULO SUPERIOR -->
+    <!-- ========================================================= -->
+
+    <x-slot name="header">
+
+        <div class="flex justify-between items-center gap-2">
+
+            <h2 class="font-semibold
+                       text-base
+                       sm:text-lg
+                       lg:text-xl
+                       text-gray-800
+                       leading-tight
+                       truncate">
+
+                Crear Nueva Tanda
+
+            </h2>
+
+            <a href="{{ route('tandas.index') }}"
+               class="inline-flex
+                      items-center
+                      gap-1
+                      sm:gap-2
+                      px-2
+                      sm:px-4
+                      py-1.5
+                      sm:py-2
+                      text-[10px]
+                      sm:text-xs
+                      font-bold
+                      text-indigo-600
+                      dark:text-indigo-400
+                      bg-indigo-50
+                      dark:bg-indigo-950/50
+                      hover:bg-indigo-100
+                      dark:hover:bg-indigo-900/50
+                      border
+                      border-indigo-200
+                      dark:border-indigo-800
+                      rounded-lg
+                      sm:rounded-xl
+                      shadow-xs
+                      transition-all
+                      duration-200
+                      group
+                      shrink-0">
+
+                <span class="transform group-hover:-translate-x-0.5 transition-transform duration-200">
+                    &larr;
+                </span>
+
+                Volver
+
+            </a>
+
+        </div>
+
+    </x-slot>
+
+
+    <!-- ========================================================= -->
+    <!-- CONTENEDOR PRINCIPAL -->
+    <!-- ========================================================= -->
+
     <div class="py-3 sm:py-6 lg:py-12">
 
         <div class="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8">
@@ -11,22 +77,6 @@
                         p-2.5
                         sm:p-5
                         lg:p-6">
-
-                <!-- ================================================= -->
-                <!-- TÍTULO -->
-                <!-- ================================================= -->
-
-                <h2 class="text-base
-                           sm:text-xl
-                           lg:text-2xl
-                           font-bold
-                           mb-3
-                           sm:mb-6
-                           text-gray-800">
-
-                    Crear Nueva Tanda
-
-                </h2>
 
 
                 <!-- ================================================= -->
@@ -421,14 +471,38 @@
 
 
                     <!-- ================================================= -->
-                    <!-- BOTÓN -->
+                    <!-- BOTONES (CANCELAR Y GUARDAR) -->
                     <!-- ================================================= -->
 
                     <div class="flex
                                 flex-col
                                 sm:flex-row
                                 sm:justify-end
+                                items-center
                                 gap-2">
+
+                        <a href="{{ route('tandas.index') }}"
+                           class="w-full
+                                  sm:w-auto
+                                  inline-flex
+                                  justify-center
+                                  items-center
+                                  bg-gray-100
+                                  hover:bg-gray-200
+                                  text-gray-700
+                                  px-4
+                                  sm:px-6
+                                  py-2
+                                  rounded-md
+                                  font-medium
+                                  text-xs
+                                  sm:text-base
+                                  transition
+                                  shadow-xs">
+
+                            Cancelar
+
+                        </a>
 
                         <button type="submit"
                                 class="w-full
@@ -438,7 +512,6 @@
                                        px-4
                                        sm:px-6
                                        py-2
-                                       sm:py-2
                                        rounded-md
                                        hover:bg-indigo-700
                                        font-medium
@@ -460,5 +533,25 @@
         </div>
 
     </div>
+
+    @if(session('success'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                Swal.fire({
+                    toast: true,
+                    position: 'center',
+                    icon: 'success',
+                    title: "{{ session('success') }}",
+                    showConfirmButton: false,
+                    timer: 1500,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                });
+            });
+        </script>
+    @endif
 
 </x-app-layout>

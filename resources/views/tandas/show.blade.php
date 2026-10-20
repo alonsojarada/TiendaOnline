@@ -440,9 +440,9 @@
 
                         <!-- ELIMINAR TANDA -->
 
-                        <form action="{{ route('tandas.destroy', $tanda->id) }}"
+                        <form id="form-eliminar-tanda"
+                              action="{{ route('tandas.destroy', $tanda->id) }}"
                               method="POST"
-                              onsubmit="return confirm('¿Estás seguro de eliminar esta tanda? Se borrarán todos sus participantes y cuotas asociadas.');"
                               x-show="modoEdicion"
                               x-cloak
                               class="inline">
@@ -451,7 +451,8 @@
                             @method('DELETE')
 
 
-                            <button type="submit"
+                            <button type="button"
+                                    onclick="confirmarEliminarTanda()"
                                     class="bg-red-600 text-white px-2 sm:px-3 py-1 sm:py-1.5 rounded-md text-[9px] sm:text-xs font-semibold hover:bg-red-700 transition flex items-center gap-1 sm:gap-1.5 shadow-sm">
 
                                 <svg xmlns="http://www.w3.org/2000/svg"
@@ -898,18 +899,19 @@
 
 
                                                 <form
+                                                    id="form-anular-entrega-{{ $participante->id }}"
                                                     action="{{ route('tandas.participantes.anular-entrega', [$tanda->id, $participante->id]) }}"
                                                     method="POST"
                                                     class="inline"
                                                     x-show="modoEdicion"
-                                                    x-cloak
-                                                    onsubmit="return confirm('¿Estás seguro de anular la entrega de este turno?');">
+                                                    x-cloak>
 
                                                     @csrf
                                                     @method('PATCH')
 
 
-                                                    <button type="submit"
+                                                    <button type="button"
+                                                            onclick="confirmarAnularEntrega({{ $participante->id }})"
                                                             class="inline-flex items-center justify-center p-0.5 sm:p-1 bg-red-50 text-red-600 rounded-md hover:bg-red-100 transition"
                                                             title="Anular entrega">
 
@@ -1451,5 +1453,80 @@
         }
 
     </style>
+
+    <!-- ========================================================= -->
+    <!-- JAVASCRIPT SWEETALERT2 -->
+    <!-- ========================================================= -->
+
+    <script>
+        const configuracionSwalProporcional = {
+            width: '90%',
+            customClass: {
+                popup: 'max-w-sm sm:max-w-md rounded-2xl p-4 sm:p-6 text-xs sm:text-sm',
+                title: 'text-base sm:text-lg font-bold',
+                htmlContainer: 'text-xs sm:text-sm',
+                confirmButton: 'px-4 py-2 rounded-xl text-xs font-bold',
+                cancelButton: 'px-4 py-2 rounded-xl text-xs font-bold'
+            }
+        };
+
+        // Confirmar Eliminación de la Tanda
+        function confirmarEliminarTanda() {
+            Swal.fire({
+                ...configuracionSwalProporcional,
+                title: '¿Estás seguro?',
+                text: '¿Estás seguro de eliminar esta tanda? Se borrarán todos sus participantes y cuotas asociadas.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc2626',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('form-eliminar-tanda').submit();
+                }
+            });
+        }
+
+        // Confirmar Anular Entrega de Turno
+        function confirmarAnularEntrega(participanteId) {
+            Swal.fire({
+                ...configuracionSwalProporcional,
+                title: '¿Anular entrega?',
+                text: '¿Estás seguro de anular la entrega de este turno?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc2626',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: 'Sí, anular',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('form-anular-entrega-' + participanteId).submit();
+                }
+            });
+        }
+    </script>
+
+    @if(session('success'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                Swal.fire({
+                    toast: true,
+                    position: 'center',
+                    icon: 'success',
+                    title: "{{ session('success') }}",
+                    showConfirmButton: false,
+                    timer: 1000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                });
+            });
+        </script>
+    @endif
 
 </x-app-layout>

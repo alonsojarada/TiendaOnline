@@ -274,34 +274,6 @@
         <div class="loan-detail-medium-scale">
 
 
-            @if (session('success'))
-
-                <div class="font-medium
-                            text-xs sm:text-sm
-                            text-green-600 dark:text-green-400
-                            bg-green-100 dark:bg-green-900/30
-                            p-2 sm:p-3
-                            rounded-xl
-
-                            @[700px]:text-[9px]
-                            @[700px]:p-1.5
-
-                            @[800px]:text-[10px]
-                            @[800px]:p-2
-
-                            @[900px]:text-xs
-                            @[900px]:p-2.5
-
-                            @[1000px]:text-sm
-                            @[1000px]:p-3">
-
-                    {{ session('success') }}
-
-                </div>
-
-            @endif
-
-
 @php
 
 // ==========================================
@@ -704,16 +676,17 @@ if (!empty($frecuenciaTexto)) {
 
                     @unless($esLiquidado)
 
-                        <form action="{{ route('debts.destroy', $loan->id) }}"
+                        <form id="form-eliminar-prestamo"
+                              action="{{ route('debts.destroy', $loan->id) }}"
                               method="POST"
-                              onsubmit="return confirm('¿Estás seguro de eliminar este préstamo?');"
                               class="shrink-0">
 
                             @csrf
                             @method('DELETE')
 
 
-                            <button type="submit"
+                            <button type="button"
+                                onclick="confirmarEliminarPrestamo()"
                                 class="px-1.5 sm:px-3
                                        py-1 sm:py-1.5
                                        bg-red-50 hover:bg-red-100
@@ -1287,14 +1260,15 @@ if (!empty($frecuenciaTexto)) {
                     @endif
 
 
-                    <form action="{{ route('debts.liquidar', $loan->id) }}"
-                          method="POST"
-                          onsubmit="return confirm('¿Liquidar este préstamo por completo?');">
+                    <form id="form-liquidar-prestamo"
+                          action="{{ route('debts.liquidar', $loan->id) }}"
+                          method="POST">
 
                         @csrf
 
 
-                        <button type="submit"
+                        <button type="button"
+                            onclick="confirmarLiquidarPrestamo()"
                             class="px-2 sm:px-3.5
                                    py-1 sm:py-1.5
                                    bg-indigo-600 hover:bg-indigo-700
@@ -1559,15 +1533,16 @@ if (!empty($frecuenciaTexto)) {
 
                                             @if(!$esLiquidado)
 
-                                                <form action="{{ route('installments.destroyPayment', [$loan->id, $installment->id]) }}"
-                                                      method="POST"
-                                                      onsubmit="return confirm('¿Eliminar el pago de esta cuota?');">
+                                                <form id="form-eliminar-cuota-{{ $installment->id }}"
+                                                      action="{{ route('installments.destroyPayment', [$loan->id, $installment->id]) }}"
+                                                      method="POST">
 
                                                     @csrf
                                                     @method('DELETE')
 
 
-                                                    <button type="submit"
+                                                    <button type="button"
+                                                        onclick="confirmarEliminarCuota({{ $installment->id }})"
                                                         class="px-1.5 py-0.5
                                                                bg-red-100
                                                                text-red-700
@@ -1646,14 +1621,15 @@ if (!empty($frecuenciaTexto)) {
                                             @endif
 
 
-                                            <form action="{{ route('installments.pay', [$loan->id, $installment->id]) }}"
-                                                  method="POST"
-                                                  onsubmit="return confirm('¿Registrar pago de esta cuota?');">
+                                            <form id="form-pagar-cuota-{{ $installment->id }}"
+                                                  action="{{ route('installments.pay', [$loan->id, $installment->id]) }}"
+                                                  method="POST">
 
                                                 @csrf
 
 
-                                                <button type="submit"
+                                                <button type="button"
+                                                    onclick="confirmarPagarCuota({{ $installment->id }})"
                                                     class="px-2 sm:px-2.5
                                                            py-1
                                                            bg-emerald-600
@@ -2893,7 +2869,99 @@ if (!empty($frecuenciaTexto)) {
 
 </div>
 
+<!-- =============================================================
+     JAVASCRIPT DE CONTROL Y ALERTAS SWEETALERT2
+============================================================= -->
+
 <script>
+    /* Configuración compartida de SweetAlert2 responsiva */
+    const configuracionSwalProporcional = {
+        width: '90%',
+        customClass: {
+            popup: 'max-w-sm sm:max-w-md rounded-2xl p-4 sm:p-6 text-xs sm:text-sm',
+            title: 'text-base sm:text-lg font-bold',
+            htmlContainer: 'text-xs sm:text-sm',
+            confirmButton: 'px-4 py-2 rounded-xl text-xs font-bold',
+            cancelButton: 'px-4 py-2 rounded-xl text-xs font-bold'
+        }
+    };
+
+    // 1. Confirmar Eliminación del Préstamo
+    function confirmarEliminarPrestamo() {
+        Swal.fire({
+            ...configuracionSwalProporcional,
+            title: '¿Estás seguro?',
+            text: '¿Estás seguro de eliminar este préstamo?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#dc2626',
+            cancelButtonColor: '#6b7280',
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('form-eliminar-prestamo').submit();
+            }
+        });
+    }
+
+    // 2. Confirmar Liquidación del Préstamo Completo
+    function confirmarLiquidarPrestamo() {
+        Swal.fire({
+            ...configuracionSwalProporcional,
+            title: '¿Liquidar préstamo?',
+            text: '¿Deseas liquidar este préstamo por completo?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#4f46e5',
+            cancelButtonColor: '#6b7280',
+            confirmButtonText: 'Sí, liquidar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('form-liquidar-prestamo').submit();
+            }
+        });
+    }
+
+    // 3. Confirmar Eliminación del Pago de una Cuota
+    function confirmarEliminarCuota(installmentId) {
+        Swal.fire({
+            ...configuracionSwalProporcional,
+            title: '¿Eliminar pago?',
+            text: '¿Deseas eliminar el pago de esta cuota?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#dc2626',
+            cancelButtonColor: '#6b7280',
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('form-eliminar-cuota-' + installmentId).submit();
+            }
+        });
+    }
+
+    // 4. Confirmar Registro del Pago de una Cuota
+    function confirmarPagarCuota(installmentId) {
+        Swal.fire({
+            ...configuracionSwalProporcional,
+            title: '¿Registrar pago?',
+            text: '¿Registrar el pago de esta cuota?',
+            icon: 'info',
+            showCancelButton: true,
+            confirmButtonColor: '#16a34a',
+            cancelButtonColor: '#6b7280',
+            confirmButtonText: 'Sí, registrar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('form-pagar-cuota-' + installmentId).submit();
+            }
+        });
+    }
+
     document.addEventListener("DOMContentLoaded", function () {
         const scrollContainer = document.getElementById('estadoCuentaScroll');
         if (!scrollContainer) return;
