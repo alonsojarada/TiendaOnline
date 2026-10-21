@@ -1626,38 +1626,48 @@ if (!empty($frecuenciaTexto)) {
 
                                             @if(!$esLiquidado)
 
-                                                <form id="form-eliminar-cuota-{{ $installment->id }}"
-                                                      action="{{ route('installments.destroyPayment', [$loan->id, $installment->id]) }}"
-                                                      method="POST">
+                                                @php
+                                                    $puedeEliminar = true;
+                                                    if ($loan->loan_modal === 'interest_only') {
+                                                        $ultimaPagada = $loan->installments->where('status', 'paid')->sortByDesc('installment_number')->first();
+                                                        $puedeEliminar = $ultimaPagada && $ultimaPagada->id === $installment->id;
+                                                    }
+                                                @endphp
 
-                                                    @csrf
-                                                    @method('DELETE')
+                                                @if($puedeEliminar)
+                                                    <form id="form-eliminar-cuota-{{ $installment->id }}"
+                                                          action="{{ route('installments.destroyPayment', [$loan->id, $installment->id]) }}"
+                                                          method="POST">
+
+                                                        @csrf
+                                                        @method('DELETE')
 
 
-                                                    <button type="button"
-                                                        onclick="confirmarEliminarCuota({{ $installment->id }})"
-                                                        class="px-1.5 py-0.5
-                                                               bg-red-100
-                                                               text-red-700
-                                                               rounded
-                                                               text-[9px] sm:text-[10px]
-                                                               font-bold
+                                                        <button type="button"
+                                                            onclick="confirmarEliminarCuota({{ $installment->id }})"
+                                                            class="px-1.5 py-0.5
+                                                                   bg-red-100
+                                                                   text-red-700
+                                                                   rounded
+                                                                   text-[9px] sm:text-[10px]
+                                                                   font-bold
 
-                                                               @[700px]:px-0.5
-                                                               @[700px]:text-[7px]
+                                                                   @[700px]:px-0.5
+                                                                   @[700px]:text-[7px]
 
-                                                               @[800px]:px-1
-                                                               @[800px]:text-[8px]
+                                                                   @[800px]:px-1
+                                                                   @[800px]:text-[8px]
 
-                                                               @[900px]:text-[9px]
+                                                                   @[900px]:text-[9px]
 
-                                                               @[1000px]:text-[8px]">
+                                                                   @[1000px]:text-[8px]">
 
-                                                        Eliminar
+                                                            Eliminar
 
-                                                    </button>
+                                                        </button>
 
-                                                </form>
+                                                    </form>
+                                                @endif
 
                                             @endif
 
