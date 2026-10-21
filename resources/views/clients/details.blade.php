@@ -1196,11 +1196,11 @@ if (!empty($frecuenciaTexto)) {
 
 
                 <!-- =================================================
-                     BOTONES DE ACCIÓN
+                     BOTONES DE ACCIÓN (Abono a la izquierda, Liquidar a la derecha)
                 ================================================== -->
 
                 <div class="mb-2 sm:mb-4
-                            flex flex-wrap justify-end
+                            flex items-center justify-between
                             gap-1.5 sm:gap-2
 
                             @[700px]:mb-2
@@ -1214,15 +1214,9 @@ if (!empty($frecuenciaTexto)) {
                             @[1000px]:gap-2">
 
 
-                    @if($loan->loan_modal === 'interest_only')
-
-                        <div class="flex justify-end mb-2 sm:mb-4
-
-                                    @[700px]:mb-1
-                                    @[800px]:mb-1.5
-                                    @[900px]:mb-2
-                                    @[1000px]:mb-4">
-
+                    <!-- CONTENEDOR IZQUIERDO: ABONO A CAPITAL -->
+                    <div>
+                        @if($loan->loan_modal === 'interest_only')
                             <button type="button"
                                 onclick="document.getElementById('modalAbonoCapital').classList.remove('hidden')"
                                 class="px-2 sm:px-3.5
@@ -1254,52 +1248,52 @@ if (!empty($frecuenciaTexto)) {
                                 + Abono a Capital
 
                             </button>
-
-                        </div>
-
-                    @endif
+                        @endif
+                    </div>
 
 
-                    <form id="form-liquidar-prestamo"
-                          action="{{ route('debts.liquidar', $loan->id) }}"
-                          method="POST">
+                    <!-- CONTENEDOR DERECHO: LIQUIDAR PRÉSTAMO -->
+                    <div>
+                        <form id="form-liquidar-prestamo"
+                              action="{{ route('debts.liquidar', $loan->id) }}"
+                              method="POST">
 
-                        @csrf
+                            @csrf
 
+                            <button type="button"
+                                onclick="confirmarLiquidarPrestamo()"
+                                class="px-2 sm:px-3.5
+                                       py-1 sm:py-1.5
+                                       bg-indigo-600 hover:bg-indigo-700
+                                       text-white
+                                       rounded-lg sm:rounded-xl
+                                       text-[9px] sm:text-xs
+                                       font-bold uppercase tracking-wider
+                                       transition shadow-md
+                                       flex items-center gap-1 sm:gap-2
 
-                        <button type="button"
-                            onclick="confirmarLiquidarPrestamo()"
-                            class="px-2 sm:px-3.5
-                                   py-1 sm:py-1.5
-                                   bg-indigo-600 hover:bg-indigo-700
-                                   text-white
-                                   rounded-lg sm:rounded-xl
-                                   text-[9px] sm:text-xs
-                                   font-bold uppercase tracking-wider
-                                   transition shadow-md
-                                   flex items-center gap-1 sm:gap-2
+                                       @[700px]:px-1.5
+                                       @[700px]:py-0.5
+                                       @[700px]:text-[8px]
+                                       @[700px]:gap-1
 
-                                   @[700px]:px-1.5
-                                   @[700px]:py-0.5
-                                   @[700px]:text-[8px]
-                                   @[700px]:gap-1
+                                       @[800px]:px-2
+                                       @[800px]:text-[9px]
 
-                                   @[800px]:px-2
-                                   @[800px]:text-[9px]
+                                       @[900px]:px-2.5
+                                       @[900px]:py-1
+                                       @[900px]:text-[10px]
 
-                                   @[900px]:px-2.5
-                                   @[900px]:py-1
-                                   @[900px]:text-[10px]
+                                       @[1000px]:px-3
+                                       @[1000px]:py-1.5
+                                       @[1000px]:text-xs">
 
-                                   @[1000px]:px-3
-                                   @[1000px]:py-1.5
-                                   @[1000px]:text-xs">
+                                LIQUIDAR PRÉSTAMO COMPLETO
 
-                            LIQUIDAR PRÉSTAMO COMPLETO
+                            </button>
 
-                        </button>
-
-                    </form>
+                        </form>
+                    </div>
 
                 </div>
 
@@ -1337,7 +1331,7 @@ if (!empty($frecuenciaTexto)) {
 
 
                     <!-- =================================================
-                         COLUMNA IZQUIERDA: CALENDARIO
+                         COLUMNA IZQUIERDA: ABONOS DIRECTOS Y CALENDARIO
                     ================================================== -->
 
                     <div class="space-y-1.5 sm:space-y-2.5
@@ -1346,6 +1340,105 @@ if (!empty($frecuenciaTexto)) {
                                 @[800px]:space-y-1
                                 @[900px]:space-y-1.5
                                 @[1000px]:space-y-1.5">
+
+
+                        <!-- =================================================
+                             ABONOS A CAPITAL DIRECTOS (Diseño idéntico a cuotas)
+                        ================================================== -->
+                        @if($loan->loan_modal === 'interest_only')
+                            @php
+                                $abonosCapitalDirectos = $loan->payments->whereNull('installment_id');
+                            @endphp
+
+                            @if($abonosCapitalDirectos->count() > 0)
+                                <h4 class="font-bold text-sm
+                                           text-gray-900 dark:text-white
+                                           @[700px]:text-[10px]
+                                           @[800px]:text-[11px]
+                                           @[900px]:text-xs
+                                           @[1000px]:text-[13px]">
+                                    Abonos a Capital
+                                </h4>
+
+                                <div class="space-y-1 mb-3">
+                                    @foreach($abonosCapitalDirectos as $abono)
+                                        <div class="flex justify-between items-center
+                                                    py-1 sm:py-1.5
+                                                    px-1.5 sm:px-3
+                                                    rounded-lg sm:rounded-xl
+                                                    border
+                                                    text-[11px] sm:text-sm
+                                                    transition
+                                                    bg-emerald-50/50
+                                                    dark:bg-emerald-950/20
+                                                    border-emerald-100
+                                                    dark:border-emerald-900/40
+
+                                                    @[700px]:py-0.5 @[700px]:px-1 @[700px]:text-[9px]
+                                                    @[800px]:py-0.5 @[800px]:px-1.5 @[800px]:text-[10px]
+                                                    @[900px]:py-1 @[900px]:px-2 @[900px]:text-[11px]
+                                                    @[1000px]:py-0.5 @[1000px]:px-1.5 @[1000px]:text-[10px]
+                                                    @[1100px]:py-1.5 @[1100px]:px-3 @[1100px]:text-sm">
+
+                                            <div class="flex flex-col min-w-0">
+                                                <span class="font-bold
+                                                             text-gray-900 dark:text-white
+                                                             text-[11px] sm:text-sm
+                                                             leading-tight
+                                                             @[700px]:text-[9px] @[800px]:text-[10px] @[900px]:text-[11px] @[1000px]:text-[10px] @[1100px]:text-sm">
+                                                    Abono a Capital
+                                                    @if($abono->notes)
+                                                        <span class="text-[10px] text-gray-500 font-normal">({{ $abono->notes }})</span>
+                                                    @endif
+                                                </span>
+
+                                                <span class="text-[10px] sm:text-[11px]
+                                                             text-gray-500 dark:text-gray-400
+                                                             @[700px]:text-[8px] @[800px]:text-[8px] @[900px]:text-[9px] @[1000px]:text-[8px]">
+                                                    Fecha: {{ \Carbon\Carbon::parse($abono->payment_date ?? $abono->created_at)->format('d/m/Y') }}
+                                                </span>
+                                            </div>
+
+                                            <div class="flex items-center
+                                                        gap-1 sm:gap-2.5
+                                                        shrink-0
+                                                        @[700px]:gap-0.5 @[800px]:gap-1 @[900px]:gap-1.5 @[1000px]:gap-1">
+
+                                                <span class="font-bold
+                                                             text-emerald-600 dark:text-emerald-400
+                                                             text-xs sm:text-sm
+                                                             @[700px]:text-[9px] @[800px]:text-[10px] @[900px]:text-[11px] @[1000px]:text-[10px] @[1100px]:text-sm">
+                                                    ${{ number_format($abono->capital_covered, 2) }}
+                                                </span>
+
+                                                <form id="form-eliminar-abono-capital-{{ $abono->id }}"
+                                                      action="{{ route('payments.destroy', $abono->id) }}"
+                                                      method="POST">
+                                                    @csrf
+                                                    @method('DELETE')
+
+                                                    <button type="button"
+                                                        onclick="confirmarEliminarAbonoCapital({{ $abono->id }})"
+                                                        class="px-1.5 py-0.5
+                                                               bg-red-100
+                                                               text-red-700
+                                                               rounded
+                                                               text-[9px] sm:text-[10px]
+                                                               font-bold
+                                                               @[700px]:px-0.5 @[700px]:text-[7px]
+                                                               @[800px]:px-1 @[800px]:text-[8px]
+                                                               @[900px]:text-[9px] @[1000px]:text-[8px]">
+                                                        Eliminar
+                                                    </button>
+                                                </form>
+
+                                            </div>
+
+                                        </div>
+                                    @endforeach
+                                </div>
+                            @endif
+                        @endif
 
 
                         <h4 class="font-bold text-sm
@@ -2958,6 +3051,25 @@ if (!empty($frecuenciaTexto)) {
         }).then((result) => {
             if (result.isConfirmed) {
                 document.getElementById('form-pagar-cuota-' + installmentId).submit();
+            }
+        });
+    }
+
+    // 5. Confirmar Eliminación de un Abono a Capital Directo
+    function confirmarEliminarAbonoCapital(paymentId) {
+        Swal.fire({
+            ...configuracionSwalProporcional,
+            title: '¿Eliminar abono?',
+            text: '¿Deseas eliminar este abono a capital?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#dc2626',
+            cancelButtonColor: '#6b7280',
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('form-eliminar-abono-capital-' + paymentId).submit();
             }
         });
     }

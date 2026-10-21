@@ -399,26 +399,79 @@ class DebtController extends Controller
         $debt = Debt::findOrFail($debtId);
         $installment = LoanInstallment::where('id', $installmentId)->where('debt_id', $debtId)->findOrFail($installmentId);
 
-        // 1. Buscar y eliminar el abono exacto vinculado a esta cuota
-        $payment = Payment::where('debt_id', $debtId)
-            ->where('installment_id', $installmentId)
-            ->first();
-
-        if ($payment) {
-            $payment->delete();
-        } else {
-            // Fallback por si acaso algún pago antiguo no tenía el ID vinculado
-            $fallbackPayment = Payment::where('debt_id', $debtId)
-                ->where('amount', $installment->amount_due)
-                ->latest()
-                ->first();
-            if ($fallbackPayment) {
-                $fallbackPayment->delete();
+        // REGLA EXCLUSIVA PARA PRÉSTAMOS DE INTERÉS FIJO (interest_only)
+        if ($debt->loan_modal === 'interest_only') {
+            
+            // 1. Validar que la cuota esté pagada (una pendiente no se puede eliminar)
+            if ($installment->status !== 'paid') {
+                return redirect()->back()->with('error', 'Solo se pueden eliminar cuotas que ya se encuentran pagadas.');
             }
-        }
 
-        // 2. Regresar la cuota a estado pendiente
-        $installment->update(['status' => 'pending']);
+            // 2. Validar estrictamente que sea la última cuota pagada
+            $ultimaCuotaPagada = LoanInstallment::where('debt_id', $debtId)
+                ->where('status', 'paid')
+                ->orderByDesc('installment_number')
+                ->first();
+
+            if (!$ultimaCuotaPagada || $ultimaCuotaPagada->id !== $installment->id) {
+                return redirect()->back()->with('error', 'Solo se puede eliminar la última cuota pagada.');
+            }
+
+            // 3. Buscar y eliminar el abono exacto vinculado a esta cuota
+            $payment = Payment::where('debt_id', $debtId)
+                ->where('installment_id', $installmentId)
+                ->first();
+
+            if ($payment) {
+                $payment->delete();
+            } else {
+                // Fallback por si acaso algún pago antiguo no tenía el ID vinculado
+                $fallbackPayment = Payment::where('debt_id', $debtId)
+                    ->where('amount', $installment->amount_due)
+                    ->latest()
+                    ->first();
+                if ($fallbackPayment) {
+                    $fallbackPayment->delete();
+                }
+            }
+
+            // 4. Regresar la cuota a estado pendiente
+            $installment->update(['status' => 'pending']);
+
+            // 5. Eliminar la cuota próxima para mantener el orden cronológico de fechas
+            $cuotaProxima = LoanInstallment::where('debt_id', $debtId)
+                ->where('installment_number', '>', $installment->installment_number)
+                ->orderBy('installment_number')
+                ->first();
+
+            if ($cuotaProxima) {
+                $cuotaProxima->delete();
+            }
+
+        } else {
+            // COMPORTAMIENTO ORIGINAL PARA LAS DEMÁS MODALIDADES (ej. Cuotas Fijas)
+            
+            // 1. Buscar y eliminar el abono exacto vinculado a esta cuota
+            $payment = Payment::where('debt_id', $debtId)
+                ->where('installment_id', $installmentId)
+                ->first();
+
+            if ($payment) {
+                $payment->delete();
+            } else {
+                // Fallback por si acaso algún pago antiguo no tenía el ID vinculado
+                $fallbackPayment = Payment::where('debt_id', $debtId)
+                    ->where('amount', $installment->amount_due)
+                    ->latest()
+                    ->first();
+                if ($fallbackPayment) {
+                    $fallbackPayment->delete();
+                }
+            }
+
+            // 2. Regresar la cuota a estado pendiente
+            $installment->update(['status' => 'pending']);
+        }
 
         // 3. Actualizar el estatus global del préstamo si estaba marcado como pagado
         if ($debt->status == 'paid') {
