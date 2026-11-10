@@ -5,7 +5,7 @@
 
             <h2
                 class="reporte-cuotas-titulo font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight text-left">
-                <span>🎯</span> Reporte de Cuotas Pagadas de Tandas
+                Reporte de Cuotas Pagadas de Tandas
             </h2>
 
             <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">

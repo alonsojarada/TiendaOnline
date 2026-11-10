@@ -176,15 +176,24 @@ class ReportController extends Controller
             'clientId'        // <-- Pasamos el cliente seleccionado para mantener el estado en el select
         ));
     }
-
+    
     public function cobros(Request $request)
     {
         $fechaInicio = $request->input('fecha_inicio', now()->startOfMonth()->toDateString());
         $fechaFin = $request->input('fecha_fin', now()->endOfMonth()->toDateString());
         $clientId = $request->input('client_id');
 
-        // 1. Agregamos 'user' dentro del array de relaciones
+        // Obtenemos la empresa del usuario logueado
+        $companyId = auth()->user()->company_id;
+
         $pagosQuery = Payment::with(['debt.client', 'user'])
+            // FILTRO ESTRICTO POR EMPRESA (Asegúrate de que la relación 'debt' tenga el campo company_id)
+            ->whereHas('debt', function ($q) use ($companyId) {
+                $q->where('company_id', $companyId);
+            })
+            // Si el company_id estuviera directamente en la tabla payments, usarías:
+            // ->where('company_id', $companyId)
+
             ->whereBetween('created_at', [$fechaInicio . ' 00:00:00', $fechaFin . ' 23:59:59'])
             ->when($clientId, function ($query, $clientId) {
                 return $query->whereHas('debt', function ($q) use ($clientId) {
@@ -196,7 +205,7 @@ class ReportController extends Controller
         $pagosDelPeriodo = $pagosQuery->get();
 
         // ==========================================
-        // SI EL USUARIO HIZO CLIC EN EXPORTAR (CSV)
+        // EXPORTACIÓN A CSV
         // ==========================================
         if ($request->has('export') && $request->input('export') === 'excel') {
             $fileName = 'reporte_abonos_' . date('Y-m-d_H-i-s') . '.csv';
@@ -213,7 +222,6 @@ class ReportController extends Controller
                 $file = fopen('php://output', 'w');
                 fprintf($file, chr(0xEF) . chr(0xBB) . chr(0xBF));
 
-                // Cabeceras del CSV incluyendo "Registrado por"
                 fputcsv($file, ['Fecha', 'Tipo de Crédito', 'Cliente', 'Concepto / Descripción', 'Dirección', 'Registrado por', 'Monto']);
 
                 foreach ($pagosDelPeriodo as $payment) {
@@ -222,8 +230,6 @@ class ReportController extends Controller
                     $clientAddress = $client && $client->address ? $client->address : 'S/D';
                     $tipoTexto = (optional($payment->debt)->type === 'store_credit') ? 'Mercancía' : 'Crédito Efectivo';
                     $concepto = optional($payment->debt)->concept ?? 'Abonado a cuenta / Nota #' . $payment->debt_id;
-
-                    // Obtenemos el nombre del usuario de forma segura
                     $userName = optional($payment->user)->name ?? 'N/A';
 
                     fputcsv($file, [
@@ -304,5 +310,5 @@ class ReportController extends Controller
         return view('reports.reporte-mensual', compact('reporte', 'year', 'aniosDisponibles'));
     }
 
-   
+
 }
